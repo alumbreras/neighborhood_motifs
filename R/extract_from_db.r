@@ -1,5 +1,5 @@
 #TODO: time: respect time spans between posts
-
+library(igraph)
 # Dataframe with date formats to parse the original databases 
 config <- data.frame(matrix(NA, 4,2))
 names(config) <- c("date", "tz")
