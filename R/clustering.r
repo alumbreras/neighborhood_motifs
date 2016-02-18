@@ -56,10 +56,10 @@ plot.clusters <- function(df.features, clusters, sizes, colors){
                  varname.size = 4) 
   p1 <- p1 + scale_color_manual(values = alpha(cluster.colors,0.75))
   p1 <- p1 + theme_bw() +
-    theme(text            = element_text(size = 15),
-          aspect.ratio    = 1,
-          legend.position = "none") +
-    ggtitle("Individual factor map (PCA)")
+        theme(text            = element_text(size = 15),
+              aspect.ratio    = 1,
+              legend.position = "none") +
+        ggtitle("Individual factor map (PCA)")
   print(p1) 
   dev.copy(png, paste0('2016-01-15-PCA2.png'), width=800, height=800)
   dev.off()

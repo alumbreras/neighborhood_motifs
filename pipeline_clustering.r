@@ -98,15 +98,15 @@ z <- cluster(features)
 # Update users df with their cluster
 df.users <-  data.frame(user=rownames(features), cluster=z) %>%
              merge(df.users, all=TRUE)
-df.users[is.na(df.users$cluster),]$cluster <- 0
+df.users[is.na(df.users$cluster),]$cluster <- 0 # non-active users go to cluster 0
 
 # Assign colors to clusters by size so that we use the same colors all along
 cluster.colors <- palette()[2:length(palette())] # 2: to avoid black
 
 # PCA and whisker plots
 #################################################### 
-#TODO: features should contain also inactive users
+#TODO: features should contain also inactive users?
 plot.clusters(features, 
               clusters = z,
-              sizes    = 0.5*log(rowSums(user.motifs)), 
+              sizes    = 0.5*log(rowSums(user.motifs[active.mask,])), 
               colors   = alpha(cluster.colors[z], 0.5))
