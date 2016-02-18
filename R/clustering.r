@@ -67,7 +67,7 @@ plot.clusters <- function(df.features, clusters, sizes, colors){
   # Boxplots
   #########################
   # Clusters profile
-  points <- df.features
+  points <- as.data.frame(df.features)
   points$cluster <- factor(z)
   points <- melt(points, id='cluster')
   p <- ggplot(points, aes(x=variable, y=value)) + 

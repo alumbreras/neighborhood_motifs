@@ -1,0 +1,9 @@
+* Comprobar a mano que todo esta ok en el clustering.
+  - ver DiegoGT y etherego: que count tienen de motifs?
+  - Astur82 es oulier o no lo es???
+
+
+user.motifs[rownames(user.motifs)=='DiegoGT']
+user.motifs[rownames(user.motifs)=='Astur82']
+
+features[rownames(features)=='Astur82',]

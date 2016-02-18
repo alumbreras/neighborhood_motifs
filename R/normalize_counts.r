@@ -1,17 +1,21 @@
-normalize_counts <- function(df.user.motifs){
+normalize_counts <- function(user.motifs){
   # Normalize the matrix with the user counts
   # Summary  matrix
-  df.user.motifs <- df.user.motifs[,colSums(df.user.motifs)>0]
-  cat("\nMotifs counts:", colSums(df.user.motifs))
+  features <- user.motifs
+  cat("\nMotifs counts:", colSums(features))
   
-  df.user.motifs <- df.user.motifs[rowSums(df.user.motifs)>0,]
   # Normalize user activity (make the analysis independent of number of posts)
-  df.user.motifs <- as.data.frame(t(apply(df.user.motifs, 1, function(x) x/sum(x))))
-  cat("\nMotifs % of active users:", colSums(df.user.motifs))
+  features <- t(apply(features, 1, function(x) x/sum(x)))
+  
+  #as.data.frame(t(apply(user.motifs, 1, function(x) x/sum(x))))
+  cat("\nMotifs % of active users:", colSums(features))
   
   # Center and scale data
-  df.user.motifs <- as.data.frame(scale(df.user.motifs))
-  cat("\nMotifs % of active users (z-score):", colSums(df.user.motifs))
+  features <- scale(features)
+  cat("\nMotifs % of active users (z-score):", colSums(features))
   
-  return(df.user.motifs)
+  # Some NA because no active user has these neighborhoods. 
+  #user.motifs[is.na(user.motifs)] <- 0
+  #features[,is.na(colSums(features))] <- 0
+  return(features)
 }
