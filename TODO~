@@ -1,9 +1,5 @@
-* Comprobar a mano que todo esta ok en el clustering.
-  - ver DiegoGT y etherego: que count tienen de motifs?
-  - Astur82 es oulier o no lo es???
+
+https://archive.org/details/2015_reddit_comments_corpus
+https://www.reddit.com/r/datasets/comments/3mg812/full_reddit_submission_corpus_now_available_2006/
 
 
-user.motifs[rownames(user.motifs)=='DiegoGT']
-user.motifs[rownames(user.motifs)=='Astur82']
-
-features[rownames(features)=='Astur82',]

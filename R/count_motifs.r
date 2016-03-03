@@ -1,3 +1,6 @@
+library(RSQLite)
+source('R/extract_from_db.r')
+
 count_motifs_by_post <- function(threads, database='reddit'){
 
   con <- dbConnect(dbDriver("SQLite"), dbname = paste0("./data/", database, ".db"))
@@ -22,12 +25,14 @@ count_motifs_by_post <- function(threads, database='reddit'){
     #Extract the egos of every post
     g <- database.to.graph(threads[i], con, database)
     gp <- g$gp
+    root.post <- V(gp)[which(degree(gp, mode='out')==0)]$name
     egos <- make_ego_graph(gp, rad, nodes=V(gp))
     
-    if (FALSE){
+    if (TRUE){
       V(gp)$color <- "black"
-      if(vcount(gp)>10 && vcount(gp)<30){
-        par(mfrow=c(3,3))
+      #if(vcount(gp)>10 && vcount(gp)<30){
+      if(TRUE){
+        par(mfrow=c(1,1))
         la <- layout_with_fr(gp)
         plot(as.undirected(gp),
              layout = la, 
@@ -55,8 +60,9 @@ count_motifs_by_post <- function(threads, database='reddit'){
       V(eg)$color <- 1 
       V(eg)[u]$color <- 2 
       #V(eg)[V(eg)$user==user.name]$color <- 2 # any post from the user
-      V(eg)[V(eg)$user=="root"]$color <- 3
-    
+      #V(eg)[V(eg)$user=="root"]$color <- 3
+      V(eg)[V(eg)$name==root.post]$color <- 3
+      
       # Drop nodes that are not connected to the post
       eg <- delete_vertices(eg, which(distances(eg, u)==Inf))
 
@@ -88,6 +94,100 @@ count_motifs_by_post <- function(threads, database='reddit'){
   } # end threads
   
   posts.motifs <- data.frame(postid=posts.id, motif=posts.motifs.id)
+  
+  
+  # Sort by frequency (and relabel: 1 for the most frequent and so forth)
+  idx <- order(table(posts.motifs$motif), decreasing = TRUE)
+  posts.motifs$motif <- match(posts.motifs$motif, idx)
+  motifs <- motifs[idx]
+  
   return(list(posts.motifs = posts.motifs,
               motifs = motifs))
 }
+
+
+merge.motif.counts.pair <- function(res1, res2){
+  # Merge two dataframes obtained by count_motifs_by_post with some differnt motifs
+
+  df.posts.motifs.1 <- res1$posts.motifs
+  df.posts.motifs.2 <- res2$posts.motifs
+  #plot.motif.counts(res1)
+  #plot.motif.counts(res2)
+  motifs.1 <- res1$motifs
+  motifs.2 <- res2$motifs
+  duplicated_motifs <- c()
+  motifs.1.new <- list()
+  mapping <- vector()
+  for(i in 1:length(motifs.2)){
+    dupl <- FALSE
+    for(j in 1:length(motifs.1)){
+      if(vcount(motifs.2[[i]]) != vcount(motifs.1[[j]])){
+        next
+      }  
+      if(is_isomorphic_to(motifs.2[[i]], motifs.1[[j]], method='vf2')){
+        dupl <- TRUE
+        cat("\n", i, " -> ", j)
+        mapping[i] <- j 
+        break
+      }
+    }
+    # if motif.2 not found among motifs.1, give him its own position in 1
+    if(!dupl){
+      new.pos <- length(motifs.1.new)+1
+      cat("\nnew ", i, " -> ", new.pos)
+      motifs.1.new[[new.pos]] <- motifs.2[[i]]
+      mapping[i] <- length(motifs.1) + new.pos
+    }
+  }
+  
+  motifs.merged <- c(motifs.1, motifs.1.new)
+  df.posts.motifs.2$motif <- mapping[df.posts.motifs.2$motif]  
+
+  df.posts.motifs.merged <- rbind(df.posts.motifs.1, df.posts.motifs.2)
+  res <- list(posts.motifs = df.posts.motifs.merged,
+              motifs = motifs.merged)
+  
+  return(res)
+  
+}
+
+# merge results
+merge.motif.counts <- function(df.list){
+  res <- df.list[[1]]
+  for (i in 2:length(df.list)){
+    res <- merge.motif.counts.pair(res, df.list[[i]])
+  }
+  
+  # Sort by frequency (and relabel: 1 for the most frequent and so forth)
+  posts.motifs  <- res$posts.motifs
+  motifs <- res$motifs
+  idx <- order(table(posts.motifs$motif), decreasing = TRUE)
+  posts.motifs$motif <- match(posts.motifs$motif, idx)
+  motifs <- motifs[idx]
+  
+  return(list(posts.motifs = posts.motifs,
+              motifs = motifs))
+}
+
+plot.motif.counts <- function(res){
+  df.post.motif  <- res$posts.motifs
+  motifs <- res$motifs
+  ####################################################
+  # Plot found neighborhoods
+  ####################################################
+  mypalette <- c("black", "red", "white")
+  par(mfrow=c(3,5))
+  for(i in 1:length(motifs)){
+    gmotif <- as.undirected(motifs[[i]])
+    la = layout_as_tree(gmotif, mode='out', root=which.min(V(gmotif)$date))
+    plot(gmotif,
+         layout = la,
+         vertex.color=mypalette[V(motifs[[i]])$color],
+         vertex.label = "",
+         edge.arrow.size=0.6)
+    #title(1, sub=sum(df.post.motif$motif==i))
+    cat(sum(df.post.motif$motif==i))
+    title(paste(i),sub=sum(df.post.motif$motif==i))  
+  }
+}
+
