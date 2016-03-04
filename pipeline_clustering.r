@@ -43,8 +43,8 @@ names(df.threads)[2] <- "length"
 names(df.users)[2] <- "posts"
 
 # Compute neighborhood around every post
-chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/8000))
-
+chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/3000))
+length(chunks)
 ##############################"
 # sequential
 #par(mfrow=c(1,1))
@@ -56,20 +56,20 @@ chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/8000))
 ncores <- detectCores() - 2
 cl<-makeCluster(ncores, outfile="", port=11439)
 registerDoParallel(cl)
-pck <- c('RSQLite')
-res.parallel <- foreach(i=1:4, .packages = pck)%dopar%{
-          source('R/extract_from_db.r')
-          count_motifs_by_post(chunks[[i]], database='reddit')
+pck <- c('RSQLite', 'data.table')
+res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
+  source('R/extract_from_db.r')
+  count_motifs_by_post(chunks[[i]], database='reddit')
 }
 stopCluster(cl)
-res.parallel <- merge.motif.counts(res.parallel)
-res <- res.parallel
+res <- merge.motif.counts(res.parallel)
+save(res,file="res.Rda")
+
 plot.motif.counts(res)
 dev.copy(png, paste0('2016-01-15-motifs_4_4.png'))
 dev.off()
 
 #########################################
-
 
 
 

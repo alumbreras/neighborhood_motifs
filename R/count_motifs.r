@@ -1,4 +1,5 @@
 library(RSQLite)
+library(data.table)
 source('R/extract_from_db.r')
 
 count_motifs_by_post <- function(threads, database='reddit'){
@@ -19,6 +20,7 @@ count_motifs_by_post <- function(threads, database='reddit'){
   plotted.trees <- 1
   
   nthreads <- length(threads)
+  posts.motifs <- data.frame()
   for(i in 1:nthreads){
     cat('\n', i, '/', nthreads)
     
@@ -88,13 +90,17 @@ count_motifs_by_post <- function(threads, database='reddit'){
         motifs[[motif.id]] <- eg
       }
 
-      posts.id <- c(posts.id, post.id)
-      posts.motifs.id <- c(posts.motifs.id, motif.id)
+      #posts.id <- c(posts.id, post.id)
+      #posts.motifs.id <- c(posts.motifs.id, motif.id)
+      
+      posts.motifs <- rbindlist(list(posts.motifs, 
+                                     data.frame(postid=post.id,motif=motif.id)))
     } # end egos
   } # end threads
   
-  posts.motifs <- data.frame(postid=posts.id, motif=posts.motifs.id)
-  
+  #posts.motifs <- data.frame(postid=posts.id, motif=posts.motifs.id)
+  posts.motifs <- data.frame(posts.motifs)
+  names(posts.motifs) <- c('postid', 'motif')
   
   # Sort by frequency (and relabel: 1 for the most frequent and so forth)
   idx <- order(table(posts.motifs$motif), decreasing = TRUE)
