@@ -35,15 +35,35 @@ MIN_POSTS <- 100 # number of post to consider a user as active
 #df.posts <- load_posts(database='reddit', forum='podemos')
 #save(df.posts,file="dfposts.Rda")
 load('dfposts.Rda')
-df.posts <- data.frame(df.posts)
-
+df.posts <- data.frame(df.posts) %>% arrange(date)
+df.posts <- df.posts[1:100000,]
 df.threads <- plyr::count(df.posts, "thread")
 df.users <- plyr::count(df.posts, 'user')                                                                                                                                   
 names(df.threads)[2] <- "length"
 names(df.users)[2] <- "posts"
 
+
+# Plot general overview of forum
+n <- hist(df.threads$length, breaks=0:max(df.threads$length))$counts
+plot(1:max(df.threads$length), n, log='xy', 
+     ylab='Number of threads', xlab='Length')
+title(main='Threads length')
+
+plot(cumsum(table(df.threads$length)), pch=19, cex=0.5,
+     ylab='Length (cum)', xlab='Thread')
+title('Threads length (cumulative)')
+
+n <- hist(df.users$posts, breaks=0:max(df.users$posts))$counts
+plot(1:max(df.users$posts), n, log='xy', 
+     ylab='Number of users', xlab='Posts')
+title(main='Users posts')
+
+plot(cumsum(table(df.users$posts)), pch=19, cex=0.5,
+     ylab='Posts (cum)', xlab='User')
+title('Users posts (cumulative)')
+
 # Compute neighborhood around every post
-chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/3000))
+chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/1000))
 length(chunks)
 ##############################"
 # sequential
@@ -63,7 +83,7 @@ res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
 }
 stopCluster(cl)
 res <- merge.motif.counts(res.parallel)
-save(res,file="res.Rda")
+save(res,file="res_4_4_dyn.Rda")
 
 plot.motif.counts(res)
 dev.copy(png, paste0('2016-01-15-motifs_4_4.png'))
@@ -82,7 +102,9 @@ motifs <- res$motifs
 #motifs <- motifs[idx]
 
 # Add motif info to posts dataframe
-df.posts <- merge(df.posts, df.post.motif, all.x=TRUE, sort=FALSE)
+#df.posts <- merge(df.posts, df.post.motif, all.x=TRUE, sort=FALSE)
+df.posts <- merge(df.posts, df.post.motif, all.x=FALSE, sort=FALSE)
+
 
 # Check that df.posts gets the motifs relabeled
 #head(arrange(df.post.motif, postid),10)
@@ -93,7 +115,7 @@ df.posts <- merge(df.posts, df.post.motif, all.x=TRUE, sort=FALSE)
 # Count motifs in which each user appears
 ######################################################
 user.motifs <- acast(df.posts, user~motif)
-user.motifs <- user.motifs[rownames(user.motifs) != 'root',] 
+#user.motifs <- user.motifs[rownames(user.motifs) != 'root',] 
 
 # Set up a user-features matrix (features are z-scores w.r.t a motif)
 ######################################################################
