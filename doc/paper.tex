@@ -125,8 +125,6 @@ Our goal is to characterize conversations by their local structure. By local str
 
 In this section, we discuss about the convenience of the classic neighbourhood definition in dynamic graphs such as discussion trees. Then we introduce a new definition to overcome some of the limitations of the classic one when dealing with temporal trees.
 
-\subsection{Structural neighborhoods in discussion trees}
-
 \begin{definition}
 Given a tree graph $G$, the \textit{structural neighbourhood} of radius $r$ of post $i$, denoted as $\mathcal{N}_i(r)$, is the induced graph composed of all the vertices that are at distance equal or less than $d$ from post $i$.
 \end{definition}
@@ -149,27 +147,31 @@ Second, a structural neighbourhood at a given radius $r$ has an unbounded number
 \end{figure}
 
 
-\subsection{Structuro-temporal neighborhoods in discussion trees}
+\section{Structuro-temporal neighborhoods in discussion trees}
+\subsection{Order-based}
 \begin{definition}
 Given a tree graph $G$, the \textit{structural-temporal neighborhood} of distance $d$ of post $i$, denoted as $\mathcal{N}_{i}^T(r,n)$ is the induced subgraph from its structural neighborhood composed the $n$ vertices that are closer to $i$ in time and for which there exists a path to $i$ in $\mathcal{N}_{i}^T(r,n)$.  
 \end{definition}
 
 The above definition has two advantages over the previous one. First, dynamics are better taken into account since the neighbourhood only includes posts that are structurally and temporally close. Second, the size of the neighborhood has an upper bound of $max(\mathcal{N}_i(r)), o)$.
 
+\subsection{Time-based}
 Note that this definition does not consider the timestamp of posts but only the order in which they arrived. An alternative definition of structural-temporal neighborhood might include not the $o$  posts that are closest to the ego post, but every post $j$ at distance $|t_i-t_j|<\tau$ from the ego post $i$. However, both options consider that the local dynamic ends at a fixed horizon ($o$ or $\tau$). This is specially problematic for the case of $\tau$ since different conversation threads may grow at different speeds, as well as different parts of the same thread or even the same part of the thread at different moments (e.g. threads barely grow at night). If we were to use $\tau$ as temporal horizon, we need a mechanism to automatically decide the proper $\tau$ for every post. 
 
 \begin{definition}
-Let $s={p^{(1)},...p^{(m)}}$ be the sequence of posts in the structural neighbourhood $\mathcal{N}_i(r)$ ordered by their temporal distance to $i$. Let $\pi=\{\Delta t_1,...,\Delta t_M\}$ be the sequence of time differences between a post in $s$ and its predecessor in $s$. The \textit{temporal radius} $\tau$ of the neighbourhood is the timestamp of the last post $k$ whose $\Delta t_k$ comes from the same distribution than its predecessors $\Delta t_{k-1},..., \Delta t_{1}$ (an intuition for this definition is given in Figure~\ref{fig:cutpoints})
+Given the set of posts from the root to any leaf, a post $p_i$ is a \textit{vertical breakpoint} if the time between $p_i$ and its parent is at least twice the median of the time lapses in the chain  $\Delta$ is   $\Delta_i < 2 \Delta_{median}$
+\end{definition}
+
+\begin{definition}
+Given the set of posts from the root to any leaf, a post is a \textit{horizontal breakpoint} if its $\Delta$ is   $\frac{\Delta_i}{\Delta_{median}}>2$
+\end{definition}
+
+\begin{definition}
+Let $s={p^{(1)},...p^{(m)}}$ be the sequence of posts in the structural neighbourhood $\mathcal{N}_i(r)$ ordered by their temporal distance to $i$. The temporal neighborhood is the subgraph that belongs to the same dynamic than the ego post 
+(an intuition for this definition is given in Figure~\ref{fig:cutpoints})
 \end{definition}
  
-According to the above definition, to find the temporal radius we need to find the first outlier in a sequence of $\Delta t$. Assuming the $\Delta t_i$ comes from an Exponential distribution, and that its $\lambda$ parameter comes itself from a Gamma distribution, we can exploit this conjugacy and obtain the analytical form of the probability of a given $\Delta t_k$ of belonging to the same distribution than its predecessors:
-\begin{equation}
-p(\Delta t_k | \Delta t_1,...\Delta t_{k-1})
-=
-\int p(\Delta t_k | \lambda_{k-1})p(\lambda_{k-1} |\Delta t_1,...\Delta t_{k-1})
-=\frac{(\beta + n\overline{x})^{\alpha+n}}{(\beta + n\overline{x}+\Delta t_k)^{\alpha+n+1}}(\alpha+n)
-\end{equation}
-Details of this derivation are given in the Appendix.
+According to the above definition, to find the temporal radius we need to find the first outlier in a sequence of $\Delta t$. Assuming the $\Delta t_i$ comes from an Exponential distribution, and that its $\lambda$ parameter comes itself from a Gamma distribution, we can exploit this conjugacy and obtain the analytical form of the probability of a given $\Delta t_k$ of belonging to the same distribution than its predecessors.
 
 \begin{figure}
 \centering

@@ -1,12 +1,13 @@
 \BOOKMARK [1][]{section.1}{Introduction}{}% 1
 \BOOKMARK [1][]{section.2}{Discussion trees}{}% 2
 \BOOKMARK [1][]{section.3}{Neighborhoods in discussion trees}{}% 3
-\BOOKMARK [2][]{subsection.3.1}{Structural neighborhoods in discussion trees}{section.3}% 4
-\BOOKMARK [2][]{subsection.3.2}{Structuro-temporal neighborhoods in discussion trees}{section.3}% 5
-\BOOKMARK [2][]{subsection.3.3}{Colored neighborhoods}{section.3}% 6
-\BOOKMARK [1][]{section.4}{Application to Reddit forums}{}% 7
-\BOOKMARK [2][]{subsection.4.1}{Podemos forum}{section.4}% 8
-\BOOKMARK [2][]{subsection.4.2}{Counting neighorhoods}{section.4}% 9
-\BOOKMARK [2][]{subsection.4.3}{Clustering}{section.4}% 10
-\BOOKMARK [2][]{subsection.4.4}{Predictive roles}{section.4}% 11
-\BOOKMARK [1][]{section.5}{Conclusions}{}% 12
+\BOOKMARK [1][]{section.4}{Structuro-temporal neighborhoods in discussion trees}{}% 4
+\BOOKMARK [2][]{subsection.4.1}{Order-based}{section.4}% 5
+\BOOKMARK [2][]{subsection.4.2}{Time-based}{section.4}% 6
+\BOOKMARK [2][]{subsection.4.3}{Colored neighborhoods}{section.4}% 7
+\BOOKMARK [1][]{section.5}{Application to Reddit forums}{}% 8
+\BOOKMARK [2][]{subsection.5.1}{Podemos forum}{section.5}% 9
+\BOOKMARK [2][]{subsection.5.2}{Counting neighorhoods}{section.5}% 10
+\BOOKMARK [2][]{subsection.5.3}{Clustering}{section.5}% 11
+\BOOKMARK [2][]{subsection.5.4}{Predictive roles}{section.5}% 12
+\BOOKMARK [1][]{section.6}{Conclusions}{}% 13

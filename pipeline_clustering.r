@@ -37,6 +37,7 @@ MIN_POSTS <- 100 # number of post to consider a user as active
 load('dfposts.Rda') # 836119 posts, 47803 threads
 df.posts <- data.frame(df.posts) %>% arrange(date)
 df.posts <- df.posts[1:300000,]
+df.posts <- df.posts[1:100000,]
 df.threads <- plyr::count(df.posts, "thread")
 df.users <- plyr::count(df.posts, 'user')                                                                                                                                   
 names(df.threads)[2] <- "length"
@@ -45,7 +46,8 @@ names(df.users)[2] <- "posts"
 # Print dates range
 start.date <- as.POSIXct(min(as.numeric(df.posts$date)), origin = "1970-01-01") 
 end.date <- as.POSIXct(max(as.numeric(df.posts$date)), origin = "1970-01-01")
-
+print(paste("Start date:", start.date))
+print(paste("End date:", end.date))
 
 # Plot general overview of forum
 n <- hist(df.threads$length, breaks=0:max(df.threads$length))$counts
