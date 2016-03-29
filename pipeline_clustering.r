@@ -34,13 +34,17 @@ MIN_POSTS <- 100 # number of post to consider a user as active
 ###################################################
 #df.posts <- load_posts(database='reddit', forum='podemos')
 #save(df.posts,file="dfposts.Rda")
-load('dfposts.Rda')
+load('dfposts.Rda') # 836119 posts, 47803 threads
 df.posts <- data.frame(df.posts) %>% arrange(date)
-df.posts <- df.posts[1:100000,]
+df.posts <- df.posts[1:300000,]
 df.threads <- plyr::count(df.posts, "thread")
 df.users <- plyr::count(df.posts, 'user')                                                                                                                                   
 names(df.threads)[2] <- "length"
 names(df.users)[2] <- "posts"
+
+# Print dates range
+start.date <- as.POSIXct(min(as.numeric(df.posts$date)), origin = "1970-01-01") 
+end.date <- as.POSIXct(max(as.numeric(df.posts$date)), origin = "1970-01-01")
 
 
 # Plot general overview of forum
@@ -68,7 +72,14 @@ length(chunks)
 ##############################"
 # sequential
 #par(mfrow=c(1,1))
-#res.seq <- count_motifs_by_post(as.vector(unlist(chunks[1025])), database='reddit')
+res.seq <- count_motifs_by_post(as.vector(unlist(chunks[1])), 
+                                database='reddit',
+                                neighbourhood='order')
+threads <- chunks[[1]]
+res.seq.dyn <- count_motifs_by_post(threads[1:50], 
+                                    database='reddit',
+                                    neighbourhood='time')
+
 #res <- res.seq
 #plot.motif.counts(res.seq)
 
@@ -79,15 +90,21 @@ registerDoParallel(cl)
 pck <- c('RSQLite', 'data.table')
 res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
   source('R/extract_from_db.r')
-  count_motifs_by_post(chunks[[i]], database='reddit')
+  count_motifs_by_post(chunks[[i]], 
+                       database='reddit',
+                       neighbourhood='order')
 }
 stopCluster(cl)
 res <- merge.motif.counts(res.parallel)
-save(res,file="res_4_4_dyn.Rda")
+save(res,file="res_3_4_dyn.Rda")
 
+# Plot found motifs and their frequency
 plot.motif.counts(res)
-dev.copy(png, paste0('2016-01-15-motifs_4_4.png'))
+#dev.copy(png, paste0('2016-01-15-motifs_4_4_order.png'))
+dev.copy(png, paste0('2016-01-15-motifs_4_dyn.png'))
+
 dev.off()
+
 
 #########################################
 

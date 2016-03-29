@@ -1,6 +1,7 @@
 library(igraph)
 library(rgexf)
 library(dplyr)
+
 forest <- function(df.posts){
   df.edges <- select(df.posts, postid, parent, date)
   df.vertices <- select(df.posts, postid, user, date)

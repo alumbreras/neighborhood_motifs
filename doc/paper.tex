@@ -206,7 +206,7 @@ In this section we will build a matrix $M$ for one of the forums of Reddit and t
 
 If we set the a spatial radius $r=1$ and an order $n=4$, the temporal neighborhood $N_{G}^{(t)}(i, 1, 4)$ recovers the four adjacent posts that were written temporally closest to a given post. Figure~\ref{fig:neighborhoods_1_4} shows the four detected neighborhoods and their frequency.
 
-In order to detect more complex types of neighborhoods we enlarge the spatial radius to $r=4$. Figure~\ref{fig:neighborhoods_4_4} shows the eight detected neighbors and their frequency. It is interesting to see different structures like chains or stars where the root node migh or might no appear and the ego post is placed at different positions.
+In order to detect more complex types of neighborhoods we enlarge the spatial radius to $r=4$. Figure~\ref{fig:neighborhoods_4_4} shows the eight detected neighbors and their frequency. It is interesting to see different structures like chains or stars where the root node might or might no appear and the ego post is placed at different positions.
 
 \begin{figure}
 	\centering
@@ -250,6 +250,64 @@ We use a simple k-means to find the clusters. To decide the number of clusters, 
 One interesting use of roles is to make predictions on users behaviors. Here, we will analyze whether the initial composition of roles in a thread is a good predictor of the final length of the thread.
 
 \section{Conclusions}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% APPENDIX
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+\noindent \textbf{\Large Appendix}
+\vspace{-0.1cm}
+
+\begin{align}
+p(\Delta t_k | \Delta t_1,...\Delta t_{k-1})
+&=
+\int p(\Delta t_k | \lambda_{k-1})
+p(\lambda_{k-1} |\Delta t_1,...\Delta t_{k-1})\\
+&=\frac{(\beta + n\overline{x})^{\alpha+n}}{(\beta + n\overline{x}+\Delta t_k)^{\alpha+n+1}}(\alpha+n)
+\end{align}
+First we work on the posterior distribution over $\lambda_{k-1}$:
+\begin{align}
+p(\lambda_{k-1} |\Delta t_1,...\Delta t_{k-1})
+&\propto
+p(\Delta t_1,...\Delta t_{k-1} | \lambda_{k-1} |)p(\lambda_{k-1})\\
+&\propto 
+\prod \lambda e^{-\lambda x}  \lambda^{\alpha-1}e^{-\beta \lambda}\\
+&\propto
+\lambda^{\alpha+k-1}
+e^{-(\beta+k\overline{x})\lambda}\\
+&\propto\mathcal{G}(\alpha+k, \beta + n\overline{x})
+\end{align}
+
+And then the predictive posterior is:
+\begin{align}
+p(\Delta t_k | \Delta t_1,...\Delta t_{k-1})&=
+\int
+p(\Delta t_k | \lambda_{k-1})
+\mathcal{G}(\lambda_{k-1} | \alpha+k, \beta + n\overline{x})\\
+&=
+\frac{(\beta+n\overline{x})^{\alpha+k}}{\Gamma(\alpha+k)}
+\int
+\lambda e^{-\lambda \Delta_k}
+\lambda^{\alpha+k-1}
+e^{-(\beta+n\overline{x})\lambda}
+\text{d}\lambda\\
+&=
+\frac{(\beta+n\overline{x})^{\alpha+k}}{\Gamma(\alpha+k)}
+\int
+\lambda^{(\alpha+k+1)-1}
+e^{-(\beta+n\overline{x}+\Delta_k)\lambda}
+\text{d}\lambda\\
+&=
+\frac{(\beta+n\overline{x})^{\alpha+k}}{\Gamma(\alpha+k)}
+\frac{\Gamma(\alpha+k+1)}{(\beta+n\overline{x}+\Delta_k)^{\alpha+k+1}}\\
+&=
+\frac
+{(\beta+n\overline{x})^{\alpha+k}}{(\beta+n\overline{x}+\Delta_k)^{\alpha+k+1}}
+(\alpha+k)
+\end{align}
+
+
 \bibliographystyle{spbasic} 
 %\bibliographystyle{chicago} 
 %\bibliographystyle{plainnat} 

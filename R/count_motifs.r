@@ -1,8 +1,12 @@
 library(RSQLite)
 library(data.table)
 source('R/extract_from_db.r')
-
-count_motifs_by_post <- function(threads, database='reddit'){
+source('R/tree_changepoints.r')
+count_motifs_by_post <- function(threads, 
+                                 database='reddit', 
+                                 neighbourhood=c('order', 'time'),
+                                 rad=3,
+                                 max.neighbors=4){
 
   con <- dbConnect(dbDriver("SQLite"), dbname = paste0("./data/", database, ".db"))
   
@@ -10,10 +14,6 @@ count_motifs_by_post <- function(threads, database='reddit'){
   # if neighborhood at distance 1 and binary tree, max nodes is 4
   # if neighborhood at distance 1 and binary tree, max nodes is 10
   # 4   10   22   30   46   62   93  123...
-  
-  # the maximum egonet will be a binary tree
-  rad <- 4
-  max.neighbors <- 4
   motifs <- list()
   posts.id <- vector()
   posts.motifs.id <- vector()
@@ -22,53 +22,43 @@ count_motifs_by_post <- function(threads, database='reddit'){
   nthreads <- length(threads)
   posts.motifs <- data.frame()
   for(i in 1:nthreads){
-    cat('\n', i, '/', nthreads)
+    cat('\n', i, '/', nthreads, '/', threads[i])
     
     #Extract the egos of every post
     g <- database.to.graph(threads[i], con, database)
     gp <- g$gp
+    
+    # cast dates to numeric
+    dates <- as.numeric(V(gp)$date)
+    gp <- remove.vertex.attribute(gp, "date")
+    V(gp)$date <- dates
+
     root.post <- V(gp)[which(degree(gp, mode='out')==0)]$name
-    egos <- make_ego_graph(gp, rad, nodes=V(gp))
     
-    if (TRUE){
-      V(gp)$color <- "black"
-      #if(vcount(gp)>10 && vcount(gp)<30){
-      if(TRUE){
-        par(mfrow=c(1,1))
-        la <- layout_with_fr(gp)
-        plot(as.undirected(gp),
-             layout = la, 
-             vertex.label = "",
-             vertex.size = 1.5 + 1.5 * log( graph.strength(gp), 3 ), 
-             edge.width = 1.5)  
-        dev.copy(png, paste0('2015-01-15-tree', plotted.trees, '.png'))
-        dev.off()
-        plotted.trees <- plotted.trees +1
-      }
-    }  
+    if(neighbourhood=='time'){
+      breakpoints <- changepoints(gp, vertical=T, horizontal=T)
+      breakpoints.h <- breakpoints$breakpoints.h
+      breakpoints.v <- breakpoints$breakpoints.v
+    }
     
-    for(j in 1:length(egos)){
-      # Reduce the ego to a maximum of N neighbors (the N closest in time)
-      # and where the neighborhood is fully connected.
-      # Set a different color (only) to the ego post
+    for(j in 1:vcount(gp)){
       user.name <- V(gp)[j]$user
       post.id <- V(gp)[j]$name
-      eg <- egos[[j]]
-      neighbors <- order((abs(as.numeric(V(eg)$date)-as.numeric(V(gp)[j]$date))))
-      reduced.neighbors <- neighbors[1:min(length(neighbors), max.neighbors)]
-      eg <- induced.subgraph(eg, reduced.neighbors)
-      u <- V(eg)[V(eg)$name==post.id]
-      mypalette <- c("black", "red", "white")
-      V(eg)$color <- 1 
-      V(eg)[u]$color <- 2 
-      #V(eg)[V(eg)$user==user.name]$color <- 2 # any post from the user
-      #V(eg)[V(eg)$user=="root"]$color <- 3
-      V(eg)[V(eg)$name==root.post]$color <- 3
-      
-      # Drop nodes that are not connected to the post
-      eg <- delete_vertices(eg, which(distances(eg, u)==Inf))
+      # Detect the neighborhood with the prefered method
+      if(neighbourhood=='order'){
+        eg <- neighborhood.temporal.order(gp, j, rad, max.neighbors)
+      }
+      if(neighbourhood=='time'){
+        eg <- neighborhood.temporal(gp, j, 2, breakpoints.v, breakpoints.h)
+      }
 
       # See if it matches any seen motif
+      mypalette <- c("black", "red", "white")
+      u <- V(eg)[V(eg)$name==post.id] # identify the ego vertex
+      V(eg)$color <- 1 
+      V(eg)[u]$color <- 2 
+      V(eg)[V(eg)$name==root.post]$color <- 3
+      
       is.new <- TRUE
       if(length(motifs)>0){
         for(motif.id in 1:length(motifs)){   
@@ -89,16 +79,12 @@ count_motifs_by_post <- function(threads, database='reddit'){
         motif.id <- length(motifs)+1
         motifs[[motif.id]] <- eg
       }
-
-      #posts.id <- c(posts.id, post.id)
-      #posts.motifs.id <- c(posts.motifs.id, motif.id)
       
       posts.motifs <- rbindlist(list(posts.motifs, 
                                      data.frame(postid=post.id,motif=motif.id)))
     } # end egos
   } # end threads
   
-  #posts.motifs <- data.frame(postid=posts.id, motif=posts.motifs.id)
   posts.motifs <- data.frame(posts.motifs)
   names(posts.motifs) <- c('postid', 'motif')
   
