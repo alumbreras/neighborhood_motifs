@@ -14,9 +14,9 @@
 
 \RequirePackage{fix-cm}
 %\documentclass[twocolumn]{svjour3}          % twocolumn
-\documentclass[smallextended]{svjour3}          % twocolumn
-
-\smartqed  % flush right qed marks, e.g. at end of proof
+%\documentclass[smallextended]{svjour3}          % twocolumn
+\documentclass[9pt,technote]{IEEEtran}
+%\smartqed  % flush right qed marks, e.g. at end of proof
 
 \usepackage{graphicx} % adjustbox loads it
 \usepackage{epstopdf} % loads eps
@@ -29,6 +29,7 @@
 %\usepackage{subcaption}
 \usepackage{subfig}
 \usepackage[utf8]{inputenc}
+\usepackage[]{algorithm2e}
 \usepackage{amssymb}
 \usepackage{amsmath} 
 
@@ -52,7 +53,7 @@
 
 \graphicspath{ {./img/} }
 \DeclareMathOperator*{\argmax}{arg\,max}
-\journalname{}
+%\journalname{}
 
 \begin{document}
 \title{You are the way you structurally talk: Structural-temporal neighborhoods of posts to characterize users in online forums}
@@ -99,16 +100,10 @@ Roles can also be studied from the macro or the micro perspective. If studied fr
 In this paper, we focus on the analyse of roles at a micro level, and more specifically at the discussion level. We would like to answer the following question: are there different types of users in terms of the kind of conversation they participate in?
 
 
-Our intuition is that some users like participating in some kind of discussion rather than other. Certainly, an analysis of the textual content will tell us much about a discussion. However, due to the huge diversity of topics, vocabulary, and the difficulty of current algorithms to capture the language subtleties such as humor, irony, or changing contexts, we turn our attention towards the structure of the discussions. More precisely, we analyze the local graph structure in which a user post in embedded, in the hope that this structure will be meaningful since it also reflects the kind of conversation in that part of the thread.
-
-Formally, these local graphs are known as neighborhoods.
+Our intuition is that some users like participating in some kind of discussion rather than other. Certainly, an analysis of the textual content will tell us much about a discussion. However, due to the huge diversity of topics, vocabulary, and the difficulty of current algorithms to capture the language subtleties such as humor, irony, or changing contexts, we turn our attention towards the structure of the discussions. More precisely, we analyze the local graph structure in which a user post in embedded, in the hope that this structure will be meaningful since it also reflects the kind of conversation in that part of the thread. Formally, these local graphs are known as neighborhoods.
 
 
-The remaining of the paper is as follows. First we will introduce our representation of online discussions. Then we will explain our concept of structural neighbourhood. Then we will apply this to the clustering of users and we will analyze the clusters. Finally, we will attemp to study whether these roles have predictive power.
-
-
-\section{Discussion trees}
-A natural way to represent a conversation thread is a tree graph where vertex represent posts and edges represent replies from some post to another. The tree is rooted at the post who started the thread. This representation allows to apply the mathematical toolbox of graph theory. Figure~\ref{fig:trees} shows some real examples of trees in a Reddit\footnote{www.reddit.com} forum.
+The remaining of the paper is as follows. We first discuss about the convenience of the classic neighbourhood definition in dynamic graphs such as discussion trees. Then we introduce two new definitions that takes into account the time to overcome some of the limitations of the structural neighbourhood. We will finally apply these time-based neighbourhoods to detect clusters of users than tend to appear in the same time-based neighbourhoods.
 
 \begin{figure}
 	\centering
@@ -119,24 +114,25 @@ A natural way to represent a conversation thread is a tree graph where vertex re
 	\label{fig:trees}
 \end{figure}
 
-\section{Neighborhoods in discussion trees}
+\section{Discussion trees}
+We represent a conversation thread as a tree graph where vertex represent posts and edges represent replies from some post to another. The tree is rooted at the post who started the thread. Figure~\ref{fig:trees} shows some real examples of trees in a Reddit\footnote{www.reddit.com} forum. 
 
-Our goal is to characterize conversations by their local structure. By local structure we mean the structure of the graph that surrounds a given post, which we call \textit{neighbourhood}. Given a set of posts written by a user, analysing the neighbourhoods where user posts are embedded will give us an insight of what kind of user she is. It is important to note that, if the space of possible neighbourhoods is too small, we might not be able to say anything interesting, while if it is too large we might have neighbourhoods that correspond to the same type of conversation.
+The \textit{root} post of the tree is the post that starts the discussion. It is the only post that has no parent. A \textit{leaf} is a post with no replies.
+A \textit{branch} of the tree is the shortest path between the root and some of the leafs. Two branches may share their first posts.
 
-In this section, we discuss about the convenience of the classic neighbourhood definition in dynamic graphs such as discussion trees. Then we introduce a new definition to overcome some of the limitations of the classic one when dealing with temporal trees.
+\section{Structural neighborhoods in discussion trees}
+Extending the classic definition of neighbourhood according to which two vertex are neighbours if the distance between them is one, in this paper we define the \textit{structural neighbourhood} as follows:
 
 \begin{definition}
 Given a tree graph $G$, the \textit{structural neighbourhood} of radius $r$ of post $i$, denoted as $\mathcal{N}_i(r)$, is the induced graph composed of all the vertices that are at distance equal or less than $d$ from post $i$.
 \end{definition}
-%The above definition is an extension of the classic definition of \textit{neighbourhood} which only considers adjacent vertices.
-
 % pros and cons
-The above definition has two drawbacks when used in the context of conversation trees.
+This definition has two drawbacks when used in the context of conversation trees.
 %%% not all dynamics are captured
-First, the dynamics of the conversation (time or order in which posts are attached to the tree) are not entirely captured in the structure of a tree representation. We know, for instance, that the time in which a node was attached to the tree is always posterior to that of its parent. But it impossible to say, by just looking at the structure of the tree, the order in which a set of sibling posts replied to their common parent post. Since these siblings may get more replies themselves, a single \textit{structural neighbourhood} may sometimes correspond to very different dynamics (see Figure).
+First, the dynamics of the conversation (time or order in which posts are attached to the tree) are not entirely captured in the structure of a tree representation. We know, for instance, that the time in which a node was attached to the tree is always posterior to that of its parent. But it impossible to say, by just looking at the structure of the tree, the order in which a set of sibling posts replied to their common parent post. Thus, a single \textit{structural neighbourhood} may sometimes correspond to very different dynamics.
 %TODO: ejemplo artificial para demostrar que la definicion de vecindario estructural puede corresponder a dinamicas muy diferentes.
 %% unbounded size
-Second, a structural neighbourhood at a given radius $r$ has an unbounded number of posts, and therefore the space of possible neighbourhoods is infinite. This poses a problem when trying to categorize conversations since many conversations, while structurally different, can be considered semantically equivalent (see Figure)
+Second, a structural neighbourhood at a given radius $r$ has an unbounded number of posts, and therefore the space of possible neighbourhoods is infinite. This poses a problem when trying to categorize conversations since many conversations, while structurally different, can be considered semantically equivalent (see Figure \ref{fig:large_neighbourhood}).
 
 \begin{figure}
 	\centering
@@ -148,35 +144,54 @@ Second, a structural neighbourhood at a given radius $r$ has an unbounded number
 
 
 \section{Structuro-temporal neighborhoods in discussion trees}
+In this section, we propose two new time-based definition of neighbourhoods.
+
 \subsection{Order-based}
+Our first definition is based on the order in which posts are attached to the tree. 
 \begin{definition}
 Given a tree graph $G$, the \textit{structural-temporal neighborhood} of distance $d$ of post $i$, denoted as $\mathcal{N}_{i}^T(r,n)$ is the induced subgraph from its structural neighborhood composed the $n$ vertices that are closer to $i$ in time and for which there exists a path to $i$ in $\mathcal{N}_{i}^T(r,n)$.  
 \end{definition}
 
-The above definition has two advantages over the previous one. First, dynamics are better taken into account since the neighbourhood only includes posts that are structurally and temporally close. Second, the size of the neighborhood has an upper bound of $max(\mathcal{N}_i(r)), o)$.
+This definition has two advantages over the \textit{structural neighbourhood}. First, the temporal aspect of the conversation is better taken into account since the neighbourhood only includes posts that are structurally and temporally close. Second, the size of the neighbourhood has an upper bound of $max(\mathcal{N}_i(r)), o)$.
 
 \subsection{Time-based}
-Note that this definition does not consider the timestamp of posts but only the order in which they arrived. An alternative definition of structural-temporal neighborhood might include not the $o$  posts that are closest to the ego post, but every post $j$ at distance $|t_i-t_j|<\tau$ from the ego post $i$. However, both options consider that the local dynamic ends at a fixed horizon ($o$ or $\tau$). This is specially problematic for the case of $\tau$ since different conversation threads may grow at different speeds, as well as different parts of the same thread or even the same part of the thread at different moments (e.g. threads barely grow at night). If we were to use $\tau$ as temporal horizon, we need a mechanism to automatically decide the proper $\tau$ for every post. 
+Our second definition uses the real timestamps of posts in order to decide where the boundaries of a neighbourhood are. We might naively set fixed time-based boundaries for the neighbourhood by only including in the neighbourhood those posts whose timestamp $p_i$ is at distance less than $\tau$ from the ego post $|t_i-t_{ego}|<\tau$. However, the pace at which posts are added to the conversation may be very different between conversations, and even between different parts of the same conversation tree. Instead, we propose a definition based on the concept of $\textit{local dynamic}$. 
 
 \begin{definition}
-Given the set of posts from the root to any leaf, a post $p_i$ is a \textit{vertical breakpoint} if the time between $p_i$ and its parent is at least twice the median of the time lapses in the chain  $\Delta$ is   $\Delta_i < 2 \Delta_{median}$
+The temporal neighbourhood $\mathcal{N}_{i}^T(r)$ is the maximal subgraph of the structural neighbourhood $\mathcal{N}_i(r)$ where all the posts belong to the same local dynamic than the ego post.
 \end{definition}
+Our definition of \textit{local dynamic} is based on the detection of changepoints in the time stamps of the posts. Given a sequence of consecutive posts in the same branch $b$ of a tree, denoted as $p_s,...,p_e$ we say that they belong to the same vertical dynamic if there is no (vertical) changepoint $p_i$ in $b$ such that $p_1 \prec p_i \preceq p_n$. Similarly, given a sequence of consecutive siblings $s$, denoted as $p_s,...,p_e$, we say that they belong to the same horizontal dynamic if there is no (horizontal) changepoint $p_i$ in $s$ such that $p_1 \prec p_i \preceq p_n$. Now we can outline the complete algorithm for time-based neighborhood (Algorithm \ref{alg:temporal_neighbourhood}). Figure \ref{fig:cutpoints} illustrate a tree with a set of breakpoints and the temporal neighbourhood for a given node.
 
-\begin{definition}
-Given the set of posts from the root to any leaf, a post is a \textit{horizontal breakpoint} if its $\Delta$ is   $\frac{\Delta_i}{\Delta_{median}}>2$
-\end{definition}
-
-\begin{definition}
-Let $s={p^{(1)},...p^{(m)}}$ be the sequence of posts in the structural neighbourhood $\mathcal{N}_i(r)$ ordered by their temporal distance to $i$. The temporal neighborhood is the subgraph that belongs to the same dynamic than the ego post 
-(an intuition for this definition is given in Figure~\ref{fig:cutpoints})
-\end{definition}
+\begin{algorithm}[H]
+ \KwData{Posts tree $g$, vertical breakpoints, horizontal breakpoints, ego post $ego$}
+ \KwResult{Subgraph of $g$ with all vertices in $V(g)$}
+ Compute structural neighbourhood $\mathcal{N}_i(r)$\;
+ ancestors $\leftarrow$  ancestors(ego) in $\mathcal{N}_i(r)$\;
+ older\_siblings $\leftarrow$ older\_siblings(ego) in $\mathcal{N}_i(r)$\;
+ posts $\leftarrow \varnothing$\;
+ \For{bp $\in$ vertical breakpoints}{
+  \eIf{bp $\in$ ancestors}{
+   posts $\leftarrow$ posts $\cup$ ancestors(bp)\;
+   }{
+   posts $\leftarrow$ posts $\cup$ descendants(bp) $\cup$ bp\;
+  }
+ }
+  \For{bp $\in$ horizontal breakpoints}{
+  \eIf{bp $\in$ (older\_siblings $\cup$ ascendants)}{
+	posts $\leftarrow$ posts $\cup$ older\_siblings(bp)\;
+   }{
+	posts $\leftarrow$ posts $\cup$ younger\_siblings(bp) $\cup$ bp\;
+  }
+ }
+ $\mathcal{N}_i^{(t)}(r) \leftarrow$ delete(posts) from $\mathcal{N}_i(r)$\;
+ \caption{Extraction of time-based neighbourhood}
+ \label{alg:temporal_neighbourhood}
+\end{algorithm}
  
-According to the above definition, to find the temporal radius we need to find the first outlier in a sequence of $\Delta t$. Assuming the $\Delta t_i$ comes from an Exponential distribution, and that its $\lambda$ parameter comes itself from a Gamma distribution, we can exploit this conjugacy and obtain the analytical form of the probability of a given $\Delta t_k$ of belonging to the same distribution than its predecessors.
-
 \begin{figure}
 \centering
-\includegraphics[width=1\textwidth]{temporal_cutpoint}
-\caption{Intuition to choice the temporal cutpoint of a neighbourhood. The two posts out of the box have a distance (time) to their parents clearly bigger than the average, so we consider that they are not part of the same local dynamic.}
+\includegraphics[width=1\textwidth]{breakpoints}
+\caption{Time-based neighbourhood. Horizontal changepoints (yellow) and vertical changepoints (orange) represent posts that are temporally far from their predecessors (siblings or parents) and therefore set the limits of the neighbourhood. Post 6 is the ego, and posts with circular borders are those belonging to the time-based neighborhood.}
 \label{fig:cutpoints}
 \end{figure}
 
@@ -202,7 +217,6 @@ The forum contains 83,6119 posts spread over 47,803 threads and written by 26,19
 \end{figure}
 
     \noindent\textcolor{red}{\rule{16cm}{1mm}}
-(Il fait que j'implemente l'équation 1 pour chercher les neighborhoods. Puis il faut voir si elle sert tout à fait à bien detecter la baisse du rythme)
 \subsection{Counting neighorhoods}
 In this section we will build a matrix $M$ for one of the forums of Reddit and then we will cluster users to find groups that have similar preferences over the different types of conversations represented by the neighbourhood structures. 
 
@@ -219,12 +233,15 @@ In order to detect more complex types of neighborhoods we enlarge the spatial ra
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.8\textwidth]{neighborhoods_4_4}
-	\caption{Most frequent neighborhoods with $r=4$ and $n=4$}
+	\includegraphics[width=0.8\textwidth]{neighbourhoods_3_4_1}
+	\includegraphics[width=0.8\textwidth]{neighbourhoods_3_4_2}
+	\includegraphics[width=0.8\textwidth]{neighbourhoods_3_4_3}
+	\caption{Order-based neighborhoods with $r=3$ and $n=4$}
 	\label{fig:neighborhoods_4_4}
 \end{figure}
 
-Note that some neighbors are still very similar. For instance, \textit{common answer 3} is very close to \textit{common answer 2} in the sense that they both represent the ego post replying to a root post that has one and two replies respectively. It seems a good idea to merge them both since they seem to represent the same type of discussion.
+
+Note that some neighbours are still very similar. For instance, \textit{common answer 3} is very close to \textit{common answer 2} in the sense that they both represent the ego post replying to a root post that has one and two replies respectively. It seems a good idea to merge them both since they seem to represent the same type of discussion.
 
 \subsection{Clustering}
 
@@ -233,23 +250,17 @@ Given the neighborhoods in which each user participates, we will analyze whether
 We want to make the analyze independent of the number of posts, and for that we normalize each user feature vector so that features indicate the percentage of posts in this kind of neighborhood. Moreover, some neighborhoods are much more common than others due to the nature of the forums. Thus, we normalize and scale the features so that every feature has a global mean 0 and variance 1. User features now represent z-scores, that is, how many standard deviations is this user feature away from the mean.
 
 We use a simple k-means to find the clusters. To decide the number of clusters, we run k-means for k=2,...,25 clusters and look at the Within-Cluster Sum of Squares (Figure~\ref{fig:elbow}) and we chose $k=5$ so that the results are more interpretable.  Figure~\ref{fig:PCA} shows a PCA projection of the users colored by cluster and the distribution of the clusters in every dimension.
-\begin{figure}
-	\centering
-	\includegraphics[width=0.5\textwidth]{elbow}
-	\caption{Within-Sum of Squares under k-means}
-	\label{fig:elbow}
-\end{figure}
+
+
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.5\textwidth]{PCA_nocolor}
-	\includegraphics[width=0.5\textwidth]{whiskers}
+	\includegraphics[width=1\textwidth]{PCA_clustering_3_4_order}
+	\includegraphics[width=1\textwidth]{clustering_3_4_order}
 	\caption{PCA projection of the clusters found and cluster profile in every dimension.}
 	\label{fig:PCA}
 \end{figure}
 
-\subsection{Predictive roles}
-One interesting use of roles is to make predictions on users behaviors. Here, we will analyze whether the initial composition of roles in a thread is a good predictor of the final length of the thread.
 
 \section{Conclusions}
 

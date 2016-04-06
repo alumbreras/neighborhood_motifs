@@ -38,6 +38,11 @@ load('dfposts.Rda') # 836119 posts, 47803 threads
 df.posts <- data.frame(df.posts) %>% arrange(date)
 df.posts <- df.posts[1:300000,]
 df.posts <- df.posts[1:100000,]
+#df.posts <- df.posts[30000:60000,] # test debug
+#df.posts <- df.posts[50000:60000,] # test debug
+df.posts <- df.posts[60000:100000,] # test debug
+
+
 df.threads <- plyr::count(df.posts, "thread")
 df.users <- plyr::count(df.posts, 'user')                                                                                                                                   
 names(df.threads)[2] <- "length"
@@ -69,7 +74,7 @@ plot(cumsum(table(df.users$posts)), pch=19, cex=0.5,
 title('Users posts (cumulative)')
 
 # Compute neighborhood around every post
-chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/1000))
+chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/175))
 length(chunks)
 ##############################"
 # sequential
@@ -78,10 +83,10 @@ res.seq <- count_motifs_by_post(as.vector(unlist(chunks[1])),
                                 database='reddit',
                                 neighbourhood='order')
 threads <- chunks[[1]]
-res.seq.dyn <- count_motifs_by_post(threads[1:50], 
+res.seq.dyn <- count_motifs_by_post(as.vector(unlist(chunks[1])), 
                                     database='reddit',
                                     neighbourhood='time')
-
+res <- res.seq.dyn
 #res <- res.seq
 #plot.motif.counts(res.seq)
 
@@ -89,28 +94,34 @@ res.seq.dyn <- count_motifs_by_post(threads[1:50],
 ncores <- detectCores() - 2
 cl<-makeCluster(ncores, outfile="", port=11439)
 registerDoParallel(cl)
-pck <- c('RSQLite', 'data.table')
+pck <- c('RSQLite', 'data.table', 'changepoint')
 res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
   source('R/extract_from_db.r')
+  #withTimeout(  count_motifs_by_post(chunks[[i]], 
+  #                                   database='reddit',
+  #                                   neighbourhood='time'),
+  #                                  120, onTimeout='warning')
   count_motifs_by_post(chunks[[i]], 
                        database='reddit',
-                       neighbourhood='order')
+                       neighbourhood='time')
 }
 stopCluster(cl)
+res.parallel2 <- res.parallel
+res.parallel3 <- res.parallel
+res.parallel4 <- res.parallel
 res <- merge.motif.counts(res.parallel)
-save(res,file="res_3_4_dyn.Rda")
+#save(res,file="res_3_4_order.Rda")
+save(res,file="res_time.Rda")
+#load('res_3_4_order.Rda') 
 
 # Plot found motifs and their frequency
 plot.motif.counts(res)
 #dev.copy(png, paste0('2016-01-15-motifs_4_4_order.png'))
-dev.copy(png, paste0('2016-01-15-motifs_4_dyn.png'))
-
+dev.copy(png, 'neighbourhoods_time.png')
 dev.off()
 
 
 #########################################
-
-
 
 df.post.motif  <- res$posts.motifs
 motifs <- res$motifs

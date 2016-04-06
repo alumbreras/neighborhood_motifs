@@ -1,10 +1,10 @@
-cluster <- function(df.user_features){
-    wss <- (nrow(df.user_features)-1)*sum(apply(df.user_features,2,var))
+cluster <- function(features){
+    wss <- (nrow(features)-1)*sum(apply(features,2,var))
     for (i in 2:25){
-      wss[i] <- sum(kmeans(df.user_features, i)$withinss)
+      wss[i] <- sum(kmeans(features, i)$withinss)
     }
     plot(1:25, wss, type="b", xlab="Number of Clusters", ylab="Within groups sum of squares")
-    fit <- kmeans(df.user_features, 5)
+    fit <- kmeans(features, 3)
     z <- fit$cluster
     
     # relabel cluster by size (to keep color consistency between executions)

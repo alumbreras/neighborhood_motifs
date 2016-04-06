@@ -22,11 +22,16 @@ count_motifs_by_post <- function(threads,
   nthreads <- length(threads)
   posts.motifs <- data.frame()
   for(i in 1:nthreads){
-    cat('\n', i, '/', nthreads, '/', threads[i])
-    
     #Extract the egos of every post
     g <- database.to.graph(threads[i], con, database)
     gp <- g$gp
+    
+    size <- vcount(gp)
+    cat('\n', i, '/', nthreads, '/', threads[i], ' size: ', size)
+    if(size>100){
+      cat("\n WARNING: skipping thread of size ", size)
+      next 
+    }
     
     # cast dates to numeric
     dates <- as.numeric(V(gp)$date)
@@ -36,9 +41,17 @@ count_motifs_by_post <- function(threads,
     root.post <- V(gp)[which(degree(gp, mode='out')==0)]$name
     
     if(neighbourhood=='time'){
-      breakpoints <- changepoints(gp, vertical=T, horizontal=T)
+      breakpoints <- changepoints.cp(gp, vertical=T, horizontal=T)
       breakpoints.h <- breakpoints$breakpoints.h
       breakpoints.v <- breakpoints$breakpoints.v
+      breakpoints.vh <- breakpoints$breakpoints.vh
+      
+      V(gp)$bp.v <- FALSE
+      V(gp)$bp.h <- FALSE
+      V(gp)$bp.vh <- FALSE
+      V(gp)[breakpoints.v]$bp.v <- TRUE
+      V(gp)[breakpoints.h]$bp.h <- TRUE
+      V(gp)[breakpoints.vh]$bp.vh <- TRUE
     }
     
     for(j in 1:vcount(gp)){
@@ -55,8 +68,10 @@ count_motifs_by_post <- function(threads,
       # See if it matches any seen motif
       mypalette <- c("black", "red", "white")
       u <- V(eg)[V(eg)$name==post.id] # identify the ego vertex
+      uu <- V(eg)[V(eg)$user==user.name]
       V(eg)$color <- 1 
-      V(eg)[u]$color <- 2 
+      V(eg)[uu]$color <- 4
+      V(eg)[u]$color <- 2
       V(eg)[V(eg)$name==root.post]$color <- 3
       
       is.new <- TRUE
@@ -167,7 +182,7 @@ plot.motif.counts <- function(res){
   ####################################################
   # Plot found neighborhoods
   ####################################################
-  mypalette <- c("black", "red", "white")
+  mypalette <- c("black", "red", "white", 'orange')
   par(mfrow=c(3,5))
   for(i in 1:length(motifs)){
     gmotif <- as.undirected(motifs[[i]])
