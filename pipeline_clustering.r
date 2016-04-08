@@ -47,7 +47,7 @@ df.posts <- data.frame(df.posts) %>% arrange(date)
 
 #df.posts <- df.posts[80000:85000,] # ok
 #df.posts <- df.posts[1:5000,] # # 15 mins
-df.posts <- df.posts[1:25000,] # in progress # 15 mins #fail!
+#df.posts <- df.posts[1:25000,] # in progress # 15 mins #fail!
 df.posts <- df.posts[1:75000,] 
 #60
 
@@ -122,7 +122,7 @@ res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
   #                                  120, onTimeout='warning')
   count_motifs_by_post(chunks[[i]], 
                        database='reddit',
-                       neighbourhood='order')
+                       neighbourhood='time')
 }
 stopCluster(cl)
 
@@ -138,16 +138,10 @@ if(FALSE){
   length(chunks)
 }
 
-
-
-res.parallel2 <- res.parallel
-res.parallel3 <- res.parallel
-res.parallel4 <- res.parallel
 res <- merge.motif.counts(res.parallel)
-#save(res,file="res_3_4_order.Rda")
-#save(res,file="res_time.Rda")
-save(res, file='res_2_4_order_75000.Rda') 
-load('res_2_4_order_75000.Rda') 
+save(res,file="res_time_75000.Rda")
+#save(res, file='res_2_4_order_75000.Rda') 
+#load('res_2_4_order_75000.Rda') 
 
 # Plot found motifs and their frequency
 plot.motif.counts(res)
@@ -180,13 +174,18 @@ df.posts <- merge(df.posts, df.post.motif, all.x=FALSE, sort=FALSE)
 # Count motifs in which each user appears
 ######################################################
 user.motifs <- acast(df.posts, user~motif)
-#user.motifs <- user.motifs[rownames(user.motifs) != 'root',] 
 
 # Set up a user-features matrix (features are z-scores w.r.t a motif)
 ######################################################################
 active.mask <- rowSums(user.motifs) > MIN_POSTS
 cat("Active users: ", sum(active.mask))
+
+# normalize with respect to active users
 features <- normalize_counts(user.motifs[active.mask,])
+
+# or normalize with respect to all users
+#features <- normalize_counts(user.motifs)
+#features <- features[active.mask,]
 
 # after removing the non-active, some motifs dissapear.
 # remove also motifs that appeared less than 10 times
