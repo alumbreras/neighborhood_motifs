@@ -1,7 +1,6 @@
-normalize_counts <- function(user.motifs){
+normalize_counts <- function(features){
   # Normalize the matrix with the user counts
   # Summary  matrix
-  features <- user.motifs
   cat("\nMotifs counts:", colSums(features))
   
   # Normalize user activity (make the analysis independent of number of posts)
@@ -10,7 +9,8 @@ normalize_counts <- function(user.motifs){
   #as.data.frame(t(apply(user.motifs, 1, function(x) x/sum(x))))
   cat("\nMotifs % of active users:", colSums(features))
   
-  # Center and scale data
+  # Center and scale data 
+  # warning: it can create NA if feature count is 0
   features <- scale(features)
   cat("\nMotifs % of active users (z-score):", colSums(features))
   

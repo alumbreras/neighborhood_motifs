@@ -5,9 +5,9 @@ source('R/tree_changepoints.r')
 count_motifs_by_post <- function(threads, 
                                  database='reddit', 
                                  neighbourhood=c('order', 'time'),
-                                 rad=3,
+                                 rad=2,
                                  max.neighbors=4){
-
+  
   con <- dbConnect(dbDriver("SQLite"), dbname = paste0("./data/", database, ".db"))
   
   # For every thread, recontruct its graph. Then count 
@@ -22,13 +22,16 @@ count_motifs_by_post <- function(threads,
   nthreads <- length(threads)
   posts.motifs <- data.frame()
   for(i in 1:nthreads){
+    write.table(threads[i], file="tried_threads.csv", row.names=FALSE, col.names=FALSE, append=TRUE)
+    
+    
     #Extract the egos of every post
     g <- database.to.graph(threads[i], con, database)
     gp <- g$gp
     
     size <- vcount(gp)
     cat('\n', i, '/', nthreads, '/', threads[i], ' size: ', size)
-    if(size>100){
+    if(size>1000){
       cat("\n WARNING: skipping thread of size ", size)
       next 
     }
@@ -98,9 +101,18 @@ count_motifs_by_post <- function(threads,
       posts.motifs <- rbindlist(list(posts.motifs, 
                                      data.frame(postid=post.id,motif=motif.id)))
     } # end egos
+    
+    # keep track of threads that gave no problems
+    write.table(threads[i], file="processed_threads.csv", row.names=FALSE, col.names=FALSE, append=TRUE)
   } # end threads
   
   posts.motifs <- data.frame(posts.motifs)
+  
+  if(nrow(posts.motifs)==0){
+    return(list(posts.motifs = NA,
+                motifs = NA))
+  }
+  
   names(posts.motifs) <- c('postid', 'motif')
   
   # Sort by frequency (and relabel: 1 for the most frequent and so forth)

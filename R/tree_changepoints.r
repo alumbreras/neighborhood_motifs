@@ -235,10 +235,10 @@ changepoints.cp <- function(gp, vertical=FALSE, horizontal=FALSE){
           bp <- cpts(cpt.meanvar(dates, class=TRUE, method="PELT"))+1
           breakpoints.h <- c(breakpoints.h, children[bp])
           
-          colors <- rep("black", length(dates))
-          colors[bp] <- 'red'
-          plot(dates, col=colors, pch=19, cex=0.5)
-          title("debug")
+          #colors <- rep("black", length(dates))
+          #colors[bp] <- 'red'
+          #plot(dates, col=colors, pch=19, cex=0.5)
+          #title("debug")
         }
       }
     }

@@ -36,12 +36,20 @@ MIN_POSTS <- 100 # number of post to consider a user as active
 #save(df.posts,file="dfposts.Rda")
 load('dfposts.Rda') # 836119 posts, 47803 threads
 df.posts <- data.frame(df.posts) %>% arrange(date)
-df.posts <- df.posts[1:300000,]
-df.posts <- df.posts[1:100000,]
+#df.posts <- df.posts[1:300000,]
+#df.posts <- df.posts[1:100000,]
 #df.posts <- df.posts[30000:60000,] # test debug
 #df.posts <- df.posts[50000:60000,] # test debug
-df.posts <- df.posts[60000:100000,] # test debug
+#df.posts <- df.posts[60000:100000,] # test debug error aqui
+#df.posts <- df.posts[70000:80000,] # test debug error aqui
+#df.posts <- df.posts[82500:85000,] # ok
+#df.posts <- df.posts[80000:82500,] # 
 
+#df.posts <- df.posts[80000:85000,] # ok
+#df.posts <- df.posts[1:5000,] # # 15 mins
+df.posts <- df.posts[1:25000,] # in progress # 15 mins #fail!
+df.posts <- df.posts[1:75000,] 
+#60
 
 df.threads <- plyr::count(df.posts, "thread")
 df.users <- plyr::count(df.posts, 'user')                                                                                                                                   
@@ -53,6 +61,11 @@ start.date <- as.POSIXct(min(as.numeric(df.posts$date)), origin = "1970-01-01")
 end.date <- as.POSIXct(max(as.numeric(df.posts$date)), origin = "1970-01-01")
 print(paste("Start date:", start.date))
 print(paste("End date:", end.date))
+
+cat('Number of threads: ', nrow(df.threads))
+cat('Number of users: ', nrow(df.users))
+cat('Number of active users', nrow(filter(df.users, posts>MIN_POSTS)))
+
 
 # Plot general overview of forum
 n <- hist(df.threads$length, breaks=0:max(df.threads$length))$counts
@@ -74,7 +87,7 @@ plot(cumsum(table(df.users$posts)), pch=19, cex=0.5,
 title('Users posts (cumulative)')
 
 # Compute neighborhood around every post
-chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/175))
+chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/800))
 length(chunks)
 ##############################"
 # sequential
@@ -83,7 +96,13 @@ res.seq <- count_motifs_by_post(as.vector(unlist(chunks[1])),
                                 database='reddit',
                                 neighbourhood='order')
 threads <- chunks[[1]]
-res.seq.dyn <- count_motifs_by_post(as.vector(unlist(chunks[1])), 
+#"t3_2a5f81" problematic
+#t3_2aga0t
+res.seq.dyn <- count_motifs_by_post("t3_2a5f81", 
+                                    database='reddit',
+                                    neighbourhood='time')
+
+res.seq.dyn <- count_motifs_by_post(as.vector(unlist(chunks)), 
                                     database='reddit',
                                     neighbourhood='time')
 res <- res.seq.dyn
@@ -103,16 +122,32 @@ res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
   #                                  120, onTimeout='warning')
   count_motifs_by_post(chunks[[i]], 
                        database='reddit',
-                       neighbourhood='time')
+                       neighbourhood='order')
 }
 stopCluster(cl)
+
+
+# Debug. get threads not still processed and create chunks to try again
+# until we find the thread that raises the exception
+if(FALSE){
+  threads <- df.threads$thread
+  processed <- as.character(read.table("processed_threads.csv")[,1])
+  threads[threads %in% processed]
+  todo <- threads[! threads %in% processed]
+  chunks <- split(threads, ceiling(seq_along(threads)/200))
+  length(chunks)
+}
+
+
+
 res.parallel2 <- res.parallel
 res.parallel3 <- res.parallel
 res.parallel4 <- res.parallel
 res <- merge.motif.counts(res.parallel)
 #save(res,file="res_3_4_order.Rda")
-save(res,file="res_time.Rda")
-#load('res_3_4_order.Rda') 
+#save(res,file="res_time.Rda")
+save(res, file='res_2_4_order_75000.Rda') 
+load('res_2_4_order_75000.Rda') 
 
 # Plot found motifs and their frequency
 plot.motif.counts(res)
@@ -150,20 +185,30 @@ user.motifs <- acast(df.posts, user~motif)
 # Set up a user-features matrix (features are z-scores w.r.t a motif)
 ######################################################################
 active.mask <- rowSums(user.motifs) > MIN_POSTS
-
+cat("Active users: ", sum(active.mask))
 features <- normalize_counts(user.motifs[active.mask,])
 
 # after removing the non-active, some motifs dissapear.
-idx.remove <- as.vector((which(is.na(colSums(features)))))
-features <- features[,-idx.remove]
+# remove also motifs that appeared less than 10 times
+idx.motifs.none <- as.vector((which(is.na(colSums(features)))))
+idx.motifs.low <- as.vector((which(colSums(user.motifs[active.mask,])<10)))
+idx.motifs.delete <- c(idx.motifs.none, idx.motifs.low)
+
+idx.motifs <- as.numeric(colnames(features))[-idx.motifs.delete]
+features <- features[,-idx.motifs.delete]
 
 ###############################################
 # Clustering
 ###############################################
+
+
 par(mfrow=c(1,1))
-z <- cluster(features)
+z <- cluster(features, 5)
 
 # Update users df with their cluster
+df.users <- plyr::count(df.posts, 'user')                                                                                                                                   
+names(df.users)[2] <- "posts"
+
 df.users <-  data.frame(user=rownames(features), cluster=z) %>%
              merge(df.users, all=TRUE)
 df.users[is.na(df.users$cluster),]$cluster <- 0 # non-active users go to cluster 0

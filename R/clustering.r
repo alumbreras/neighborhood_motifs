@@ -1,10 +1,10 @@
-cluster <- function(features){
+cluster <- function(features, k){
     wss <- (nrow(features)-1)*sum(apply(features,2,var))
     for (i in 2:25){
       wss[i] <- sum(kmeans(features, i)$withinss)
     }
     plot(1:25, wss, type="b", xlab="Number of Clusters", ylab="Within groups sum of squares")
-    fit <- kmeans(features, 3)
+    fit <- kmeans(features, k)
     z <- fit$cluster
     
     # relabel cluster by size (to keep color consistency between executions)
@@ -25,9 +25,9 @@ cluster <- function(features){
 #fit2 <-Mclust(df.scaled)
 #summary(fit2, parameters=TRUE)
 
-plot.clusters <- function(df.features, clusters, sizes, colors){
+plot.clusters <- function(features, clusters, sizes, colors){
   par(mfrow=c(1,1))
-  pca <- princomp(df.features)
+  pca <- princomp(features)
   
   # Colored PCA (base graphics)
   ######################################
@@ -37,7 +37,7 @@ plot.clusters <- function(df.features, clusters, sizes, colors){
        pch  = 19,
        xlab = "Dimension 1", ylab = "Dimension 2")
   text(pca$scores[,1], pca$scores[,2], 
-       labels = rownames(df.features), 
+       labels = rownames(features), 
        cex    = 0.7)
   title("Individual factor map (PCA)")
   dev.copy(png, paste0('2016-01-15-PCA.png'), width = 800, height = 800)
@@ -51,7 +51,7 @@ plot.clusters <- function(df.features, clusters, sizes, colors){
                  groups       = factor(z), 
                  ellipse      = TRUE, 
                  circle       = TRUE,
-                 labels       = rownames(df.features),
+                 labels       = rownames(features),
                  labels.size  = 3.5,
                  varname.size = 4) 
   p1 <- p1 + scale_color_manual(values = alpha(cluster.colors,0.75))
@@ -67,7 +67,7 @@ plot.clusters <- function(df.features, clusters, sizes, colors){
   # Boxplots
   #########################
   # Clusters profile
-  points <- as.data.frame(df.features)
+  points <- as.data.frame(features)
   points$cluster <- factor(z)
   points <- melt(points, id='cluster')
   p <- ggplot(points, aes(x=variable, y=value)) + 
