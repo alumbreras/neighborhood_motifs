@@ -46,7 +46,7 @@ df.posts <- data.frame(df.posts) %>% arrange(date)
 #df.posts <- df.posts[80000:82500,] # 
 
 #df.posts <- df.posts[80000:85000,] # ok
-#df.posts <- df.posts[1:5000,] # # 15 mins
+df.posts <- df.posts[1:5000,] # # 15 mins
 #df.posts <- df.posts[1:25000,] # in progress # 15 mins #fail!
 df.posts <- df.posts[1:75000,] 
 #60
@@ -87,7 +87,11 @@ plot(cumsum(table(df.users$posts)), pch=19, cex=0.5,
 title('Users posts (cumulative)')
 
 # Compute neighborhood around every post
-chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/800))
+
+# Only long threads
+#df.threads <- filter(df.threads, length>10)
+
+chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/100))
 length(chunks)
 ##############################"
 # sequential
@@ -95,16 +99,17 @@ length(chunks)
 res.seq <- count_motifs_by_post(as.vector(unlist(chunks[1])), 
                                 database='reddit',
                                 neighbourhood='order')
-threads <- chunks[[1]]
 #"t3_2a5f81" problematic
 #t3_2aga0t
-res.seq.dyn <- count_motifs_by_post("t3_2a5f81", 
+
+res.seq.dyn <- count_motifs_by_post('t3_29yrey', 
                                     database='reddit',
                                     neighbourhood='time')
 
-res.seq.dyn <- count_motifs_by_post(as.vector(unlist(chunks)), 
-                                    database='reddit',
-                                    neighbourhood='time')
+library('lineprof')
+l <- lineprof(count_motifs_by_post(unlist(chunks)[1:20], 
+                                   database='reddit',
+                                   neighbourhood='time'))
 res <- res.seq.dyn
 #res <- res.seq
 #plot.motif.counts(res.seq)
@@ -202,7 +207,7 @@ features <- features[,-idx.motifs.delete]
 
 
 par(mfrow=c(1,1))
-z <- cluster(features, 5)
+z <- cluster(features, 3)
 
 # Update users df with their cluster
 df.users <- plyr::count(df.posts, 'user')                                                                                                                                   

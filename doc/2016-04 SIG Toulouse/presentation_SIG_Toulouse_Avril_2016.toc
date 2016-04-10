@@ -1,0 +1,10 @@
+\beamer@endinputifotherversion {3.24pt}
+\beamer@sectionintoc {1}{Introduction}{3}{0}{1}
+\beamer@subsectionintoc {1}{1}{The data}{4}{0}{1}
+\beamer@subsectionintoc {1}{2}{The graph representations of the data}{5}{0}{1}
+\beamer@sectionintoc {2}{Structures of conversations}{8}{0}{2}
+\beamer@subsectionintoc {2}{1}{Basic idea}{9}{0}{2}
+\beamer@subsectionintoc {2}{2}{Triadic structures}{10}{0}{2}
+\beamer@subsectionintoc {2}{3}{Neighbourhood structures}{11}{0}{2}
+\beamer@sectionintoc {3}{Conversation-based clustering}{15}{0}{3}
+\beamer@sectionintoc {4}{Conclusions}{18}{0}{4}

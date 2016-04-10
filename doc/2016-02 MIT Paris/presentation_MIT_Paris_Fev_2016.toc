@@ -1,0 +1,8 @@
+\beamer@endinputifotherversion {3.36pt}
+\beamer@sectionintoc {1}{Introduction}{3}{0}{1}
+\beamer@subsectionintoc {1}{1}{Reddit dataset}{4}{0}{1}
+\beamer@subsectionintoc {1}{2}{Graph representations}{6}{0}{1}
+\beamer@subsectionintoc {1}{3}{Dynamics of conversations}{7}{0}{1}
+\beamer@sectionintoc {2}{Neighborhood census}{9}{0}{2}
+\beamer@sectionintoc {3}{You are the way you (structurally) talk?}{15}{0}{3}
+\beamer@sectionintoc {4}{Conclusions}{20}{0}{4}

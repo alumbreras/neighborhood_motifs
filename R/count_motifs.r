@@ -2,6 +2,56 @@ library(RSQLite)
 library(data.table)
 source('R/extract_from_db.r')
 source('R/tree_changepoints.r')
+
+
+prune <- function(motif){
+  # Arguments:
+  #   motif: a tree graph
+  # Returns:
+  #   a pruned motif
+  # 4 colors: 1(black) 2(red) 4(orange)
+  # we can only remove black nodes
+  # there can be only two black nodes together
+  # delete 
+  parents <- which(degree(motif, mode='in')>2)
+  to.delete <- c()
+  if(length(parents)==0){
+    return(motif)
+  }
+  # If more than two siblings with no children, keep only the first two
+  # (the most ancient)
+  for (p in 1:length(parents)){
+    siblings <- neighbors(motif, parents[p], mode='in')
+    siblings <- siblings[order(V(motif)$date[siblings])]
+    siblings.indegree <- degree(motif, v=siblings, mode='in')
+    
+    if(length(siblings)<3){
+      next
+    }
+    x <- siblings$color
+    
+    counts <- 1
+    delete <- rep(FALSE, length(x))
+    for(i in 2:length(x)){
+      if(x[i] != x[i-1]){
+        counts <- 1
+      }
+      else if(siblings.indegree[i]>0){
+        counts <- 1
+      }
+      else{
+        counts <- counts + 1
+      }
+      if(counts>2){
+        delete[i] <- TRUE
+      }
+    }
+    to.delete <- union(to.delete, siblings[delete])
+  }
+  motif <- delete.vertices(motif, to.delete)
+  motif
+}
+
 count_motifs_by_post <- function(threads, 
                                  database='reddit', 
                                  neighbourhood=c('order', 'time'),
@@ -9,8 +59,8 @@ count_motifs_by_post <- function(threads,
                                  max.neighbors=4){
   
   con <- dbConnect(dbDriver("SQLite"), dbname = paste0("./data/", database, ".db"))
-  
-  # For every thread, recontruct its graph. Then count 
+
+    # For every thread, recontruct its graph. Then count 
   # if neighborhood at distance 1 and binary tree, max nodes is 4
   # if neighborhood at distance 1 and binary tree, max nodes is 10
   # 4   10   22   30   46   62   93  123...
@@ -19,91 +69,119 @@ count_motifs_by_post <- function(threads,
   posts.motifs.id <- vector()
   plotted.trees <- 1
   
+  id.process <- Sys.getpid()
+  filelog <- paste0("log", id.process, ".csv")
+  
+  
   nthreads <- length(threads)
   posts.motifs <- data.frame()
   for(i in 1:nthreads){
-    write.table(threads[i], file="tried_threads.csv", row.names=FALSE, col.names=FALSE, append=TRUE)
-    
-    
-    #Extract the egos of every post
-    g <- database.to.graph(threads[i], con, database)
-    gp <- g$gp
-    
-    size <- vcount(gp)
-    cat('\n', i, '/', nthreads, '/', threads[i], ' size: ', size)
-    if(size>1000){
-      cat("\n WARNING: skipping thread of size ", size)
-      next 
-    }
-    
-    # cast dates to numeric
-    dates <- as.numeric(V(gp)$date)
-    gp <- remove.vertex.attribute(gp, "date")
-    V(gp)$date <- dates
-
-    root.post <- V(gp)[which(degree(gp, mode='out')==0)]$name
-    
-    if(neighbourhood=='time'){
-      breakpoints <- changepoints.cp(gp, vertical=T, horizontal=T)
-      breakpoints.h <- breakpoints$breakpoints.h
-      breakpoints.v <- breakpoints$breakpoints.v
-      breakpoints.vh <- breakpoints$breakpoints.vh
+    tryCatch({
       
-      V(gp)$bp.v <- FALSE
-      V(gp)$bp.h <- FALSE
-      V(gp)$bp.vh <- FALSE
-      V(gp)[breakpoints.v]$bp.v <- TRUE
-      V(gp)[breakpoints.h]$bp.h <- TRUE
-      V(gp)[breakpoints.vh]$bp.vh <- TRUE
-    }
-    
-    for(j in 1:vcount(gp)){
-      user.name <- V(gp)[j]$user
-      post.id <- V(gp)[j]$name
-      # Detect the neighborhood with the prefered method
-      if(neighbourhood=='order'){
-        eg <- neighborhood.temporal.order(gp, j, rad, max.neighbors)
+      write.table(threads[i], file="tried_threads.csv", row.names=FALSE, col.names=FALSE, append=TRUE)
+      cat(threads[i], file=filelog, sep=",", append=TRUE)
+      
+      #Extract the egos of every post
+      g <- database.to.graph(threads[i], con, database)
+      gp <- g$gp
+      cat('graph', file=filelog, sep=",", append=TRUE)
+      
+      size <- vcount(gp)
+      cat('\n', i, '/', nthreads, '/', threads[i], ' size: ', size)
+      if(size>1000){
+        cat("\n WARNING: skipping thread of size ", size)
+        next 
       }
+      
+      # cast dates to numeric
+      dates <- as.numeric(V(gp)$date)
+      gp <- remove.vertex.attribute(gp, "date")
+      V(gp)$date <- dates
+      
+      root.post <- V(gp)[which(degree(gp, mode='out')==0)]$name
+      cat('root', file=filelog, sep=",", append=TRUE)
+      
       if(neighbourhood=='time'){
-        eg <- neighborhood.temporal(gp, j, 2, breakpoints.v, breakpoints.h)
-      }
-
-      # See if it matches any seen motif
-      mypalette <- c("black", "red", "white")
-      u <- V(eg)[V(eg)$name==post.id] # identify the ego vertex
-      uu <- V(eg)[V(eg)$user==user.name]
-      V(eg)$color <- 1 
-      V(eg)[uu]$color <- 4
-      V(eg)[u]$color <- 2
-      V(eg)[V(eg)$name==root.post]$color <- 3
-      
-      is.new <- TRUE
-      if(length(motifs)>0){
-        for(motif.id in 1:length(motifs)){   
-          gmotif <- motifs[[motif.id]] 
-          
-          # the vf2 does not like graphs of different size
-          if(vcount(eg) != vcount(gmotif)){
-            next
-          }          
-
-          if(is_isomorphic_to(eg, gmotif, method='vf2')){            
-            is.new <- FALSE
-            break
-          }}}
-      
-      # If motif is new, add it to the list
-      if(is.new){
-        motif.id <- length(motifs)+1
-        motifs[[motif.id]] <- eg
+        breakpoints <- changepoints.cp(gp, vertical=T, horizontal=T)
+        breakpoints.h <- breakpoints$breakpoints.h
+        breakpoints.v <- breakpoints$breakpoints.v
+        breakpoints.vh <- breakpoints$breakpoints.vh
+        
+        V(gp)$bp.v <- FALSE
+        V(gp)$bp.h <- FALSE
+        V(gp)$bp.vh <- FALSE
+        V(gp)[breakpoints.v]$bp.v <- TRUE
+        V(gp)[breakpoints.h]$bp.h <- TRUE
+        V(gp)[breakpoints.vh]$bp.vh <- TRUE
+        cat('bp', file=filelog, sep=",", append=TRUE)
       }
       
-      posts.motifs <- rbindlist(list(posts.motifs, 
-                                     data.frame(postid=post.id,motif=motif.id)))
-    } # end egos
+      for(j in 1:vcount(gp)){
+        user.name <- V(gp)[j]$user
+        post.id <- V(gp)[j]$name
+        
+        # Detect the neighborhood with the prefered method
+        if(neighbourhood=='order'){
+          eg <- neighborhood.temporal.order(gp, j, rad, max.neighbors)
+        }
+        if(neighbourhood=='time'){
+          eg <- neighborhood.temporal(gp, j, 2, breakpoints.v, breakpoints.h)
+        }
+        
+        # See if it matches any seen motif
+        u <- V(eg)[V(eg)$name==post.id] # identify the ego vertex
+        uu <- V(eg)[V(eg)$user==user.name] # posts writen by ego author
+        
+        # note the <= in case two siblings have the same date
+        V(eg)$color[V(eg)$date<=V(eg)[u]$date] <- 1 
+        V(eg)$color[V(eg)$date>V(eg)[u]$date] <- 2 
+        if(degree(eg, v=u, mode='out')==1){
+          p.user.name <- neighbors(eg, u, mode='out')$user
+          V(eg)[V(eg)$user==p.user.name]$color <- 3 # posts writen by parent of ego
+        }
+        V(eg)[uu]$color <- 4
+        V(eg)[u]$color <- 5
+        V(eg)[V(eg)$name==root.post]$color <- 6
     
-    # keep track of threads that gave no problems
-    write.table(threads[i], file="processed_threads.csv", row.names=FALSE, col.names=FALSE, append=TRUE)
+        # Prune neighbourhood to reduce number of possible neighbourhoods
+        eg <- prune(eg)
+        
+        is.new <- TRUE
+        if(length(motifs)>0){
+          for(motif.id in 1:length(motifs)){   
+            gmotif <- motifs[[motif.id]] 
+            
+            # the vf2 does not like graphs of different size
+            if(vcount(eg) != vcount(gmotif)){
+              next
+            }          
+            
+            if(is_isomorphic_to(eg, gmotif, method='vf2')){            
+              is.new <- FALSE
+              break
+            }}}
+        
+        # If motif is new, add it to the list
+        if(is.new){
+          motif.id <- length(motifs)+1
+          motifs[[motif.id]] <- eg
+        }
+        
+        posts.motifs <- rbindlist(list(posts.motifs, 
+                                       data.frame(postid=post.id,motif=motif.id)))
+      } # end egos
+      cat('done', file=filelog, sep="\n", append=TRUE)
+      # keep track of threads that gave no problems
+      write.table(threads[i], file="processed_threads.csv", row.names=FALSE, col.names=FALSE, append=TRUE)
+    }, 
+    error=function(e){
+      e
+      cat('\n CATCHED ERROR in thread: ', threads[i], "check logfile: ", filelog)
+      cat(paste('\n CATCHED ERROR in thread: ', threads[i]), 
+          file=paste0('exception_',filelog), sep="\n", append=TRUE)
+      stop("ERROR")
+    }
+    )
   } # end threads
   
   posts.motifs <- data.frame(posts.motifs)
@@ -194,7 +272,8 @@ plot.motif.counts <- function(res){
   ####################################################
   # Plot found neighborhoods
   ####################################################
-  mypalette <- c("black", "red", "white", 'orange')
+  #mypalette <- c("black", "red", "white", 'orange')
+  mypalette <- c("grey", "black", "yellow", "orange", "red", "white")
   par(mfrow=c(3,5))
   for(i in 1:length(motifs)){
     gmotif <- as.undirected(motifs[[i]])
