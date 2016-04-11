@@ -46,7 +46,7 @@ df.posts <- data.frame(df.posts) %>% arrange(date)
 #df.posts <- df.posts[80000:82500,] # 
 
 #df.posts <- df.posts[80000:85000,] # ok
-df.posts <- df.posts[1:5000,] # # 15 mins
+#df.posts <- df.posts[1:5000,] # # 15 mins
 #df.posts <- df.posts[1:25000,] # in progress # 15 mins #fail!
 df.posts <- df.posts[1:75000,] 
 #60
@@ -91,7 +91,7 @@ title('Users posts (cumulative)')
 # Only long threads
 #df.threads <- filter(df.threads, length>10)
 
-chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/100))
+chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/300))
 length(chunks)
 ##############################"
 # sequential
@@ -115,7 +115,7 @@ res <- res.seq.dyn
 #plot.motif.counts(res.seq)
 
 # parallel
-ncores <- detectCores() - 2
+ncores <- detectCores() - 9
 cl<-makeCluster(ncores, outfile="", port=11439)
 registerDoParallel(cl)
 pck <- c('RSQLite', 'data.table', 'changepoint')
@@ -127,7 +127,7 @@ res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
   #                                  120, onTimeout='warning')
   count_motifs_by_post(chunks[[i]], 
                        database='reddit',
-                       neighbourhood='time')
+                       neighbourhood='order')
 }
 stopCluster(cl)
 
@@ -144,8 +144,11 @@ if(FALSE){
 }
 
 res <- merge.motif.counts(res.parallel)
-save(res,file="res_time_75000.Rda")
-#save(res, file='res_2_4_order_75000.Rda') 
+
+#save(res,file="res_time_75000.Rda")
+#load("res_time_75000.Rda")
+
+save(res, file='res_2_4_order_75000.Rda') 
 #load('res_2_4_order_75000.Rda') 
 
 # Plot found motifs and their frequency
@@ -195,7 +198,7 @@ features <- normalize_counts(user.motifs[active.mask,])
 # after removing the non-active, some motifs dissapear.
 # remove also motifs that appeared less than 10 times
 idx.motifs.none <- as.vector((which(is.na(colSums(features)))))
-idx.motifs.low <- as.vector((which(colSums(user.motifs[active.mask,])<10)))
+idx.motifs.low <- as.vector((which(colSums(user.motifs[active.mask,])<50)))
 idx.motifs.delete <- c(idx.motifs.none, idx.motifs.low)
 
 idx.motifs <- as.numeric(colnames(features))[-idx.motifs.delete]
@@ -223,6 +226,7 @@ cluster.colors <- palette()[2:length(palette())] # 2: to avoid black
 # PCA and whisker plots
 #################################################### 
 #TODO: features should contain also inactive users?
+library(scales)
 plot.clusters(features, 
               clusters = z,
               sizes    = 0.5*log(rowSums(user.motifs[active.mask,])), 
