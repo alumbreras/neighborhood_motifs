@@ -330,6 +330,8 @@ The remaining of the paper is as follows. We first discuss about the convenience
 	\label{fig:trees}
 \end{figure}
 
+\section{Data}
+
 \section{Discussion trees}
 We represent a conversation thread as a tree graph where vertex represent posts and edges represent replies from some post to another. The tree is rooted at the post who started the thread. Figure~\ref{fig:trees} shows some real examples of trees in a Reddit\footnote{www.reddit.com} forum. 
 
@@ -415,38 +417,44 @@ Our definition of \textit{local dynamic} is based on the detection of changepoin
 \subsection{Colored neighbourhoods}
 In conversation trees, the root vertex plays an important role since it represents the post that opened the conversation and thus set the topic of the thread. Therefore, a reply to the root post is clearly different from a reply to any other post in the tree. We distinguish root posts from non-root posts by assigning root posts a unique color (white). We also assign a unique color to the ego post (red). 
 
+\subsection{Neighbourhood pruning}\label{sec:pruning}
+
 
 \section{Application to Reddit forums}
 In this section, we use our definition of structural-temporal neighbourhood to detect different types of users according to the neighbourhoods in which their posts are embedded.
 
-\subsection{Podemos forum}
 Our dataset consists of all posts from March 2014 to May 2015 of the Podemos forum in Reddit\footnote{https://www.reddit.com/r/podemos}\footnote{I have also the data for \textit{gameofthrones, france, datascience, machinelearning complexsystems, philosophy, twoxchromosomes, trees, sex}}. The Podemos forum was conceived in March 2014 as a tool for internal democracy, and forum members used it to debate ideological and organizational principles that were later formalized in their first party congress hold in Madrid the October 18th and 19th 2014. Nowadays, its members use it mainly to share and discuss about political news.
 The forum contains 83,6119 posts spread over 47,803 threads and written by 26,193 users. (see Figure~\ref{fig:podemos_distributions})
 
 \begin{figure*}
 \centering
-\includegraphics[width=0.5\textwidth]{threads_length}%
-\includegraphics[width=0.5\textwidth]{users_posts}
-\includegraphics[width=0.5\textwidth]{threads_length_cum}%
+\includegraphics[width=0.5\textwidth]{users_posts}%
 \includegraphics[width=0.5\textwidth]{users_posts_cum}
-\caption{Log-log and cumulative distributions and of thread lengths and posts per user.}
+\caption{Log-log and cumulative distributions and of posts per user.}
 \label{fig:podemos_distributions}
 \end{figure*}
 
  %\noindent\textcolor{red}{\rule{16cm}{1mm}}
-\subsection{Counting neighorhoods}
-In this section we will build a matrix $M$ for one of the forums of Reddit and then we will cluster users to find groups that have similar preferences over the different types of conversations represented by the neighbourhood structures. 
-
-If we set the a spatial radius $r=1$ and an order $n=4$, the temporal neighbourhood $N_{G}^{(t)}(i, 1, 4)$ recovers the four adjacent posts that were written temporally closest to a given post. Figure~\ref{fig:neighbourhoods_1_4} shows the four detected neighbourhoods and their frequency.
-
-In order to detect more complex types of neighbourhoods we enlarge the spatial radius to $r=4$. Figure~\ref{fig:neighbourhoods_4_4} shows the eight detected neighbors and their frequency. It is interesting to see different structures like chains or stars where the root node might or might no appear and the ego post is placed at different positions.
+\subsection{Neighbourhood census}
+In this section we analyse the neighbourhood census of our dataset. A counter for every neighbourhood structure is created the first time we detect them. For every post, we extract its neighbourhood (order-based or time-based) and prune it as explained above (Section~\ref{sec:pruning}). Then check whether it is isomorphic to some of the already seen neighbourhoods. If this is the case, then we increment the counter for the neighbourhood previously seen. Otherwise we create a new entry for the current neighbourhood.
 
 \begin{figure*}
 	\centering
-	\includegraphics[width=0.8\textwidth]{neighbourhoods_1_4}
-	\caption{neighbourhood counts with $r=1$ and $n=4$}
-	\label{fig:neighbourhoods_1_4}
+	\includegraphics[width=0.8\textwidth]{census_orderbased_1}
+	%\includegraphics[width=0.8\textwidth]{census_orderbased_2}
+	%\includegraphics[width=0.8\textwidth]{census_orderbased_3}
+	\caption{Most frequent order-based neighbourhoods with $r=2$ and $n=4$}
+	\label{fig:census_orderbased}
 \end{figure*}
+
+The census obtained with both type of neighbourhood are similar for the most frequent structures. That means that both kind of neighbourhoods are isomorphic for the most popular discussion structures.
+
+
+
+In this section we will build a matrix $M$ for one of the forums of Reddit and then we will cluster users to find groups that have similar preferences over the different types of conversations represented by the neighbourhood structures. 
+
+In order to detect more complex types of neighbourhoods we enlarge the spatial radius to $r=4$. Figure~\ref{fig:neighbourhoods_4_4} shows the eight detected neighbors and their frequency. It is interesting to see different structures like chains or stars where the root node might or might no appear and the ego post is placed at different positions.
+
 
 \begin{figure*}
 	\centering
@@ -470,7 +478,7 @@ In order to detect more complex types of neighbourhoods we enlarge the spatial r
 
 Note that some neighbours are still very similar. For instance, \textit{common answer 3} is very close to \textit{common answer 2} in the sense that they both represent the ego post replying to a root post that has one and two replies respectively. It seems a good idea to merge them both since they seem to represent the same type of discussion.
 
-\subsection{Clustering}
+\subsection{Conversation-based clustering of users}
 
 Given the neighbourhoods in which each user participates, we will analyze whether there exists different types of users or all users look similar.
 
@@ -478,7 +486,13 @@ We want to make the analyze independent of the number of posts, and for that we 
 
 We use a simple k-means to find the clusters. To decide the number of clusters, we run k-means for k=2,...,25 clusters and look at the Within-Cluster Sum of Squares (Figure~\ref{fig:elbow}) and we chose $k=5$ so that the results are more interpretable.  Figure~\ref{fig:PCA} shows a PCA projection of the users colored by cluster and the distribution of the clusters in every dimension.
 
-
+\begin{figure*}
+	\centering
+	\includegraphics[width=1\textwidth]{PCA_cluster_timebased}
+	\includegraphics[width=1\textwidth]{PCA_cluster_orderbased}
+	\caption{PCA projection of the clusters found and cluster profile in every dimension.}
+	\label{fig:PCA}
+\end{figure*}
 
 \begin{figure*}
 	\centering

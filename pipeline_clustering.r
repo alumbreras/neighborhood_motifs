@@ -49,7 +49,7 @@ df.posts <- data.frame(df.posts) %>% arrange(date)
 #df.posts <- df.posts[1:5000,] # # 15 mins
 #df.posts <- df.posts[1:25000,] # in progress # 15 mins #fail!
 df.posts <- df.posts[1:75000,] 
-#60
+
 
 df.threads <- plyr::count(df.posts, "thread")
 df.users <- plyr::count(df.posts, 'user')                                                                                                                                   
@@ -131,7 +131,6 @@ res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
 }
 stopCluster(cl)
 
-
 # Debug. get threads not still processed and create chunks to try again
 # until we find the thread that raises the exception
 if(FALSE){
@@ -149,7 +148,7 @@ res <- merge.motif.counts(res.parallel)
 #load("res_time_75000.Rda")
 
 save(res, file='res_2_4_order_75000.Rda') 
-#load('res_2_4_order_75000.Rda') 
+load('res_2_4_order_75000.Rda') 
 
 # Plot found motifs and their frequency
 plot.motif.counts(res)
