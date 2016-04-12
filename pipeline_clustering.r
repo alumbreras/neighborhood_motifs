@@ -145,10 +145,10 @@ if(FALSE){
 res <- merge.motif.counts(res.parallel)
 
 #save(res,file="res_time_75000.Rda")
-#load("res_time_75000.Rda")
+load("res_time_75000.Rda")
 
-save(res, file='res_2_4_order_75000.Rda') 
-load('res_2_4_order_75000.Rda') 
+#save(res, file='res_2_4_order_75000.Rda') 
+#load('res_2_4_order_75000.Rda') 
 
 # Plot found motifs and their frequency
 plot.motif.counts(res)
