@@ -230,3 +230,29 @@ plot.clusters(features,
               clusters = z,
               sizes    = 0.5*log(rowSums(user.motifs[active.mask,])), 
               colors   = alpha(cluster.colors[z], 0.5))
+
+
+####################################################
+# Which are the top neighbourhoods of each cluster?
+####################################################
+centers <- kmeans(features, 3)$centers
+plot(centers[1,])
+plot(centers[2,])
+plot(centers[3,])
+
+k <- 1
+fav.motifs <- order(abs(centers[k,]),  decreasing=TRUE)
+plot(centers[k,fav.motifs])
+cat(fav.motifs)
+
+k <- 2
+fav.motifs <- order(abs(centers[k,]),  decreasing=TRUE)
+plot(centers[k,fav.motifs])
+cat(fav.motifs)
+
+k <- 3
+fav.motifs <- order(abs(centers[k,]),  decreasing=TRUE)
+plot(centers[k,fav.motifs])
+cat(fav.motifs)
+
+## Plot which are those favorite clusters
