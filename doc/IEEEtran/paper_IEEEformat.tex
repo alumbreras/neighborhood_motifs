@@ -330,8 +330,6 @@ The remaining of the paper is as follows. We first discuss about the convenience
 	\label{fig:trees}
 \end{figure}
 
-\section{Data}
-
 \section{Discussion trees}
 We represent a conversation thread as a tree graph where vertex represent posts and edges represent replies from some post to another. The tree is rooted at the post who started the thread. Figure~\ref{fig:trees} shows some real examples of trees in a Reddit\footnote{www.reddit.com} forum. 
 
@@ -447,23 +445,9 @@ In this section we analyse the neighbourhood census of our dataset. A counter fo
 	\label{fig:census_orderbased}
 \end{figure*}
 
-The census obtained with both type of neighbourhood are similar for the most frequent structures. That means that both kind of neighbourhoods are isomorphic for the most popular discussion structures.
+The census obtained with both type of neighbourhood are similar for the most frequent structures? That means that both kind of neighbourhoods are isomorphic for the most popular discussion structures.
 
-
-
-In this section we will build a matrix $M$ for one of the forums of Reddit and then we will cluster users to find groups that have similar preferences over the different types of conversations represented by the neighbourhood structures. 
-
-In order to detect more complex types of neighbourhoods we enlarge the spatial radius to $r=4$. Figure~\ref{fig:neighbourhoods_4_4} shows the eight detected neighbors and their frequency. It is interesting to see different structures like chains or stars where the root node might or might no appear and the ego post is placed at different positions.
-
-
-\begin{figure*}
-	\centering
-	\includegraphics[width=0.8\textwidth]{neighbourhoods_3_4_1}
-	\includegraphics[width=0.8\textwidth]{neighbourhoods_3_4_2}
-	\includegraphics[width=0.8\textwidth]{neighbourhoods_3_4_3}
-	\caption{Order-based neighbourhoods with $r=3$ and $n=4$}
-	\label{fig:neighbourhoods_4_4}
-\end{figure*}
+%In this section we will build a matrix $M$ for one of the forums of Reddit and then we will cluster users to find groups that have similar preferences over the different types of conversations represented by the neighbourhood structures. 
 
 
 \begin{figure*}
@@ -471,49 +455,26 @@ In order to detect more complex types of neighbourhoods we enlarge the spatial r
 	\includegraphics[width=0.8\textwidth]{neighbourhoods_time_1}
 	\includegraphics[width=0.8\textwidth]{neighbourhoods_time_2}
 	%\includegraphics[width=0.8\textwidth]{neighbourhoods_time_3}
-	\caption{Time-based neighbourhoods (most frequent)}
+	%\caption{Time-based neighbourhoods (most frequent)}
 	\label{fig:neighbourhoods_time}
 \end{figure*}
 
-
-Note that some neighbours are still very similar. For instance, \textit{common answer 3} is very close to \textit{common answer 2} in the sense that they both represent the ego post replying to a root post that has one and two replies respectively. It seems a good idea to merge them both since they seem to represent the same type of discussion.
-
 \subsection{Conversation-based clustering of users}
+In this section we categorize users based on the neighbourhoods of their posts. We limit our study to a set of 100 \textit{active users} who wrote more than 100 posts. For those users, we create an initial feature matrix $U\times N$ where $U$ is the number of users and $N$ is the number of neighbourhoods in the census, and where the the position $(u,n)$ is a counter of the number of times that a post written by user $u$ has a neighbourhood isomorphic to $n$. We drop those feature columns that are zero for every user (these are neighbourhoods seen only around posts of users with low-level activity). To make the feature vector of a user independent on the number of posts, we transform the counts into percentages. And since some features have much higher percentages than others for most users, we scale and normalize the matrix so that every feature has mean 0 and variance 1. To avoid non-significant scores, we remove also the feature column corresponding to neighbourhoods that have a frequency less than 50 among the active users.
 
-Given the neighbourhoods in which each user participates, we will analyze whether there exists different types of users or all users look similar.
+We use k-means to find the clusters, though one can use any other clustering method. Since the plot over the Within-Cluster Sum of Squares for $k=1,...20$ did not show any clear elbow we chose $k=3$ clusters so that clusters are easier to interpret. We did the clustering over a feature matrix with order-based neighbourhoods and another feature matrix with time-based neighbourhoods. Figures~\ref{fig:PCA} and shows the PCA projections of the users coloured by their assigned cluster. 
 
-We want to make the analyze independent of the number of posts, and for that we normalize each user feature vector so that features indicate the percentage of posts in this kind of neighbourhood. Moreover, some neighbourhoods are much more common than others due to the nature of the forums. Thus, we normalize and scale the features so that every feature has a global mean 0 and variance 1. User features now represent z-scores, that is, how many standard deviations is this user feature away from the mean.
-
-We use a simple k-means to find the clusters. To decide the number of clusters, we run k-means for k=2,...,25 clusters and look at the Within-Cluster Sum of Squares (Figure~\ref{fig:elbow}) and we chose $k=5$ so that the results are more interpretable.  Figure~\ref{fig:PCA} shows a PCA projection of the users colored by cluster and the distribution of the clusters in every dimension.
-
-\begin{figure*}
-	\centering
-	\includegraphics[width=1\textwidth]{PCA_cluster_timebased}
-	\includegraphics[width=1\textwidth]{PCA_cluster_orderbased}
-	\caption{PCA projection of the clusters found and cluster profile in every dimension.}
-	\label{fig:PCA}
-\end{figure*}
-
-\begin{figure*}
-	\centering
-	\includegraphics[width=1\textwidth]{PCA_clustering_3_4_order}
-	\includegraphics[width=1\textwidth]{clustering_3_4_order}
-	\caption{PCA projection of the clusters found and cluster profile in every dimension.}
-	\label{fig:PCA}
-\end{figure*}
-
+%Interpretation
 
 \section{Conclusions}
+We presented a method to characterise conversations of users in online threads. Due to the tree nature of online threads, traditional patters such as triads are not able to capture much of relevant dynamics of a conversation. Our defined order-based and temporal-based neighbourhoods 
+are able to capture a very rich variety of structures. We used this neighbourhoods to characterise users in terms of the structure of the conversations they participate in and showed that, indeed, there are different types of structural conversationalists
 
+%Future
+The concept of structural-temporal neighbourhood opens the door to some interesting paths of research. One might wonder whether other pruning are more pertinent than the proposed here. Also, even after pruning some neighbourhoods suggest the same type of conversation, so a manual merge might be convenient. Maybe sociologists can help to merge the found neighbourhoods in a meaningful way.   
+ 
 % use section* for acknowledgment
-\section*{Acknowledgment}
-
-
-The authors would like to thank...
-
-
-
-
+%\section*{Acknowledgment}
 
 % trigger a \newpage just before the given reference
 % number - used to balance the columns on the last page

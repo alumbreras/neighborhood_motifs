@@ -51,7 +51,7 @@ plot.clusters <- function(features, clusters, sizes, colors){
                  groups       = factor(z), 
                  ellipse      = TRUE, 
                  circle       = TRUE,
-                 labels       = rownames(features),
+                 #labels       = rownames(features),
                  labels.size  = 3.5,
                  varname.size = 4) 
   p1 <- p1 + scale_color_manual(values = alpha(cluster.colors,0.75))

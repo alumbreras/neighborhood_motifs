@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.3.11)  12 APR 2016 14:44
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.3.11)  12 APR 2016 18:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -403,11 +403,7 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 )
 \c@definition=\count101
 
-(./paper_IEEEformat.aux
-
-LaTeX Warning: Label `fig:PCA' multiply defined.
-
-)
+(./paper_IEEEformat.aux)
 \openout1 = `paper_IEEEformat.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 218.
@@ -509,14 +505,14 @@ Package pdftex.def Info: ./img/tree2.png used on input line 327.
 File: ./img/large_neighbourhood.png Graphic file (type png)
 
 <use ./img/large_neighbourhood.png>
-Package pdftex.def Info: ./img/large_neighbourhood.png used on input line 357.
+Package pdftex.def Info: ./img/large_neighbourhood.png used on input line 355.
 (pdftex.def)             Requested size: 123.84283pt x 123.83882pt.
 
 <./img/small_neighbourhood.png, id=13, 481.8pt x 481.8pt>
 File: ./img/small_neighbourhood.png Graphic file (type png)
 
 <use ./img/small_neighbourhood.png>
-Package pdftex.def Info: ./img/small_neighbourhood.png used on input line 358.
+Package pdftex.def Info: ./img/small_neighbourhood.png used on input line 356.
 (pdftex.def)             Requested size: 123.84283pt x 123.83882pt.
  [2 <./img/tree2.png> <./img/large_neighbourhood.png> <./img/small_neighbourhoo
 d.png>]
@@ -524,7 +520,7 @@ d.png>]
 File: ./img/breakpoints.png Graphic file (type png)
 
 <use ./img/breakpoints.png>
-Package pdftex.def Info: ./img/breakpoints.png used on input line 412.
+Package pdftex.def Info: ./img/breakpoints.png used on input line 410.
 (pdftex.def)             Requested size: 232.19843pt x 188.18979pt.
 Package epstopdf Info: Source file: <./img/users_posts.eps>
 (epstopdf)                    date: 2016-03-06 18:42:52
@@ -534,7 +530,7 @@ Package epstopdf Info: Source file: <./img/users_posts.eps>
 (epstopdf)                    size: 40395 bytes
 (epstopdf)             Command: <repstopdf --outfile=./img/users_posts-eps-conv
 erted-to.pdf ./img/users_posts.eps>
-(epstopdf)             \includegraphics on input line 431.
+(epstopdf)             \includegraphics on input line 429.
 Package epstopdf Info: Output file is already uptodate.
 
 <./img/users_posts-eps-converted-to.pdf, id=27, 776.9025pt x 513.92pt>
@@ -542,7 +538,7 @@ File: ./img/users_posts-eps-converted-to.pdf Graphic file (type pdf)
 
 <use ./img/users_posts-eps-converted-to.pdf>
 Package pdftex.def Info: ./img/users_posts-eps-converted-to.pdf used on input l
-ine 431.
+ine 429.
 (pdftex.def)             Requested size: 258.0pt x 170.66844pt.
 Package epstopdf Info: Source file: <./img/users_posts_cum.eps>
 (epstopdf)                    date: 2016-03-06 19:09:58
@@ -553,7 +549,7 @@ Package epstopdf Info: Source file: <./img/users_posts_cum.eps>
 (epstopdf)                    size: 51146 bytes
 (epstopdf)             Command: <repstopdf --outfile=./img/users_posts_cum-eps-
 converted-to.pdf ./img/users_posts_cum.eps>
-(epstopdf)             \includegraphics on input line 432.
+(epstopdf)             \includegraphics on input line 430.
 Package epstopdf Info: Output file is already uptodate.
 
 <./img/users_posts_cum-eps-converted-to.pdf, id=28, 776.9025pt x 513.92pt>
@@ -561,104 +557,40 @@ File: ./img/users_posts_cum-eps-converted-to.pdf Graphic file (type pdf)
 
 <use ./img/users_posts_cum-eps-converted-to.pdf>
 Package pdftex.def Info: ./img/users_posts_cum-eps-converted-to.pdf used on inp
-ut line 432.
+ut line 430.
 (pdftex.def)             Requested size: 258.0pt x 170.66844pt.
 
 <./img/census_orderbased_1.png, id=29, 662.475pt x 483.30562pt>
 File: ./img/census_orderbased_1.png Graphic file (type png)
 
 <use ./img/census_orderbased_1.png>
-Package pdftex.def Info: ./img/census_orderbased_1.png used on input line 443.
+Package pdftex.def Info: ./img/census_orderbased_1.png used on input line 441.
 (pdftex.def)             Requested size: 412.80157pt x 301.15819pt.
 
-<./img/neighbourhoods_3_4_1.png, id=30, 831.85782pt x 430.60875pt>
-File: ./img/neighbourhoods_3_4_1.png Graphic file (type png)
-
-<use ./img/neighbourhoods_3_4_1.png>
-Package pdftex.def Info: ./img/neighbourhoods_3_4_1.png used on input line 461.
-
-(pdftex.def)             Requested size: 412.80157pt x 213.68748pt.
-
-<./img/neighbourhoods_3_4_2.png, id=31, 831.85782pt x 430.60875pt>
-File: ./img/neighbourhoods_3_4_2.png Graphic file (type png)
-
-<use ./img/neighbourhoods_3_4_2.png>
-Package pdftex.def Info: ./img/neighbourhoods_3_4_2.png used on input line 462.
-
-(pdftex.def)             Requested size: 412.80157pt x 213.68748pt.
-
-<./img/neighbourhoods_3_4_3.png, id=32, 831.85782pt x 430.60875pt>
-File: ./img/neighbourhoods_3_4_3.png Graphic file (type png)
-
-<use ./img/neighbourhoods_3_4_3.png>
-Package pdftex.def Info: ./img/neighbourhoods_3_4_3.png used on input line 463.
-
-(pdftex.def)             Requested size: 412.80157pt x 213.68748pt.
-
-<./img/neighbourhoods_time_1.png, id=33, 1016.29688pt x 621.82312pt>
+<./img/neighbourhoods_time_1.png, id=30, 1016.29688pt x 621.82312pt>
 File: ./img/neighbourhoods_time_1.png Graphic file (type png)
 
 <use ./img/neighbourhoods_time_1.png>
-Package pdftex.def Info: ./img/neighbourhoods_time_1.png used on input line 471
+Package pdftex.def Info: ./img/neighbourhoods_time_1.png used on input line 455
 .
 (pdftex.def)             Requested size: 412.80157pt x 252.56758pt.
 
-<./img/neighbourhoods_time_2.png, id=34, 1016.29688pt x 621.82312pt>
+<./img/neighbourhoods_time_2.png, id=31, 1016.29688pt x 621.82312pt>
 File: ./img/neighbourhoods_time_2.png Graphic file (type png)
 
 <use ./img/neighbourhoods_time_2.png>
-Package pdftex.def Info: ./img/neighbourhoods_time_2.png used on input line 472
+Package pdftex.def Info: ./img/neighbourhoods_time_2.png used on input line 456
 .
 (pdftex.def)             Requested size: 412.80157pt x 252.56758pt.
- [3 <./img/breakpoints.png (PNG copy)>]
-
-LaTeX Warning: Reference `fig:elbow' on page 4 undefined on input line 487.
-
-<./img/PCA_cluster_timebased.png, id=39, 976.64874pt x 755.82375pt>
-File: ./img/PCA_cluster_timebased.png Graphic file (type png)
-
-<use ./img/PCA_cluster_timebased.png>
-Package pdftex.def Info: ./img/PCA_cluster_timebased.png used on input line 491
-.
-(pdftex.def)             Requested size: 516.0pt x 399.32759pt.
-
-<./img/PCA_cluster_orderbased.png, id=40, 976.64874pt x 753.81625pt>
-File: ./img/PCA_cluster_orderbased.png Graphic file (type png)
-
-<use ./img/PCA_cluster_orderbased.png>
-Package pdftex.def Info: ./img/PCA_cluster_orderbased.png used on input line 49
-2.
-(pdftex.def)             Requested size: 516.0pt x 398.26697pt.
 
 
-LaTeX Warning: Float too large for page by 148.92653pt on input line 495.
+LaTeX Warning: Reference `fig:PCA' on page 3 undefined on input line 465.
 
-<./img/PCA_clustering_3_4_order.png, id=41, 831.85782pt x 542.025pt>
-File: ./img/PCA_clustering_3_4_order.png Graphic file (type png)
-
-<use ./img/PCA_clustering_3_4_order.png>
-Package pdftex.def Info: ./img/PCA_clustering_3_4_order.png used on input line 
-499.
-(pdftex.def)             Requested size: 516.0pt x 336.23398pt.
-
-<./img/clustering_3_4_order.png, id=42, 831.85782pt x 542.025pt>
-File: ./img/clustering_3_4_order.png Graphic file (type png)
-
-<use ./img/clustering_3_4_order.png>
-Package pdftex.def Info: ./img/clustering_3_4_order.png used on input line 500.
-
-(pdftex.def)             Requested size: 516.0pt x 336.23398pt.
-
-
-LaTeX Warning: Float too large for page by 23.79993pt on input line 503.
-
-
+[3 <./img/breakpoints.png (PNG copy)>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [4 <./img/users_posts-eps-converted-to.pdf> <./img/users_posts_cum-eps-convert
-ed-to.pdf> <./img/census_orderbased_1.png (PNG copy)>] [5 <./img/neighbourhoods
-_3_4_1.png (PNG copy)> <./img/neighbourhoods_3_4_2.png (PNG copy)> <./img/neigh
-bourhoods_3_4_3.png (PNG copy)>]
+ed-to.pdf> <./img/census_orderbased_1.png (PNG copy)>]
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -670,27 +602,22 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[6
+[5
 
  <./img/neighbourhoods_time_1.png (PNG copy)> <./img/neighbourhoods_time_2.png 
-(PNG copy)>] [7 <./img/PCA_cluster_timebased.png (PNG copy)> <./img/PCA_cluster
-_orderbased.png (PNG copy)>] [8 <./img/PCA_clustering_3_4_order.png (PNG copy)>
- <./img/clustering_3_4_order.png (PNG copy)>] (./paper_IEEEformat.aux)
+(PNG copy)>] (./paper_IEEEformat.aux)
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: There were multiply-defined labels.
-
  ) 
 Here is how much of TeX's memory you used:
- 3242 strings out of 494902
- 49972 string characters out of 6177496
- 112897 words of memory out of 5000000
- 6390 multiletter control sequences out of 15000+600000
+ 3205 strings out of 494902
+ 48761 string characters out of 6177496
+ 112850 words of memory out of 5000000
+ 6360 multiletter control sequences out of 15000+600000
  47738 words of font info for 102 fonts, out of 8000000 for 9000
  65 hyphenation exceptions out of 8191
- 37i,11n,27p,886b,433s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,11n,27p,1081b,433s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/
@@ -704,10 +631,10 @@ pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/typ
 e1/urw/times/utmri8a.pfb>
-Output written on paper_IEEEformat.pdf (8 pages, 878363 bytes).
+Output written on paper_IEEEformat.pdf (5 pages, 378912 bytes).
 PDF statistics:
- 123 PDF objects out of 1000 (max. 8388607)
- 74 compressed objects within 1 object stream
+ 105 PDF objects out of 1000 (max. 8388607)
+ 66 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 81 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 46 words of extra memory for PDF output out of 10000 (max. 10000000)
 
