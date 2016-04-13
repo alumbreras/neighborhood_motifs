@@ -1,0 +1,41 @@
+@article{Dorat2007,
+annote = {via Jean-philippe cointet y recmendado tambien por el buen revisor de MARAMI 
+(especialmente aB. Conein)},
+author = {Dorat, R and Latapy, Matthieu and Conein, Bernard and Auray, Nicolas},
+file = {:home/alumbreras/Descargas/debian.pdf:pdf},
+journal = {Annales des t{\'{e}}l{\'{e}}communications},
+mendeley-groups = {0. Inbox,4 Forums {\&} Threads},
+number = {3-4},
+pages = {325--349},
+title = {{Multi-level analysis of an interaction network between individuals in a mailing-list}},
+url = {http://link.springer.com/article/10.1007/BF03253264},
+volume = {62},
+year = {2007}
+}
+
+
+@inproceedings{Gaumont2016,
+archivePrefix = {arXiv},
+arxivId = {arXiv:1512.05002v1},
+author = {Gaumont, No{\'{e}} and Viard, Tiphaine and Fournier-S'niehotta, Rapha{\"{e}}l and Wang, Qinna and Latapy, Matthieu},
+booktitle = {Workshop on Complex Networks CompleNet},
+eprint = {arXiv:1512.05002v1},
+file = {:home/alumbreras/Descargas/1512.05002v1.pdf:pdf},
+mendeley-groups = {4 Forums {\&} Threads},
+title = {{Analysis of the temporal and structural features of threads in a mailing-list}},
+url = {http://arxiv.org/pdf/1512.05002v1.pdf},
+year = {2016}
+}
+
+@inproceedings{Bhatt2012,
+abstract = {Public online groups allow individuals to carry out conversations of common interests. Study of such group conversations provides a unique opportunity to study patterns of human conversations without violating individual privacy. The observational studies conducted in this paper are an attempt to identify the main correlates of continued growth of conversations, thereby clearing the path to developing predictive models user participation. We study temporal evolution of online group discussions. Surprisingly, we find that individual discussion groups display distinctively q-exponential shaped inter-message times to reply distributions, unlike the power law distributions seen in email conversations. We show, using simulations, that the heavy-tailed distribution of time to reply, which we also observe when all data is combined, originate from mixtures of q-exponentials. We also find that popular threads come to be so from the very beginning as opposed to evolving to be more popular as they grow. This raises new possibilities for developing generative models of thread growth.},
+author = {Bhatt, Rushi and Barman, Kishor},
+booktitle = {Proceedings of the Sixth International AAAI Conference on Weblogs and Social Media},
+file = {:home/alumbreras/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Bhatt, Barman - 2012 - Global Dynamics of Online Group Conversations.pdf:pdf},
+isbn = {9781577355564},
+keywords = {Short Papers},
+mendeley-groups = {4 Forums {\&} Threads},
+title = {{Global Dynamics of Online Group Conversations}},
+year = {2012}
+}
+
