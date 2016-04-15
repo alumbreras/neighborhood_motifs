@@ -39,3 +39,56 @@ title = {{Global Dynamics of Online Group Conversations}},
 year = {2012}
 }
 
+@inproceedings{Whittaker1998,
+author = {Whittaker, Steve and Terveen, Loren and Hill, Will and Cherny, Lynn},
+booktitle = {Proceedings of the 1998 ACM conference on Computer supported cooperative work},
+file = {:home/alumbreras/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Whittaker et al. - 1998 - The dynamics of mass interaction.pdf:pdf},
+mendeley-groups = {4 Forums {\&} Threads},
+pages = {257--264},
+title = {{The dynamics of mass interaction}},
+year = {1998}
+}
+
+@inproceedings{Adamic2008,
+address = {New York, New York, USA},
+author = {Adamic, Lada A. and Zhang, Jun and Bakshy, Eytan and Ackerman, Mark S.},
+booktitle = {Proceeding of the 17th international conference on World Wide Web - WWW '08},
+doi = {10.1145/1367497.1367587},
+file = {:home/alumbreras/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Adamic et al. - 2008 - Knowledge sharing and yahoo answers.pdf:pdf},
+isbn = {9781605580852},
+keywords = {expertise finding,forum-analysis,help seeking,knowledge sharing,online communities,question answering,social network anal-,ysis},
+mendeley-groups = {Community exploration,PhD,Papers/Mi-parcours,Public,4 Forums {\&} Threads},
+mendeley-tags = {forum-analysis},
+pages = {665},
+publisher = {ACM Press},
+title = {{Knowledge sharing and yahoo answers}},
+url = {http://dl.acm.org/citation.cfm?id=1367587 http://portal.acm.org/citation.cfm?doid=1367497.1367587},
+year = {2008}
+}
+
+@inproceedings{Lumbreras2013,
+author = {Lumbreras, Alberto and Lanagan, James and Velcin, Julien and Jouve, Bertrand},
+booktitle = {Mod{\`{e}}les et Analyses R{\'{e}}seau : Approches Math{\'{e}}matiques et Informatiques (MARAMI)},
+file = {:home/alumbreras/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Lumbreras et al. - 2013 - Analyse des r{\^{o}}les dans les communaut{\'{e}}s virtuelles d{\'{e}}finitions et premi{\`{e}}res exp{\'{e}}rimentations sur IMDb.pdf:pdf},
+mendeley-groups = {Papers/Mi-parcours,4 Forums {\&} Threads},
+pages = {1--12},
+title = {{Analyse des r{\^{o}}les dans les communaut{\'{e}}s virtuelles : d{\'{e}}finitions et premi{\`{e}}res exp{\'{e}}rimentations sur IMDb}},
+year = {2013}
+}
+
+@article{McCallum2007a,
+abstract = {Previous work in social network analysis (SNA) has modeled the existence of links from one entity to another, but not the attributes such as language content or topics on those links. We present the Author-Recipient-Topic (ART) model for social network analysis, which learns topic distributions based on the direction-sensitive messages sent between entities. The model builds on Latent Dirichlet Allocation (LDA) and the Author-Topic (AT) model, adding the key attribute that distribution over topics is conditioned distinctly on both the sender and recipient--steering the discovery of topics according to the relationships between people. We give results on both the Enron email corpus and a researcher's email archive, providing evidence not only that clearly relevant topics are discovered, but that the ART model better predicts people's roles and gives lower perplexity on previously unseen messages. We also present the Role-Author-Recipient-Topic (RART) model, an extension to ART that explicitly represents people's roles.},
+author = {McCallum, Andrew and Wang, Xuerui and Corrada-Emmanuel, Andres},
+journal = {Journal of Artificial Intelligence Research},
+keywords = {enron,lda,role dectection,social network analysis},
+number = {1},
+pages = {249--272},
+title = {{Topic and role discovery in social networks with experiments on enron and academic email}},
+url = {http://www.aaai.org/Papers/JAIR/Vol30/JAIR-3007.pdf},
+volume = {30},
+year = {2007}
+}
+
+
+
+

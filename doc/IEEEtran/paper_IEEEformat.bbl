@@ -21,6 +21,15 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{McCallum2007a}
+\BIBentryALTinterwordspacing
+A.~McCallum, X.~Wang, and A.~Corrada-Emmanuel, ``{Topic and role discovery in
+  social networks with experiments on enron and academic email},''
+  \emph{Journal of Artificial Intelligence Research}, vol.~30, no.~1, pp.
+  249--272, 2007. [Online]. Available:
+  \url{http://www.aaai.org/Papers/JAIR/Vol30/JAIR-3007.pdf}
+\BIBentrySTDinterwordspacing
+
 \bibitem{Bhatt2012}
 R.~Bhatt and K.~Barman, ``{Global Dynamics of Online Group Conversations},'' in
   \emph{Proceedings of the Sixth International AAAI Conference on Weblogs and
@@ -47,5 +56,22 @@ N.~Gaumont, T.~Viard, R.~Fournier-S'niehotta, Q.~Wang, and M.~Latapy,
   mailing-list},'' in \emph{Workshop on Complex Networks CompleNet}, 2016.
   [Online]. Available: \url{http://arxiv.org/pdf/1512.05002v1.pdf}
 \BIBentrySTDinterwordspacing
+
+\bibitem{Adamic2008}
+\BIBentryALTinterwordspacing
+L.~A. Adamic, J.~Zhang, E.~Bakshy, and M.~S. Ackerman, ``{Knowledge sharing and
+  yahoo answers},'' in \emph{Proceeding of the 17th international conference on
+  World Wide Web - WWW '08}.\hskip 1em plus 0.5em minus 0.4em\relax New York,
+  New York, USA: ACM Press, 2008, p. 665. [Online]. Available:
+  \url{http://dl.acm.org/citation.cfm?id=1367587
+  http://portal.acm.org/citation.cfm?doid=1367497.1367587}
+\BIBentrySTDinterwordspacing
+
+\bibitem{Lumbreras2013}
+A.~Lumbreras, J.~Lanagan, J.~Velcin, and B.~Jouve, ``{Analyse des r{\^{o}}les
+  dans les communaut{\'{e}}s virtuelles : d{\'{e}}finitions et premi{\`{e}}res
+  exp{\'{e}}rimentations sur IMDb},'' in \emph{Mod{\`{e}}les et Analyses
+  R{\'{e}}seau : Approches Math{\'{e}}matiques et Informatiques (MARAMI)},
+  2013, pp. 1--12.
 
 \end{thebibliography}
