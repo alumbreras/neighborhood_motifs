@@ -214,7 +214,6 @@
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
-
 \begin{document}
 %
 % paper title
@@ -299,10 +298,7 @@ The interactions between users in online forums are often modelled as complex ne
 %*** global properties: degree distribution, depth distribution, inter-message times,...
 %** Individual properties: ... 
 
-Our goal in this paper is two-fold: on the one hand, to illustrate how structural-temporal neighbourhoods can play the role of triads for conversation trees. On the other hand, to show how structural-temporal neighbourhoods can be used for the detection of different types of conversationalists in online forums or any other type of online discussion that is representable by a tree structure (e.g.: e-mails).
-
-%TODO: llevar esto al final 
-%Our intuition is that some users like participating in some kind of discussion rather than other. Certainly, an analysis of the textual content will tell us much about a discussion. However, due to the huge diversity of topics, vocabulary, and the difficulty of current algorithms to capture the language subtleties such as humour, irony, or changing contexts, we turn our attention towards the structure of the discussions. More precisely, we analyse the local graph structure in which a user post in embedded, in the hope that this structure will be meaningful since it also reflects the kind of conversation in that part of the thread. Formally, these local graphs are known as neighbourhoods.
+Our goal in this paper is two-fold: on the one hand, to illustrate how structural-temporal neighbourhoods can play the role of triads for conversation trees, in the sense that they show us the local structures or dynamics from which the bigger graph emerges. On the other hand, to show how structural-temporal neighbourhoods can be used for the detection of different types of conversationalists in online forums or any other type of online discussion that is representable by a tree structure (e.g.: e-mails).
 
 The remaining of the paper is as follows. We first discuss about the convenience of the classic neighbourhood definition in dynamic graphs such as discussion trees. Then we introduce our two definitions of structural-temporal neighbourhoods. To illustrate the kind of neighbourhoods that we obtain in a real data, we analyse the neighbourhood census of a Reddit forum. Finally, we apply both neighbourhood definitions to detect clusters of users that tend to appear in the same neighbourhoods. We close the paper with some suggestions of future research.
 \begin{figure}
@@ -411,7 +407,7 @@ Figure~\ref{fig:colors} shows some real examples, from our dataset, of time-base
 
 \section{Application to Reddit forums}
 We applied our two definitions of structural-temporal neighbourhood (order-based and time-based) to a forum dataset. Our dataset consists of all posts from March 2014 to May 2015 of the Podemos forum in Reddit\footnote{https://www.reddit.com/r/podemos}. The Podemos forum was conceived in March 2014 as a tool for internal democracy, and forum members used it to debate ideological and organizational principles that were later formalized in their first party congress hold in Madrid the October 18th and 19th 2014. Nowadays, its members use it mainly to share and discuss about political news.
-The forum contains 83,6119 posts spread over 47,803 threads and written by 26,193 users.
+Our dataset contains contains 75,000 posts spread over 4,262 threads and written by 9,160 users between the April 25th and October 20th 2014.
 
 \begin{figure*}
 \centering
@@ -421,7 +417,6 @@ The forum contains 83,6119 posts spread over 47,803 threads and written by 26,19
 \label{fig:podemos_distributions}
 \end{figure*}
 
- %\noindent\textcolor{red}{\rule{16cm}{1mm}}
 \subsection{Neighbourhood census}
 Given a set of local structures and a graph under study, a census is a counting of how many times does every structure appear in the graph. In the context of online discussion forums, triad census in the graph of users interactions are often used (in these graphs, an edge exists from user $u$ to user $v$ if $u$ wrote a post reply to some of the posts written by $v$ in some thread.) \cite{Adamic2008, Lumbreras2013}.
 
@@ -443,13 +438,15 @@ We analysed the order-based and time-based neighbourhood census of our dataset. 
 	\label{fig:neighbourhoods_time}
 \end{figure*}
 
-Figure \ref{fig:census_orderbased} and \ref{fig:neighbourhoods_time} show the most frequent order-based and time-based neighbourhoods.
+Figure \ref{fig:census_orderbased} and \ref{fig:neighbourhoods_time} show the most frequent order-based and time-based neighbourhoods in the Podemos dataset. In Figure X we compare the census of the most frequent neighbourhoods in the Podemos and the Game of Thrones forums. 
 
 % TODO: Explicar un poco los resultados y conclusiones del censo. Mostrar grafica de frecuencia de cada motif o cumsum, para ilustrar como de distribuido esta el censo.
 
 
 \subsection{Conversation-based clustering of users}
-In this section, we cluster users based on the neighbourhoods of their posts. We limit our study to a set of 100 \textit{active users} who wrote more than 100 posts. For those users, we create an initial feature matrix $U\times N$ where $U$ is the number of users and $N$ is the number of neighbourhoods in the census, and where the the position $(u,n)$ is a counter of the number of times that a post written by user $u$ has a neighbourhood isomorphic to $n$. We drop those feature columns that are zero for every user (these are neighbourhoods seen only around posts of users with low-level activity). To make the feature vector of a user independent on the number of posts, we transform the counts into percentages. And since some features have much higher percentages than others for most users, we scale and normalize the matrix so that every feature has mean 0 and variance 1. To avoid non-significant scores, we remove also the feature column corresponding to neighbourhoods that have a frequency less than 50 among the active users.
+In this section, we cluster users based on the neighbourhoods of their posts. Our intuition is that some users like participating in some kind of discussion rather than other. Certainly, most part of the information necessary to understand the nature of a discussion in in its textual content. However, due to the huge diversity of topics, vocabulary, and the difficulty of current algorithms to capture the language subtleties such as humour, irony, or context, we turn our attention towards the structure of the discussions, which can also contain some information. We work under the  hypothesis that the structural-neighbourhoods in which a user post in embedded reflect the kind of conversation in that part of the thread. 
+
+We limit our study to a set of 100 \textit{active users} who wrote more than 100 posts. For those users, we create an initial feature matrix $U\times N$ where $U$ is the number of users and $N$ is the number of neighbourhoods in the census, and where the the position $(u,n)$ is a counter of the number of times that a post written by user $u$ has a neighbourhood isomorphic to $n$. We drop those feature columns that are zero for every user (these are neighbourhoods seen only around posts of users with low-level activity). To make the feature vector of a user independent on the number of posts, we transform the counts into percentages. And since some features have much higher percentages than others for most users, we scale and normalize the matrix so that every feature has mean 0 and variance 1. To avoid non-significant scores, we remove also the feature column corresponding to neighbourhoods that have a frequency less than 50 among the active users.
 
 We use k-means to find the clusters, though one can use any other clustering method. Since the plot over the Within-Cluster Sum of Squares for $k=1,...20$ did not show any clear elbow we chose $k=3$ clusters so that clusters are easier to interpret. We did the clustering over a feature matrix with order-based neighbourhoods and another feature matrix with time-based neighbourhoods. Figure~\ref{fig:PCA} and shows the PCA projections of the users coloured by their assigned cluster. 
 
@@ -468,7 +465,12 @@ We use k-means to find the clusters, though one can use any other clustering met
 \end{figure*}
 
 %Interpretation
-
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\textwidth]{whiskers}
+	\caption{Whiskers plots in the most relevant features (time-based)}
+	\label{fig:PCA}
+\end{figure}
 
 % Maybe mention that we can take for instance only the posts before the ego and use it to understand when when can recommend a post based on the structure.
 
@@ -478,7 +480,7 @@ are able to capture a very rich variety of structures. We used this neighbourhoo
 
 %Future
 The concept of structural-temporal neighbourhood opens the door to some interesting paths of research. One might wonder whether other pruning are more pertinent than the proposed here. Also, even after pruning some neighbourhoods suggest the same type of conversation, so a manual merge might be convenient. Maybe sociologists can help to merge the found neighbourhoods in a meaningful way.   
- 
+
 % use section* for acknowledgment
 %\section*{Acknowledgment}
 

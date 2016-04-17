@@ -37,3 +37,22 @@ SELECT DISTINCT t.threadid  FROM  posts p, threads t WHERE t.forum LIKE 'podemos
 SELECT t.threadid  FROM  posts p, threads t WHERE t.forum LIKE 'podemos' AND p.thread LIKE t.threadid AND p.user LIKE 'cacbox2' LIMIT 10
 
 
+SELECT p.postid, p.user FROM posts p, threads t WHERE p.thread LIKE t.threadid AND t.forum LIKE 'podemos'
+SELECT p.postid, p.parent, p.user, p.date FROM posts p, threads t WHERE p.thread LIKE t.threadid AND t.forum LIKE 'podemos' LIMIT 20
+
+
+query <- "SELECT p.postid, p.parent, p.user, p.date, t.threadid FROM posts p, threads t WHERE p.thread LIKE t.threadid AND t.forum LIKE 'podemos'"
+database='reddit'
+con <- dbConnect(dbDriver("SQLite"), dbname = paste0("./data/", database, ".db"))
+df.posts <- dbGetQuery(con, query)
+
+# select first threads by date (does not work)
+SELECT t.threadid FROM threads t, posts p WHERE p.thread LIKE t.threadid  AND t.forum LIKE 'podemos' ORDER BY CONVERT(INT, p.date) LIMIT 10
+SELECT t.threadid FROM threads t, posts p WHERE p.postid LIKE t.threadid  AND t.forum LIKE 'podemos' ORDER BY CAST(p.date as unsigned) LIMIT 10
+
+
+
+threads <-  dbGetQuery(con,  paste0("SELECT t.threadid, p.date FROM threads t, posts p WHERE p.postid LIKE t.threadid  AND t.forum LIKE '", forum, "'"))
+threads$date <- as.numeric(threads$date)
+threads.ids <- arrange(threads, date)$threadid
+

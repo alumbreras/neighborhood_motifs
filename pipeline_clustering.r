@@ -34,7 +34,14 @@ MIN_POSTS <- 100 # number of post to consider a user as active
 ###################################################
 #df.posts <- load_posts(database='reddit', forum='podemos')
 #save(df.posts,file="dfposts.Rda")
-load('dfposts.Rda') # 836119 posts, 47803 threads
+#load('dfposts.Rda') # 836119 posts, 47803 threads
+
+df.posts <- load_posts(database='reddit', forum='gameofthrones')
+#save(df.posts,file="dfposts.Rda")
+
+
+# TODO: get N first threads by date
+
 df.posts <- data.frame(df.posts) %>% arrange(date)
 #df.posts <- df.posts[1:300000,]
 #df.posts <- df.posts[1:100000,]
@@ -48,7 +55,10 @@ df.posts <- data.frame(df.posts) %>% arrange(date)
 #df.posts <- df.posts[80000:85000,] # ok
 #df.posts <- df.posts[1:5000,] # # 15 mins
 #df.posts <- df.posts[1:25000,] # in progress # 15 mins #fail!
-df.posts <- df.posts[1:75000,] 
+
+df.posts <- df.posts[1:75000,] # Paper
+
+#df.posts <- df.posts[1:5000,] # Debug
 
 
 df.threads <- plyr::count(df.posts, "thread")
@@ -96,15 +106,13 @@ length(chunks)
 ##############################"
 # sequential
 #par(mfrow=c(1,1))
-res.seq <- count_motifs_by_post(as.vector(unlist(chunks[1])), 
+res.seq <- count_motifs_by_post(as.vector(unlist(chunks)), 
                                 database='reddit',
                                 neighbourhood='order')
-#"t3_2a5f81" problematic
-#t3_2aga0t
 
-res.seq.dyn <- count_motifs_by_post('t3_29yrey', 
-                                    database='reddit',
-                                    neighbourhood='time')
+
+
+
 
 library('lineprof')
 l <- lineprof(count_motifs_by_post(unlist(chunks)[1:20], 
@@ -115,7 +123,7 @@ res <- res.seq.dyn
 #plot.motif.counts(res.seq)
 
 # parallel
-ncores <- detectCores() - 9
+ncores <- detectCores() - 2
 cl<-makeCluster(ncores, outfile="", port=11439)
 registerDoParallel(cl)
 pck <- c('RSQLite', 'data.table', 'changepoint')
@@ -145,13 +153,14 @@ if(FALSE){
 res <- merge.motif.counts(res.parallel)
 
 #save(res,file="res_time_75000.Rda")
-load("res_time_75000.Rda")
+#load("res_time_75000.Rda")
 
 #save(res, file='res_2_4_order_75000.Rda') 
 #load('res_2_4_order_75000.Rda') 
 
 # Plot found motifs and their frequency
 plot.motif.counts(res)
+plot.motif.counts(res.seq.dyn)
 #dev.copy(png, paste0('2016-01-15-motifs_4_4_order.png'))
 dev.copy(png, 'neighbourhoods_time.png')
 dev.off()
@@ -162,20 +171,25 @@ dev.off()
 df.post.motif  <- res$posts.motifs
 motifs <- res$motifs
 
-# Sort by frequency (and relabel: 1 for the most frequent and so forth)
-#idx <- order(table(df.post.motif$motif), decreasing = TRUE)
-#df.post.motif$motif <- match(df.post.motif$motif, idx)
-#motifs <- motifs[idx]
-
 # Add motif info to posts dataframe
-#df.posts <- merge(df.posts, df.post.motif, all.x=TRUE, sort=FALSE)
 df.posts <- merge(df.posts, df.post.motif, all.x=FALSE, sort=FALSE)
 
 
-# Check that df.posts gets the motifs relabeled
-#head(arrange(df.post.motif, postid),10)
-#head(arrange(df.posts, postid),10)
+###############################################
+# Census
+###############################################
+par(mfrow=c(1,1))
+n <- hist(df.posts$motif, breaks=0:max(df.posts$motif))$counts
+plot(1:max(df.posts$motif), n, log='y', 
+     ylab='Frequency', xlab='Neighbourhood')
+title(main='Neighbourhoods frequency')
 
+plot(cumsum(table(df.posts$motif)), pch=19, cex=0.5,
+     ylab='Frequency (cum)', xlab='Neighbourhood')
+title('Neighbourhoods frequency (cumulative)')
+
+# How many neighbourhoods we need to account for 90% (for instance) of occurrences
+names(table(df.posts$motif))[cumsum(table(df.posts$motif))<63000]
 
 ######################################################
 # Count motifs in which each user appears
@@ -235,24 +249,68 @@ plot.clusters(features,
 ####################################################
 # Which are the top neighbourhoods of each cluster?
 ####################################################
+
 centers <- kmeans(features, 3)$centers
 plot(centers[1,])
 plot(centers[2,])
 plot(centers[3,])
+relevant.features <- c() 
+mypalette <- c("grey", "black", "yellow", "orange", "red", "white")
+for (k in 1:3){
+  par(mfrow=c(1,1))
+  fav.motifs <- order(abs(centers[k,]),  decreasing=TRUE)
+  plot(centers[k,fav.motifs])
+  cat('\nrelevants: ', fav.motifs)
+  
+  # The most prefered and the most repulsed
+  limits <- quantile(centers[k,],c(0.05,0.95))
+  upper.motifs <- sort(centers[k,][centers[k,]>limits[2]], decreasing=TRUE) %>% names %>% as.numeric
+  lower.motifs <- sort(centers[k,][centers[k,]<limits[1]], decreasing=TRUE) %>% names %>% as.numeric
+  
+  relevant.features <- c(relevant.features, upper.motifs)
+  relevant.features <- c(relevant.features, lower.motifs)
+  cat('\nCluster: ', k)
+  cat('\n Relevant features -- upper ', upper.motifs)
+  cat('\n Relevant features -- lower ', lower.motifs)
+  
+  par(mfrow=c(3,5))
+  for(j in 1:length(upper.motifs)){
+    i <- upper.motifs[j]
+    gmotif <- as.undirected(motifs[[i]])
+    la = layout_as_tree(gmotif, mode='out', root=which.min(V(gmotif)$date))
+    plot(gmotif,
+         layout = la,
+         vertex.color=mypalette[V(motifs[[i]])$color],
+         vertex.label = "",
+         edge.arrow.size=0.6)
+    title(paste(i),sub=sum(df.post.motif$motif==i))  
+  }
 
-k <- 1
-fav.motifs <- order(abs(centers[k,]),  decreasing=TRUE)
-plot(centers[k,fav.motifs])
-cat(fav.motifs)
+  par(mfrow=c(3,5))
+  for(j in 1:length(lower.motifs)){
+    i <- lower.motifs[j]
+    gmotif <- as.undirected(motifs[[i]])
+    la = layout_as_tree(gmotif, mode='out', root=which.min(V(gmotif)$date))
+    plot(gmotif,
+         layout = la,
+         vertex.color=mypalette[V(motifs[[i]])$color],
+         vertex.label = "",
+         edge.arrow.size=0.6)
+    title(paste(i),sub=sum(df.post.motif$motif==i)) 
+  }
+}
 
-k <- 2
-fav.motifs <- order(abs(centers[k,]),  decreasing=TRUE)
-plot(centers[k,fav.motifs])
-cat(fav.motifs)
-
-k <- 3
-fav.motifs <- order(abs(centers[k,]),  decreasing=TRUE)
-plot(centers[k,fav.motifs])
-cat(fav.motifs)
 
 ## Plot which are those favorite clusters
+
+points <- as.data.frame(features[, relevant.features])
+points$cluster <- factor(z)
+points <- melt(points, id='cluster')
+p <- ggplot(points, aes(x=variable, y=value)) + 
+  scale_fill_manual(values = cluster.colors) + 
+  geom_boxplot(aes(fill = cluster), position = position_dodge(width = 0.75))
+p <- p + theme_bw() +
+  theme(text = element_text(size = 15),
+        legend.key = element_blank()) +
+  ggtitle("Clusters means and variances")
+print(p)
