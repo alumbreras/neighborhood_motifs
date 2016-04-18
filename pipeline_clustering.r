@@ -36,7 +36,7 @@ MIN_POSTS <- 100 # number of post to consider a user as active
 #save(df.posts,file="dfposts.Rda")
 #load('dfposts.Rda') # 836119 posts, 47803 threads
 
-df.posts <- load_posts(database='reddit', forum='gameofthrones')
+#df.posts <- load_posts(database='reddit', forum='gameofthrones')
 #save(df.posts,file="dfposts.Rda")
 load('./R_objects/dfposts_gameofthrones.Rda')
 df.posts$date <- as.numeric(df.posts$date)
@@ -124,7 +124,7 @@ stopCluster(cl)
 
 res <- merge.motif.counts(res.parallel)
 
-save(res,file="res_time_75000_gameofthrones.Rda")
+#save(res,file="res_time_75000_gameofthrones.Rda")
 #load("res_time_75000.Rda")
 
 #save(res, file='res_2_4_order_75000.Rda') 
@@ -139,13 +139,32 @@ dev.off()
 
 
 #########################################
+#df.posts.bck <- df.posts
 
+df.posts <-df.posts.bck
 df.post.motif  <- res$posts.motifs
 motifs <- res$motifs
 
-# Add motif info to posts dataframe
-df.posts <- merge(df.posts, df.post.motif, all.x=FALSE, sort=FALSE)
+# Check they are sorted by frequency
+n <- as.numeric(table(df.post.motif$motif))
+all(n == cummin(n))
 
+# Add motif info to posts dataframe
+df.posts <- merge(df.posts, df.post.motif, all=FALSE, sort=FALSE)
+
+# Because the counting is based on threads, there might be some posts that were 
+# recovered in df.post.motif but that were cut in df.posts[1:N]
+# so re-sort again motifs by frequency
+# Sort by frequency (and relabel: 1 for the most frequent and so forth)
+# make NA appear in table so that they are convetred to 0
+idx <- order(tabulate(df.posts$motif), decreasing = TRUE)
+df.posts$motif <- match(df.posts$motif, idx)
+motifs <- motifs[idx]
+
+
+# Check they are STILL sorted by frequency (they should be)
+n <- as.numeric(table(df.posts$motif))
+all(n == cummin(n))
 
 ###############################################
 # Census
@@ -153,7 +172,8 @@ df.posts <- merge(df.posts, df.post.motif, all.x=FALSE, sort=FALSE)
 par(mfrow=c(1,1))
 n <- hist(df.posts$motif, breaks=0:max(df.posts$motif))$counts
 plot(1:max(df.posts$motif), n, log='y', 
-     ylab='Frequency', xlab='Neighbourhood')
+     ylab='Frequency', xlab='Neighbourhood',
+     pch=19, cex=0.1)
 title(main='Neighbourhoods frequency')
 
 plot(cumsum(table(df.posts$motif)), pch=19, cex=0.5,

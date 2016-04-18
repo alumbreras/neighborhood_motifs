@@ -208,8 +208,6 @@ merge.motif.counts.pair <- function(res1, res2){
 
   df.posts.motifs.1 <- res1$posts.motifs
   df.posts.motifs.2 <- res2$posts.motifs
-  #plot.motif.counts(res1)
-  #plot.motif.counts(res2)
   motifs.1 <- res1$motifs
   motifs.2 <- res2$motifs
   duplicated_motifs <- c()
@@ -239,8 +237,8 @@ merge.motif.counts.pair <- function(res1, res2){
   
   motifs.merged <- c(motifs.1, motifs.1.new)
   df.posts.motifs.2$motif <- mapping[df.posts.motifs.2$motif]  
-
   df.posts.motifs.merged <- rbind(df.posts.motifs.1, df.posts.motifs.2)
+  
   res <- list(posts.motifs = df.posts.motifs.merged,
               motifs = motifs.merged)
   
@@ -262,6 +260,14 @@ merge.motif.counts <- function(df.list){
   posts.motifs$motif <- match(posts.motifs$motif, idx)
   motifs <- motifs[idx]
   
+  # check this is sorted
+  n <- table(posts.motifs$motif[idx])
+  n <- table(posts.motifs$motif)
+  if(! all(n == cummin(n))){
+    cat('Something wrong in sorting motifs!')
+  }
+  
+  
   return(list(posts.motifs = posts.motifs,
               motifs = motifs))
 }
@@ -272,7 +278,6 @@ plot.motif.counts <- function(res){
   ####################################################
   # Plot found neighborhoods
   ####################################################
-  #mypalette <- c("black", "red", "white", 'orange')
   mypalette <- c("grey", "black", "yellow", "orange", "red", "white")
   par(mfrow=c(3,5))
   for(i in 1:length(motifs)){
@@ -283,7 +288,6 @@ plot.motif.counts <- function(res){
          vertex.color=mypalette[V(motifs[[i]])$color],
          vertex.label = "",
          edge.arrow.size=0.6)
-    #title(1, sub=sum(df.post.motif$motif==i))
     cat(sum(df.post.motif$motif==i))
     title(paste(i),sub=sum(df.post.motif$motif==i))  
   }

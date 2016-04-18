@@ -7,11 +7,7 @@ load_posts <- function(database='reddit', forum='podemos'){
   
   # Threads in forum
   thread.ids <- dbGetQuery(con,  paste0("SELECT threadid FROM threads WHERE forum='", forum, "'"))
-  
-  #threads <-  dbGetQuery(con,  paste0("SELECT t.threadid, p.date FROM threads t, posts p WHERE p.postid LIKE t.threadid  AND t.forum LIKE '", forum, "'"))
-  #threads$date <- as.numeric(threads$date)
-  #threads.ids <- arrange(threads, date)$threadid
-  
+
   # Dataframe of users and threads where they participated
   df.posts <- data.frame()
   for(i in 1:nrow(thread.ids)){ 
