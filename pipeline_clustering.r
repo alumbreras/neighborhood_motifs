@@ -38,28 +38,11 @@ MIN_POSTS <- 100 # number of post to consider a user as active
 
 df.posts <- load_posts(database='reddit', forum='gameofthrones')
 #save(df.posts,file="dfposts.Rda")
-
-
-# TODO: get N first threads by date
-
+load('./R_objects/dfposts_gameofthrones.Rda')
+df.posts$date <- as.numeric(df.posts$date)
 df.posts <- data.frame(df.posts) %>% arrange(date)
-#df.posts <- df.posts[1:300000,]
-#df.posts <- df.posts[1:100000,]
-#df.posts <- df.posts[30000:60000,] # test debug
-#df.posts <- df.posts[50000:60000,] # test debug
-#df.posts <- df.posts[60000:100000,] # test debug error aqui
-#df.posts <- df.posts[70000:80000,] # test debug error aqui
-#df.posts <- df.posts[82500:85000,] # ok
-#df.posts <- df.posts[80000:82500,] # 
-
-#df.posts <- df.posts[80000:85000,] # ok
-#df.posts <- df.posts[1:5000,] # # 15 mins
-#df.posts <- df.posts[1:25000,] # in progress # 15 mins #fail!
-
 df.posts <- df.posts[1:75000,] # Paper
-
 #df.posts <- df.posts[1:5000,] # Debug
-
 
 df.threads <- plyr::count(df.posts, "thread")
 df.users <- plyr::count(df.posts, 'user')                                                                                                                                   
@@ -101,7 +84,7 @@ title('Users posts (cumulative)')
 # Only long threads
 #df.threads <- filter(df.threads, length>10)
 
-chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/300))
+chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/295))
 length(chunks)
 ##############################"
 # sequential
@@ -123,7 +106,7 @@ res <- res.seq.dyn
 #plot.motif.counts(res.seq)
 
 # parallel
-ncores <- detectCores() - 2
+ncores <- detectCores() - 5
 cl<-makeCluster(ncores, outfile="", port=11439)
 registerDoParallel(cl)
 pck <- c('RSQLite', 'data.table', 'changepoint')
@@ -135,24 +118,13 @@ res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
   #                                  120, onTimeout='warning')
   count_motifs_by_post(chunks[[i]], 
                        database='reddit',
-                       neighbourhood='order')
+                       neighbourhood='time')
 }
 stopCluster(cl)
 
-# Debug. get threads not still processed and create chunks to try again
-# until we find the thread that raises the exception
-if(FALSE){
-  threads <- df.threads$thread
-  processed <- as.character(read.table("processed_threads.csv")[,1])
-  threads[threads %in% processed]
-  todo <- threads[! threads %in% processed]
-  chunks <- split(threads, ceiling(seq_along(threads)/200))
-  length(chunks)
-}
-
 res <- merge.motif.counts(res.parallel)
 
-#save(res,file="res_time_75000.Rda")
+save(res,file="res_time_75000_gameofthrones.Rda")
 #load("res_time_75000.Rda")
 
 #save(res, file='res_2_4_order_75000.Rda') 
