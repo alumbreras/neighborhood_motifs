@@ -38,7 +38,7 @@ MIN_POSTS <- 100 # number of post to consider a user as active
 
 #df.posts <- load_posts(database='reddit', forum='gameofthrones')
 #save(df.posts,file="dfposts.Rda")
-load('./R_objects/dfposts_gameofthrones.Rda')
+load('./R_objects/dfposts_podemos.Rda')
 df.posts$date <- as.numeric(df.posts$date)
 df.posts <- data.frame(df.posts) %>% arrange(date)
 df.posts <- df.posts[1:75000,] # Paper
@@ -84,7 +84,7 @@ title('Users posts (cumulative)')
 # Only long threads
 #df.threads <- filter(df.threads, length>10)
 
-chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/295))
+chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/300))
 length(chunks)
 ##############################"
 # sequential
@@ -106,7 +106,7 @@ res <- res.seq.dyn
 #plot.motif.counts(res.seq)
 
 # parallel
-ncores <- detectCores() - 5
+ncores <- detectCores() - 10
 cl<-makeCluster(ncores, outfile="", port=11439)
 registerDoParallel(cl)
 pck <- c('RSQLite', 'data.table', 'changepoint')
@@ -118,19 +118,19 @@ res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
   #                                  120, onTimeout='warning')
   count_motifs_by_post(chunks[[i]], 
                        database='reddit',
-                       neighbourhood='order')
+                       neighbourhood='time')
 }
 stopCluster(cl)
 
 res <- merge.motif.counts(res.parallel)
 
-#save(res,file="res_time_75000_gameofthrones.Rda")
+#save(res,file="res_time_75000_4chan.Rda")
 #load("res_time_75000.Rda")
 
 #save(res,file="res_order_2_4_75000_gameofthrones.Rda")
-load("res_order_2_4_75000_gameofthrones.Rda")
+#load("res_order_2_4_75000_gameofthrones.Rda")
 
-#save(res, file='res_2_4_order_75000.Rda') 
+save(res, file='res_order_2_4_75000_podemos.Rda') 
 #load('res_2_4_order_75000.Rda') 
 
 # Plot found motifs and their frequency
