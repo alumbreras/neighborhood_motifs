@@ -118,7 +118,7 @@ res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
   #                                  120, onTimeout='warning')
   count_motifs_by_post(chunks[[i]], 
                        database='reddit',
-                       neighbourhood='time')
+                       neighbourhood='order')
 }
 stopCluster(cl)
 
@@ -126,6 +126,9 @@ res <- merge.motif.counts(res.parallel)
 
 #save(res,file="res_time_75000_gameofthrones.Rda")
 #load("res_time_75000.Rda")
+
+#save(res,file="res_order_2_4_75000_gameofthrones.Rda")
+load("res_order_2_4_75000_gameofthrones.Rda")
 
 #save(res, file='res_2_4_order_75000.Rda') 
 #load('res_2_4_order_75000.Rda') 
