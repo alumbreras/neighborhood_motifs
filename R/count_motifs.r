@@ -54,7 +54,7 @@ prune <- function(motif){
 
 count_motifs_by_post <- function(threads, 
                                  database='reddit', 
-                                 neighbourhood=c('order', 'time'),
+                                 neighbourhood=c('struct', 'order', 'time'),
                                  rad=2,
                                  max.neighbors=4){
   
@@ -126,6 +126,9 @@ count_motifs_by_post <- function(threads,
         }
         if(neighbourhood=='time'){
           eg <- neighborhood.temporal(gp, j, 2, breakpoints.v, breakpoints.h)
+        }
+        if(neighbourhood=='struct'){
+          eg <- make_ego_graph(gp, rad, nodes=j)[[1]]
         }
         
         # See if it matches any seen motif

@@ -79,31 +79,25 @@ plot(cumsum(table(df.users$posts)), pch=19, cex=0.5,
      ylab='Posts (cum)', xlab='User')
 title('Users posts (cumulative)')
 
+#########################################################
 # Compute neighborhood around every post
-
+#########################################################
 # Only long threads
 #df.threads <- filter(df.threads, length>10)
 
 chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/300))
 length(chunks)
-##############################"
+
+# Profiling
+#library('lineprof')
+#l <- lineprof(count_motifs_by_post(unlist(chunks)[1:20], 
+#                                   database='reddit',
+#                                   neighbourhood='time'))
+
 # sequential
-#par(mfrow=c(1,1))
 res.seq <- count_motifs_by_post(as.vector(unlist(chunks)), 
                                 database='reddit',
                                 neighbourhood='order')
-
-
-
-
-
-library('lineprof')
-l <- lineprof(count_motifs_by_post(unlist(chunks)[1:20], 
-                                   database='reddit',
-                                   neighbourhood='time'))
-res <- res.seq.dyn
-#res <- res.seq
-#plot.motif.counts(res.seq)
 
 # parallel
 ncores <- detectCores() - 10
@@ -118,11 +112,12 @@ res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
   #                                  120, onTimeout='warning')
   count_motifs_by_post(chunks[[i]], 
                        database='reddit',
-                       neighbourhood='time')
+                       neighbourhood='struct')
 }
 stopCluster(cl)
-
 res <- merge.motif.counts(res.parallel)
+save(res, file='./R_objects/res_struct_75000_podemos.Rda') 
+#save(res, file='./R_objects/res_order_2_4_75000_4chan.Rda') 
 
 #save(res,file="res_time_75000_4chan.Rda")
 #load("res_time_75000.Rda")
@@ -130,12 +125,11 @@ res <- merge.motif.counts(res.parallel)
 #save(res,file="res_order_2_4_75000_gameofthrones.Rda")
 #load("res_order_2_4_75000_gameofthrones.Rda")
 
-save(res, file='res_order_2_4_75000_podemos.Rda') 
 #load('res_2_4_order_75000.Rda') 
 
 # Plot found motifs and their frequency
 plot.motif.counts(res)
-plot.motif.counts(res.seq.dyn)
+
 #dev.copy(png, paste0('2016-01-15-motifs_4_4_order.png'))
 dev.copy(png, 'neighbourhoods_time.png')
 dev.off()
