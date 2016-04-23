@@ -108,7 +108,7 @@ plot(1:max(df.posts.1$motif), n1, ylim=c(1, 20000), log='y',
      pch=19, cex=0.1)
 
 points(1:max(df.posts.2$motif), n2, 
-     pch=19, cex=0.1, col='red')
+       pch=19, cex=0.1, col='red')
 #legend('topright', c('time-based', 'order-based'), col=1:2, pch=19)
 legend(1805,5, c('time-based', 'order-based'), col=1:2, pch=19)
 title(main='Census distribution (Game of Thrones)')
@@ -222,7 +222,7 @@ for(i in 1:50){
   cat('\n ', i)
   counters.1[i] <- sum(df.posts.1$motif==i)
   for(j in 1:length(motifs.2)){
-  
+    
     # the vf2 does not like graphs of different size
     if(vcount(motifs.1[[i]]) != vcount(motifs.2[[j]])){      
       next
@@ -314,14 +314,14 @@ for(i in 1:length(motifs.order)){
       break
     }
   }
-    # if motif.2 not found among motifs.1, give him its own position in 1
-    if(!dupl){
-      new.pos <- last.pos + 1
-      motifs.global[[new.pos]] <- motifs.order[[i]] # copy motif graph
-      mapping[i] <- new.pos
-      cat("\nnew ", i, " -> ", new.pos)
-      last.pos <- last.pos + 1
-    }
+  # if motif.2 not found among motifs.1, give him its own position in 1
+  if(!dupl){
+    new.pos <- last.pos + 1
+    motifs.global[[new.pos]] <- motifs.order[[i]] # copy motif graph
+    mapping[i] <- new.pos
+    cat("\nnew ", i, " -> ", new.pos)
+    last.pos <- last.pos + 1
+  }
 }
 df.posts.motif.order$motif <- mapping[df.posts.motif.order$motif]
 df.posts.motif.global <- data.frame(postid = df.posts.motif.time$postid,
@@ -339,9 +339,9 @@ plot(df.posts.motif.global$motif.time, df.posts.motif.global$motif.order, cex=0.
 # other ways
 ma <- matrix(0, length(motifs.global), length(motifs.global))
 for (i in 1:nrow(df.posts.motif.global)){
-    a <- df.posts.motif.global$motif.time[i]
-    b <- df.posts.motif.global$motif.order[i]
-    ma[a,b] <- ma[a,b] + 1
+  a <- df.posts.motif.global$motif.time[i]
+  b <- df.posts.motif.global$motif.order[i]
+  ma[a,b] <- ma[a,b] + 1
 }
 # how many are in the diagonal?
 sum(diag(ma))/69484
@@ -349,7 +349,7 @@ sum(diag(ma))/69484
 apply(ma,2, function(x) sum(x>0))
 top.atractors <- order(apply(ma,2, function(x) sum(x>0)), decreasing = TRUE)[1:10]
 apply(ma,2, function(x) sum(x>0))[top.atractors]
-  
+
 # we dont see nothing here :(
 image(ma[1:100,1:100], col = rev(grey(seq(0, 1, length = max(ma)))))
 # neither
@@ -380,7 +380,7 @@ df.confusions <- data.frame(motif.time = most.frequent.time,
 ####################################################
 # Plot selection of neighborhoods
 ####################################################
-mypalette <- c("grey", "black", "yellow", "orange", "red", "white")
+mypalette <- c("black", "yellow", "orange", "red", "white")
 par(mfcol=c(2,5))
 selected.motifs <- top.atractors
 for(i in 1:nrow(df.confusions)){
