@@ -41,8 +41,8 @@ MIN_POSTS <- 100 # number of post to consider a user as active
 load('./R_objects/dfposts_podemos.Rda')
 df.posts$date <- as.numeric(df.posts$date)
 df.posts <- data.frame(df.posts) %>% arrange(date)
-df.posts <- df.posts[1:75000,] # Paper
-#df.posts <- df.posts[1:5000,] # Debug
+#df.posts <- df.posts[1:75000,] # Paper
+df.posts <- df.posts[17100:17109,] # Debug
 
 df.threads <- plyr::count(df.posts, "thread")
 df.users <- plyr::count(df.posts, 'user')                                                                                                                                   
@@ -85,22 +85,24 @@ title('Users posts (cumulative)')
 # Only long threads
 #df.threads <- filter(df.threads, length>10)
 
-chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/300))
+chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/70))
 length(chunks)
 
 # Profiling
-#library('lineprof')
-#l <- lineprof(count_motifs_by_post(unlist(chunks)[1:20], 
-#                                   database='reddit',
-#                                   neighbourhood='time'))
+library(profvis)
+prof <- profvis({
+           res.seq <- count_motifs_by_post(as.vector(unlist(chunks))[1], 
+                                           database='reddit',
+                                           neighbourhood='struct')
+})
 
 # sequential
 res.seq <- count_motifs_by_post(as.vector(unlist(chunks)), 
                                 database='reddit',
-                                neighbourhood='order')
+                                neighbourhood='struct')
 
 # parallel
-ncores <- detectCores() - 10
+ncores <- detectCores() - 5
 cl<-makeCluster(ncores, outfile="", port=11439)
 registerDoParallel(cl)
 pck <- c('RSQLite', 'data.table', 'changepoint')
@@ -112,11 +114,11 @@ res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
   #                                  120, onTimeout='warning')
   count_motifs_by_post(chunks[[i]], 
                        database='reddit',
-                       neighbourhood='struct')
+                       neighbourhood='struct', chunk.id=i)
 }
 stopCluster(cl)
 res <- merge.motif.counts(res.parallel)
-save(res, file='./R_objects/res_struct_75000_podemos.Rda') 
+save(res, file='./R_objects/res_struct_35000_podemos.Rda') 
 #save(res, file='./R_objects/res_order_2_4_75000_4chan.Rda') 
 
 #save(res,file="res_time_75000_4chan.Rda")
@@ -244,7 +246,7 @@ plot(centers[1,])
 plot(centers[2,])
 plot(centers[3,])
 relevant.features <- c() 
-mypalette <- c("grey", "black", "yellow", "orange", "red", "white")
+mypalette <- c("black", "yellow", "orange", "red", "white")
 for (k in 1:3){
   par(mfrow=c(1,1))
   fav.motifs <- order(abs(centers[k,]),  decreasing=TRUE)

@@ -380,7 +380,7 @@ df.confusions <- data.frame(motif.time = most.frequent.time,
 ####################################################
 # Plot selection of neighborhoods
 ####################################################
-mypalette <- c("grey", "black", "yellow", "orange", "red", "white")
+mypalette <- c("black", "yellow", "orange", "red", "white")
 par(mfcol=c(2,5))
 selected.motifs <- top.atractors
 for(i in 1:nrow(df.confusions)){
