@@ -77,7 +77,6 @@ year = {2013}
 }
 
 @article{McCallum2007a,
-abstract = {Previous work in social network analysis (SNA) has modeled the existence of links from one entity to another, but not the attributes such as language content or topics on those links. We present the Author-Recipient-Topic (ART) model for social network analysis, which learns topic distributions based on the direction-sensitive messages sent between entities. The model builds on Latent Dirichlet Allocation (LDA) and the Author-Topic (AT) model, adding the key attribute that distribution over topics is conditioned distinctly on both the sender and recipient--steering the discovery of topics according to the relationships between people. We give results on both the Enron email corpus and a researcher's email archive, providing evidence not only that clearly relevant topics are discovered, but that the ART model better predicts people's roles and gives lower perplexity on previously unseen messages. We also present the Role-Author-Recipient-Topic (RART) model, an extension to ART that explicitly represents people's roles.},
 author = {McCallum, Andrew and Wang, Xuerui and Corrada-Emmanuel, Andres},
 journal = {Journal of Artificial Intelligence Research},
 keywords = {enron,lda,role dectection,social network analysis},
@@ -87,6 +86,14 @@ title = {{Topic and role discovery in social networks with experiments on enron 
 url = {http://www.aaai.org/Papers/JAIR/Vol30/JAIR-3007.pdf},
 volume = {30},
 year = {2007}
+}
+
+@article{Killick2012,
+author = {Killick, R. and Fearnhead, P. and Eckely, I.A.},
+journal = {Journal of the American Statistical Association},
+pages = {1590--1598},
+title = {{Optimal detection of changepoints with a linear computational cost}},
+year = {2012}
 }
 
 

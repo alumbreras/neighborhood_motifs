@@ -35,27 +35,10 @@ R.~Bhatt and K.~Barman, ``{Global Dynamics of Online Group Conversations},'' in
   \emph{Proceedings of the Sixth International AAAI Conference on Weblogs and
   Social Media}, 2012.
 
-\bibitem{Dorat2007}
-\BIBentryALTinterwordspacing
-R.~Dorat, M.~Latapy, B.~Conein, and N.~Auray, ``{Multi-level analysis of an
-  interaction network between individuals in a mailing-list},'' \emph{Annales
-  des t{\'{e}}l{\'{e}}communications}, vol.~62, no. 3-4, pp. 325--349, 2007.
-  [Online]. Available:
-  \url{http://link.springer.com/article/10.1007/BF03253264}
-\BIBentrySTDinterwordspacing
-
-\bibitem{Whittaker1998}
-S.~Whittaker, L.~Terveen, W.~Hill, and L.~Cherny, ``{The dynamics of mass
-  interaction},'' in \emph{Proceedings of the 1998 ACM conference on Computer
-  supported cooperative work}, 1998, pp. 257--264.
-
-\bibitem{Gaumont2016}
-\BIBentryALTinterwordspacing
-N.~Gaumont, T.~Viard, R.~Fournier-S'niehotta, Q.~Wang, and M.~Latapy,
-  ``{Analysis of the temporal and structural features of threads in a
-  mailing-list},'' in \emph{Workshop on Complex Networks CompleNet}, 2016.
-  [Online]. Available: \url{http://arxiv.org/pdf/1512.05002v1.pdf}
-\BIBentrySTDinterwordspacing
+\bibitem{Killick2012}
+R.~Killick, P.~Fearnhead, and I.~Eckely, ``{Optimal detection of changepoints
+  with a linear computational cost},'' \emph{Journal of the American
+  Statistical Association}, pp. 1590--1598, 2012.
 
 \bibitem{Adamic2008}
 \BIBentryALTinterwordspacing
