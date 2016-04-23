@@ -118,7 +118,7 @@ count_motifs_by_post <- function(threads,
       }
       
       for(j in 1:vcount(gp)){
-        if(j %% 25>1){
+        if(j %% 25==0){
           cat('\n', i, '/', nthreads, '/', threads[i], ' size: ', size, ' chunk.id: ', chunk.id, " post: ", j )
           
         }
@@ -145,16 +145,17 @@ count_motifs_by_post <- function(threads,
         u <- V(eg)[post.id] # identify the ego vertex. Faster than V(eg)[V(eg)$name==post.id] 
         uu <- V(eg)[V(eg)$user==user.name] # posts writen by ego author
         
+        V(eg)$color <- 1
         # note the <= in case two siblings have the same date
-        V(eg)$color[V(eg)$date<=V(eg)[u]$date] <- 1 
-        V(eg)$color[V(eg)$date>V(eg)[u]$date] <- 2 
+        #V(eg)$color[V(eg)$date<=V(eg)[u]$date] <- 1 
+        #V(eg)$color[V(eg)$date>V(eg)[u]$date] <- 2 
         if(degree(eg, v=u, mode='out')==1){
           p.user.name <- neighbors(eg, u, mode='out')$user
-          V(eg)[V(eg)$user==p.user.name]$color <- 3 # posts writen by parent of ego
+          V(eg)[V(eg)$user==p.user.name]$color <- 2 # posts writen by parent of ego
         }
-        V(eg)[uu]$color <- 4
-        V(eg)[u]$color <- 5
-        tryCatch({V(eg)[root.post]$color <- 6}, error = function(e){}) # exception if root not in there
+        V(eg)[uu]$color <- 3
+        V(eg)[u]$color <- 4
+        tryCatch({V(eg)[root.post]$color <- 5}, error = function(e){}) # exception if root not in there
         
         # Prune neighbourhood to reduce number of possible neighbourhoods
         eg <- prune(eg)
