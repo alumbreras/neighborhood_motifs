@@ -88,6 +88,7 @@ title('Users posts (cumulative)')
 chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/70))
 length(chunks)
 
+chunks <- "t3_2bmb4v"
 # Profiling
 library(profvis)
 prof <- profvis({

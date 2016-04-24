@@ -118,7 +118,7 @@ count_motifs_by_post <- function(threads,
       }
       
       for(j in 1:vcount(gp)){
-        if(j %% 25==0){
+        if(j %% 25==1){
           cat('\n', i, '/', nthreads, '/', threads[i], ' size: ', size, ' chunk.id: ', chunk.id, " post: ", j )
           
         }
@@ -132,6 +132,7 @@ count_motifs_by_post <- function(threads,
         #post.id <- V(gp)[j]$name
         
         # Detect the neighborhood with the prefered method
+        cat('\n...get eg...')
         if(neighbourhood=='order'){
           eg <- neighborhood.temporal.order(gp, j, rad, max.neighbors)
         }
@@ -141,7 +142,9 @@ count_motifs_by_post <- function(threads,
         if(neighbourhood=='struct'){
           eg <- make_ego_graph(gp, rad, nodes=j)[[1]]
         }
+        cat('\n...eg size: ', vcount(eg) )
         
+        cat('\n...colouring...')
         u <- V(eg)[post.id] # identify the ego vertex. Faster than V(eg)[V(eg)$name==post.id] 
         uu <- V(eg)[V(eg)$user==user.name] # posts writen by ego author
         
@@ -157,11 +160,15 @@ count_motifs_by_post <- function(threads,
         V(eg)[u]$color <- 4
         tryCatch({V(eg)[root.post]$color <- 5}, error = function(e){}) # exception if root not in there
         
+        cat('\n pruning...')
         # Prune neighbourhood to reduce number of possible neighbourhoods
         eg <- prune(eg)
+        cat("\nSize after pruning: ", vcount(eg))
         
         # See if it matches any seen motif
         ###################################
+        cat('\nCheck if already seen')
+        cat('\n motifs indexed: ', length(motifs))
         is.new <- TRUE
         if(length(motifs)>0){
           for(motif.id in 1:length(motifs)){   
