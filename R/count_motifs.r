@@ -1,5 +1,7 @@
 library(RSQLite)
 library(data.table)
+library(R.utils)
+
 source('R/extract_from_db.r')
 source('R/tree_changepoints.r')
 
@@ -132,7 +134,6 @@ count_motifs_by_post <- function(threads,
         #post.id <- V(gp)[j]$name
         
         # Detect the neighborhood with the prefered method
-        cat('\n...get eg...')
         if(neighbourhood=='order'){
           eg <- neighborhood.temporal.order(gp, j, rad, max.neighbors)
         }
@@ -142,9 +143,7 @@ count_motifs_by_post <- function(threads,
         if(neighbourhood=='struct'){
           eg <- make_ego_graph(gp, rad, nodes=j)[[1]]
         }
-        cat('\n...eg size: ', vcount(eg) )
-        
-        cat('\n...colouring...')
+
         u <- V(eg)[post.id] # identify the ego vertex. Faster than V(eg)[V(eg)$name==post.id] 
         uu <- V(eg)[V(eg)$user==user.name] # posts writen by ego author
         
@@ -160,15 +159,17 @@ count_motifs_by_post <- function(threads,
         V(eg)[u]$color <- 4
         tryCatch({V(eg)[root.post]$color <- 5}, error = function(e){}) # exception if root not in there
         
-        cat('\n pruning...')
         # Prune neighbourhood to reduce number of possible neighbourhoods
         eg <- prune(eg)
-        cat("\nSize after pruning: ", vcount(eg))
-        
+
+        # If neighbourhood is too big, sometimes isomorphism check takes too long
+        if(vcount(eg)>25){
+          #cat("\nSkipping neighbourhood isomorphism in thread ", threads[i])
+          next
+        }
+
         # See if it matches any seen motif
         ###################################
-        cat('\nCheck if already seen')
-        cat('\n motifs indexed: ', length(motifs))
         is.new <- TRUE
         if(length(motifs)>0){
           for(motif.id in 1:length(motifs)){   
@@ -178,6 +179,14 @@ count_motifs_by_post <- function(threads,
             if(vcount(eg) != vcount(gmotif)){
               next
             }          
+
+            if(length(unique(V(eg)$color)) != length(unique(V(gmotif)$color))){
+              next
+            } 
+            
+            if(all(table(V(eg)$color) != table(V(gmotif)$color))){
+              next
+            }
             
             if(is_isomorphic_to(eg, gmotif, method='vf2')){            
               is.new <- FALSE
@@ -198,7 +207,7 @@ count_motifs_by_post <- function(threads,
       write.table(threads[i], file="processed_threads.csv", row.names=FALSE, col.names=FALSE, append=TRUE)
     }, 
     error=function(e){
-      e
+      print(e)
       cat('\n CATCHED ERROR in thread: ', threads[i], "check logfile: ", filelog)
       cat(paste('\n CATCHED ERROR in thread: ', threads[i]), 
           file=paste0('exception_',filelog), sep="\n", append=TRUE)

@@ -1,30 +1,13 @@
-# Extract list of triads where a user participates.
-#
-# author: Alberto Lumbreras
-#
-#https://www.reddit.com/r/europe/CasualConversation
-#https://www.reddit.com/r/europe/
-#https://www.reddit.com/r/datascience
-#https://www.reddit.com/r/science/
-#https://www.reddit.com/r/france
-#https://www.reddit.com/r/catalunya
-#https://www.reddit.com/r/es
-library(parallel)
-library(doParallel)
-library(foreach)
+
 library(ggplot2)
 library(ggbiplot)
 library(gplots)
-
 library(dplyr)
 library(reshape2)
 library(igraph)
 library(ggbiplot)
-#library(RSQLite)
-#library(GGally)
 
 source('R/load_participations.r')
-source('R/count_motifs.r')
 source('R/normalize_counts.r')
 source('R/clustering.r')
 
@@ -32,12 +15,6 @@ MIN_POSTS <- 100 # number of post to consider a user as active
 ###################################################
 # Load data
 ###################################################
-#df.posts <- load_posts(database='reddit', forum='podemos')
-#save(df.posts,file="dfposts.Rda")
-#load('dfposts.Rda') # 836119 posts, 47803 threads
-
-#df.posts <- load_posts(database='reddit', forum='gameofthrones')
-#save(df.posts,file="dfposts.Rda")
 load('./R_objects/dfposts_podemos.Rda')
 df.posts$date <- as.numeric(df.posts$date)
 df.posts <- data.frame(df.posts) %>% arrange(date)
@@ -79,69 +56,14 @@ plot(cumsum(table(df.users$posts)), pch=19, cex=0.5,
      ylab='Posts (cum)', xlab='User')
 title('Users posts (cumulative)')
 
-#########################################################
-# Compute neighborhood around every post
-#########################################################
-# Only long threads
-#df.threads <- filter(df.threads, length>10)
-
-chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/70))
-length(chunks)
-
-chunks <- "t3_2bmb4v"
-# Profiling
-library(profvis)
-prof <- profvis({
-  res.seq <- count_motifs_by_post(as.vector(unlist(chunks))[1], 
-                                  database='reddit',
-                                  neighbourhood='struct')
-})
-
-# sequential
-res.seq <- count_motifs_by_post(as.vector(unlist(chunks)), 
-                                database='reddit',
-                                neighbourhood='struct')
-
-# parallel
-ncores <- detectCores() - 5
-cl<-makeCluster(ncores, outfile="", port=11439)
-registerDoParallel(cl)
-pck <- c('RSQLite', 'data.table', 'changepoint')
-res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
-  source('R/extract_from_db.r')
-  #withTimeout(  count_motifs_by_post(chunks[[i]], 
-  #                                   database='reddit',
-  #                                   neighbourhood='time'),
-  #                                  120, onTimeout='warning')
-  count_motifs_by_post(chunks[[i]], 
-                       database='reddit',
-                       neighbourhood='struct', chunk.id=i)
-}
-stopCluster(cl)
-res <- merge.motif.counts(res.parallel)
-save(res, file='./R_objects/res_struct_35000_podemos.Rda') 
-#save(res, file='./R_objects/res_order_2_4_75000_4chan.Rda') 
-
-#save(res,file="res_time_75000_4chan.Rda")
-#load("res_time_75000.Rda")
-
-#save(res,file="res_order_2_4_75000_gameofthrones.Rda")
-#load("res_order_2_4_75000_gameofthrones.Rda")
-
-#load('res_2_4_order_75000.Rda') 
-
-# Plot found motifs and their frequency
-plot.motif.counts(res)
-
-#dev.copy(png, paste0('2016-01-15-motifs_4_4_order.png'))
-dev.copy(png, 'neighbourhoods_time.png')
-dev.off()
-
 
 #########################################
-#df.posts.bck <- df.posts
+# Load neighbourhoods previously extracted
+#########################################
+load("res_time_75000.Rda")
 
-df.posts <-df.posts.bck
+df.posts.bck <- df.posts
+#df.posts <-df.posts.bck
 df.post.motif  <- res$posts.motifs
 motifs <- res$motifs
 
@@ -167,7 +89,7 @@ n <- as.numeric(table(df.posts$motif))
 all(n == cummin(n))
 
 ###############################################
-# Census
+# Census (deprecated. see pipeline_compare_census.r)
 ###############################################
 par(mfrow=c(1,1))
 n <- hist(df.posts$motif, breaks=0:max(df.posts$motif))$counts
@@ -212,8 +134,6 @@ features <- features[,-idx.motifs.delete]
 ###############################################
 # Clustering
 ###############################################
-
-
 par(mfrow=c(1,1))
 z <- cluster(features, 3)
 
