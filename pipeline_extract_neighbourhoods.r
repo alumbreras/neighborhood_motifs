@@ -60,7 +60,7 @@ cat('Number of active users', nrow(filter(df.users, posts>MIN_POSTS)))
 # Only long threads
 #df.threads <- filter(df.threads, length>10)
 
-chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/70))
+chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/235))
 length(chunks)
 
 if(FALSE){
@@ -82,7 +82,7 @@ res.seq <- count_motifs_by_post(as.vector(unlist(chunks)),
 }
 
 # parallel
-ncores <- detectCores() - 5
+ncores <- detectCores() - 6
 cl<-makeCluster(ncores, outfile="", port=11439)
 registerDoParallel(cl)
 pck <- c('RSQLite', 'data.table', 'changepoint')
@@ -98,7 +98,13 @@ res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
 }
 stopCluster(cl)
 res <- merge.motif.counts(res.parallel)
-#save(res, file='./R_objects/res_struct_35000_podemos.Rda') 
+# save(res, file='./R_objects/res_time_75000_podemos.Rda') 
+# save(res, file='./R_objects/res_order_75000_podemos.Rda') 
+save(res, file='./R_objects/res_struct_75000_podemos.Rda') 
+# save(res, file='./R_objects/res_time_75000_gameofthrones.Rda') 
+# save(res, file='./R_objects/res_order_75000_gameofthrones.Rda') 
+# save(res, file='./R_objects/res_time_75000_4chan.Rda')
+# save(res, file='./R_objects/res_order_75000_4chan.Rda')
 
 #load("res_time_75000.Rda")
 
