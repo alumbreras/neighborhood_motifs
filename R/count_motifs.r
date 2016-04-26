@@ -1,6 +1,6 @@
 library(RSQLite)
 library(data.table)
-library(R.utils)
+#library(R.utils)
 
 source('R/extract_from_db.r')
 source('R/tree_changepoints.r')
@@ -163,7 +163,7 @@ count_motifs_by_post <- function(threads,
         eg <- prune(eg)
 
         # If neighbourhood is too big, sometimes isomorphism check takes too long
-        if(vcount(eg)>25){
+        if(vcount(eg)>10){
           #cat("\nSkipping neighbourhood isomorphism in thread ", threads[i])
           next
         }
