@@ -2,6 +2,7 @@
 # author: Alberto Lumbreras
 
 library(dplyr)
+library(reshape2)
 library(igraph)
 if(FALSE){
   df.posts <- load_posts(database='reddit', forum='podemos')
@@ -23,94 +24,111 @@ if(FALSE){
   save(df.posts,file="dfposts_datascience.Rda")
 }
 
-# Load posts dataframe (df.posts)
+########################################################
+# Load posts
+########################################################
 load('./R_objects/dfposts_gameofthrones.Rda')
-#load('./R_objects/dfposts_podemos.Rda')
-df.posts$date <- as.numeric(df.posts$date)
-df.posts <- data.frame(df.posts) %>% arrange(date)
-df.posts <- df.posts[1:75000,] # Paper
+df.posts.got <- df.posts
+df.posts.got$date <- as.numeric(df.posts.got$date)
+df.posts.got <- data.frame(df.posts.got) %>% arrange(date)
+df.posts.got <- df.posts.got[1:75000,] # Paper
+df.threads.got <- plyr::count(df.posts.got, "thread")
+df.users.got <- plyr::count(df.posts.got, 'user')                                                                                                                                   
+names(df.threads.got)[2] <- "length"
+names(df.users.got)[2] <- "posts"
 
-df.threads <- plyr::count(df.posts, "thread")
-df.users <- plyr::count(df.posts, 'user')                                                                                                                                   
-names(df.threads)[2] <- "length"
-names(df.users)[2] <- "posts"
+load('./R_objects/dfposts_podemos.Rda')
+df.posts.pod <- df.posts
+df.posts.pod$date <- as.numeric(df.posts.pod$date)
+df.posts.pod <- data.frame(df.posts.pod) %>% arrange(date)
+df.posts.pod <- df.posts.pod[1:75000,] # Paper
+df.threads.pod <- plyr::count(df.posts.pod, "thread")
+df.users.pod <- plyr::count(df.posts.pod, 'user')                                                                                                                                   
+names(df.threads.pod)[2] <- "length"
+names(df.users.pod)[2] <- "posts"
+
+load('./R_objects/dfposts_4chan.Rda')
+df.posts.4ch <- df.posts
+df.posts.4ch$date <- as.numeric(df.posts.4ch$date)
+df.posts.4ch <- data.frame(df.posts.4ch) %>% arrange(date)
+df.posts.4ch <- df.posts.4ch[1:75000,] # Paper
+df.threads.4ch <- plyr::count(df.posts.4ch, "thread")
+df.users.4ch <- plyr::count(df.posts.4ch, 'user')                                                                                                                                   
+names(df.threads.4ch)[2] <- "length"
+names(df.users.4ch)[2] <- "posts"
 
 
-# Load the results of the neighbourhoud detection (res)
-load("./R_objects/res_time_75000_gameofthrones.Rda")
-#load("./R_objects/res_time_75000_podemos.Rda")
+########################################################
+# Load neighbourhoods
+########################################################
+#load("./R_objects/res_struct_75000_gameofthrones.Rda")
+load("./R_objects/res_struct_75000_podemos.Rda")
+res.got.struct <- res
 
 # Add motif info to posts dataframe and sort by frequency
-df.post.motif  <- res$posts.motifs
-motifs <- res$motifs
-df.posts <- merge(df.posts, df.post.motif, all=FALSE, sort=FALSE)
-idx <- order(tabulate(df.posts$motif), decreasing = TRUE)
-df.posts$motif <- match(df.posts$motif, idx)
-motifs <- motifs[idx]
-
-# unique name
-df.posts.1 <- df.posts
-motifs.1 <- motifs
+#df.post.motif  <- res.got.order$posts.motifs
+#motifs <- res$motifs
+df.posts.got <- merge(df.posts.got, res.got.struct$posts.motifs, all=FALSE, sort=FALSE)
+idx <- order(tabulate(df.posts.got$motif), decreasing = TRUE) # get order by frequency
+df.posts.got$motif <- match(df.posts.got$motif, idx) # re-arrange pointers to motifs
+motifs.got.struct <- res.got.struct$motifs[idx] # re-sort motifs
+colnames(df.posts.got)[which(names(df.posts.got) == "motif")] <- "motif.struct"
 
 # Check they are sorted by frequency (they should be)
-n <- as.numeric(table(df.posts.1$motif))
+n <- as.numeric(table(df.posts.got$motif))
 all(n == cummin(n))
 
+#################################
+#load("./R_objects/res_order_75000_gameofthrones.Rda")
+load("./R_objects/res_order_75000_podemos.Rda")
 
-###############################################################
-# Load another kind of motifs
-##############################################################
-# Load posts dataframe (df.posts)
-#load('./R_objects/dfposts_podemos.Rda')
-
-load('./R_objects/dfposts_gameofthrones.Rda')
-#load('./R_objects/dfposts_podemos.Rda')
-df.posts$date <- as.numeric(df.posts$date)
-df.posts <- data.frame(df.posts) %>% arrange(date)
-df.posts <- df.posts[1:75000,] # Paper
-
-df.threads <- plyr::count(df.posts, "thread")
-df.users <- plyr::count(df.posts, 'user')                                                                                                                                   
-names(df.threads)[2] <- "length"
-names(df.users)[2] <- "posts"
-
-# Load the results of the neighbourhoud detection (res)
-load("./R_objects/res_order_2_4_75000_gameofthrones.Rda")
-#load("./R_objects/res_order_2_4_75000_podemos.Rda")
+res.got.order <- res
 
 # Add motif info to posts dataframe and sort by frequency
-df.post.motif  <- res$posts.motifs
-motifs <- res$motifs
-df.posts <- merge(df.posts, df.post.motif, all=FALSE, sort=FALSE)
-idx <- order(tabulate(df.posts$motif), decreasing = TRUE)
-df.posts$motif <- match(df.posts$motif, idx)
-motifs <- motifs[idx]
+df.posts.got <- merge(df.posts.got, res.got.order$posts.motifs, all=FALSE, sort=FALSE)
+idx <- order(tabulate(df.posts.got$motif), decreasing = TRUE) # get order by frequency
+df.posts.got$motif <- match(df.posts.got$motif, idx) # re-arrange pointers to motifs
+motifs.got.order <- res.got.order$motifs[idx] # re-sort motifs
+colnames(df.posts.got)[which(names(df.posts.got) == "motif")] <- "motif.order"
 
-# unique name
-df.posts.2 <- df.posts
-motifs.2 <- motifs
-
-# Check they are sorted by frequency (they should be)
-n <- as.numeric(table(df.posts.2$motif))
+# Check the motifs ids are sorted by frequency (they should be)
+n <- as.numeric(table(df.posts.got$motif.order))
 all(n == cummin(n))
 
+#################################
+#load("./R_objects/res_time_75000_gameofthrones.Rda")
+load("./R_objects/res_time_75000_podemos.Rda")
+res.got.time <- res
+
+# Add motif info to posts dataframe and sort by frequency
+df.posts.got <- merge(df.posts.got, res.got.time$posts.motifs, all=FALSE, sort=FALSE)
+idx <- order(tabulate(df.posts.got$motif), decreasing = TRUE) # get order by frequency
+df.posts.got$motif <- match(df.posts.got$motif, idx) # re-arrange pointers to motifs
+motifs.got.time <- res.got.time$motifs[idx] # re-sort motifs
+colnames(df.posts.got)[which(names(df.posts.got) == "motif")] <- "motif.time"
+
+# Check they are sorted by frequency (they should be)
+n <- as.numeric(table(df.posts.got$motif.time))
+all(n == cummin(n))
 
 
 ########################################
 # Plot census distribution
 ########################################
 par(mfrow=c(1,1))
-n1 <- hist(df.posts.1$motif, breaks=0:max(df.posts.1$motif), plot=FALSE)$counts
-n2 <- hist(df.posts.2$motif, breaks=0:max(df.posts.2$motif), plot=FALSE)$counts
+n1 <- hist(df.posts.got$motif.order, breaks=0:max(df.posts.got$motif.order), plot=FALSE)$counts
+n2 <- hist(df.posts.got$motif.time, breaks=0:max(df.posts.got$motif.time), plot=FALSE)$counts
 
-plot(1:max(df.posts.1$motif), n1, ylim=c(1, 20000), log='y',
-     ylab='Frequency', xlab='Neighbourhood',
-     pch=19, cex=0.1)
+plot(1:max(df.posts.got$motif.order), n1, 
+       pch=19, cex=0.1, col='red',
+       ylim=c(1, 20000), xlim=c(0, max(df.posts.got$motif.time)), log='y',
+       ylab='Frequency', xlab='Neighbourhood')
 
-points(1:max(df.posts.2$motif), n2, 
-       pch=19, cex=0.1, col='red')
+points(1:max(df.posts.got$motif.time), n2,
+       pch=19, cex=0.1, col='black')
+
 #legend('topright', c('time-based', 'order-based'), col=1:2, pch=19)
-legend(1805,5, c('time-based', 'order-based'), col=1:2, pch=19)
+legend(1305,5, c('time-based', 'order-based'), col=1:2, pch=19)
 title(main='Census distribution (Game of Thrones)')
 
 #In-picture plot
@@ -122,18 +140,18 @@ par(mar=c(4,4,1,1))
 n.max <- 100
 plot(1:n.max, n1[1:n.max], ylim=c(1, 20000), log='y',
      ylab=NA, xlab=NA,
-     pch=19, cex=0.1)
+     pch=19, cex=0.1, col='red')
 
 points(1:n.max, n2[1:n.max], 
-       pch=19, cex=0.1, col='red')
+       pch=19, cex=0.1, col='black')
 
 
 # Cumulative
 par(mfrow=c(1,1))
-plot(cumsum(n1), pch=19, cex=0.5, ylab='Frequency (cum)', xlab='Neighbourhoods')
-points(1:max(df.posts.2$motif), cumsum(n2), pch=19, cex=0.1, col='red')
+plot(cumsum(n2), pch=19, cex=0.5, ylab='Frequency (cum)', xlab='Neighbourhoods')
+points(1:max(df.posts.got$motif.order), cumsum(n1), pch=19, cex=0.1, col='red')
 #legend('topright', c('time-based', 'order-based'), col=1:2, pch=19)
-legend(1805,65000, c('time-based', 'order-based'), col=1:2, pch=19)
+legend(1305,65000, c('time-based', 'order-based'), col=1:2, pch=19)
 title('Cumulative census distribution (Game of Thrones)')
 
 #In-picture plot
@@ -143,8 +161,8 @@ par(mfcol=c(2,2), mfg=c(2,2))
 par(mar=c(4,4,1,1))
 
 n.max <- 100
-plot(cumsum(n1[1:n.max]),  ylim=c(1, 70000), pch=19, cex=0.5, ylab=NA, xlab=NA)
-points(1:n.max, cumsum(n2[1:n.max]), pch=19, cex=0.1, col='red')
+plot(cumsum(n1[1:n.max]),  ylim=c(1, 70000), pch=19, cex=0.5, ylab=NA, xlab=NA, col='red')
+points(1:n.max, cumsum(n2[1:n.max]), pch=19, cex=0.1, col='black')
 
 ######################
 # How many neighbourhoods explain the 90% of the census?
@@ -157,6 +175,123 @@ total <- sum(n2)
 th <-total*0.95
 sum(cumsum(n2) < th)
 
+################################
+# Census of the 3 types of neighbourhood in the same forum
+###############################
+# Get the first 25 motifs of struct, order and time based
+# Plot the census population in this base 
+# if a motif has not isomorphisms in another XX-based, the coount in XX-base in 0
+
+# Create a common index for the three kind of neighbourhoods
+# sort the index by total frequency
+df.posts <- df.posts.got
+motifs.time <- motifs.got.time
+motifs.order <- motifs.got.order
+motifs.struct <- motifs.got.struct
+
+motifs.global <- motifs.time
+last.pos <- length(motifs.global)
+mapping <- vector()
+for(i in 1:length(motifs.order)){
+  dupl <- FALSE
+  # search a similar motif in the dictionary
+  for(j in 1:length(motifs.time)){
+    if(vcount(motifs.order[[i]]) != vcount(motifs.time[[j]])){
+      next
+    }
+    if(is_isomorphic_to(motifs.order[[i]], motifs.time[[j]], method='vf2')){
+      dupl <- TRUE
+      mapping[i] <- j
+      cat("\n", i, " -> ", j)
+      break
+    }
+  }
+  # if not found among motifs in the dictionary, give it a new entry
+  if(!dupl){
+    new.pos <- last.pos + 1
+    motifs.global[[new.pos]] <- motifs.order[[i]] # copy motif graph
+    mapping[i] <- new.pos
+    cat("\nnew ", i, " -> ", new.pos)
+    last.pos <- last.pos + 1
+  }
+}
+df.posts.global <- data.frame(postid = df.posts$postid,
+                                    motif.time = df.posts$motif.time,
+                                    motif.order = mapping[df.posts$motif.order])
+
+# Now we have df.posts.motif.global that indicate the motif (neighbourhood) of each post
+# and motifs.global where we store the motifs
+
+# Re-index by total frequency
+together <- c(df.posts.global$motif.order, df.posts.global$motif.time)
+idx <- order(tabulate(together), decreasing = TRUE) # get order by frequency
+df.posts.global$motif.order <- match(df.posts.global$motif.order, idx) # re-arrange pointers to motifs
+df.posts.global$motif.time <- match(df.posts.global$motif.time, idx) # re-arrange pointers to motifs
+motifs.global <- motifs.global[idx] # re-sort motifs
+
+# Plot confusion matrix
+##########################
+df.test <- head(df.posts.global,100)
+df.test <- df.posts.global
+m1 <- acast(df.test, motif.order~postid, fun.aggregate = length)
+m2 <- acast(df.test, motif.time~postid, fun.aggregate = length)
+confusion <- m1%*%t(m2) 
+
+confusion.2 <- acast(df.posts.global, motif.order~motif.time, fun.aggregate = length) # faster?
+
+## Confusion matrix
+#library(caret)
+par(mfrow=c(1,1))
+# Plot confusion matrix (not confusion matrix because it does not sum)
+plot(df.posts.global$motif.time, df.posts.global$motif.order, cex=0.1, pch=19,
+     xlab='time-based neighbourhood', ylab='order-based neighbourhood', xlim=c(0,500), ylim=c(0,500))
+
+# and closer
+plot(df.posts.global$motif.time, df.posts.global$motif.order, cex=0.1, pch=19,
+     xlab='time-based neighbourhood', ylab='order-based neighbourhood', xlim=c(0,100), ylim=c(0,100))
+
+# Looking only at most frequents in time
+# idx <- order(tabulate(df.posts.global$motif.time), decreasing = TRUE) # get order by frequency
+# df.posts.filtered <- filter(df.posts.global, motif.time %in% idx[1:100])
+
+# Looking only at most frequents in order
+# idx <- order(tabulate(df.posts.global$motif.order), decreasing = TRUE) # get order by frequency
+# df.posts.filtered <- filter(df.posts.global, motif.order %in% idx[1:100])
+
+# par(mfrow=c(1,1))
+# Plot confusion matrix (not confusion matrix because it does not sum)
+# plot(df.posts.filtered$motif.time, df.posts.filtered$motif.order, cex=0.1, pch=19,
+#     xlab='time-based neighbourhood', ylab='order-based neighbourhood', xlim=c(0,200), ylim=c(0,200))
+# and closer
+# plot(df.posts.filtered$motif.time, df.posts.filtered$motif.order, cex=0.1, pch=19,
+#     xlab='time-based neighbourhood', ylab='order-based neighbourhood', xlim=c(0,100), ylim=c(0,100))
+
+
+# Census for 20-20-20 top neighbourhoods 
+########################################
+ntop <- 30
+#top.struct <- order(tabulate(df.posts.global$motif.struct), decreasing = TRUE)
+top.order <- order(tabulate(df.posts.global$motif.order), decreasing = TRUE)[1:ntop]
+top.time <- order(tabulate(df.posts.global$motif.time), decreasing = TRUE)[1:ntop]
+top <- union(top.order, top.time) %>% sort
+top <- 1:max(top) # fill the gaps
+
+counts.order <- df.posts.global$motif.order[df.posts.global$motif.order %in% top]
+counts.time <- df.posts.global$motif.time[df.posts.global$motif.time %in% top]
+census.order <- sapply(top, function(x) sum(counts.order==x))
+census.time <- sapply(top, function(x) sum(counts.time==x))
+
+par(mfrow=c(1,1))
+plot(census.order)
+plot(census.time)
+plot(1:max(top), census.order, pch=18, type='o', xlab='Neighborhood', ylab='Frequency', col='red')
+lines(1:max(top), census.time, pch=20, type='o', col='black')
+legend(37,20300, c('order-based', 'time_based'), col=1:2, pch=c(18,20))
+title('Neighbourhood census in Podemos')
+
+###################################################
+# Census of time-based in different forums
+###################################################
 
 #############################################################
 # Get first motifs of first dataset as reference and plot 
