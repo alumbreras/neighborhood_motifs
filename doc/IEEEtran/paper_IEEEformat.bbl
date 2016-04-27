@@ -40,6 +40,35 @@ R.~Killick, P.~Fearnhead, and I.~Eckely, ``{Optimal detection of changepoints
   with a linear computational cost},'' \emph{Journal of the American
   Statistical Association}, pp. 1590--1598, 2012.
 
+\bibitem{Backstrom2013}
+L.~Backstrom, J.~Kleinberg, L.~Lee, and C.~Danescu-Niculescu-Mizil,
+  ``{Characterizing and Curating Conversation Threads: Expansion, Focus,
+  Volume, Re-entry},'' in \emph{Proceedings of the Sixth ACM International
+  Conference on Web Search and Data Mining}, 2013, pp. 13--22.
+
+\bibitem{Himelboim2009}
+I.~Himelboim, E.~Gleave, and M.~Smith, ``{Discussion catalysts in online
+  political discussions: Content importers and conversation starters},''
+  \emph{Journal of Computer-Mediated Communication}, vol.~14, no.~4, pp.
+  771--789, jul 2009.
+
+\bibitem{Lumbreras2013}
+A.~Lumbreras, J.~Lanagan, J.~Velcin, and B.~Jouve, ``{Analyse des r{\^{o}}les
+  dans les communaut{\'{e}}s virtuelles : d{\'{e}}finitions et premi{\`{e}}res
+  exp{\'{e}}rimentations sur IMDb},'' in \emph{Mod{\`{e}}les et Analyses
+  R{\'{e}}seau : Approches Math{\'{e}}matiques et Informatiques (MARAMI)},
+  2013, pp. 1--12.
+
+\bibitem{Gomez2010}
+V.~G{\'{o}}mez, H.~J. Kappen, and A.~Kaltenbrunner, ``{Modeling the structure
+  and evolution of discussion cascades},'' in \emph{Proceedings of the 22nd ACM
+  conference on Hypertext and hypermedia}, 2010, pp. 181--190.
+
+\bibitem{Gomez2012}
+V.~G{\'{o}}mez, H.~J. Kappen, N.~Litvak, and A.~Kaltenbrunner, ``{A
+  likelihood-based framework for the analysis of discussion threads},''
+  \emph{World Wide Web}, p.~31, apr 2012.
+
 \bibitem{Adamic2008}
 \BIBentryALTinterwordspacing
 L.~A. Adamic, J.~Zhang, E.~Bakshy, and M.~S. Ackerman, ``{Knowledge sharing and
@@ -49,12 +78,5 @@ L.~A. Adamic, J.~Zhang, E.~Bakshy, and M.~S. Ackerman, ``{Knowledge sharing and
   \url{http://dl.acm.org/citation.cfm?id=1367587
   http://portal.acm.org/citation.cfm?doid=1367497.1367587}
 \BIBentrySTDinterwordspacing
-
-\bibitem{Lumbreras2013}
-A.~Lumbreras, J.~Lanagan, J.~Velcin, and B.~Jouve, ``{Analyse des r{\^{o}}les
-  dans les communaut{\'{e}}s virtuelles : d{\'{e}}finitions et premi{\`{e}}res
-  exp{\'{e}}rimentations sur IMDb},'' in \emph{Mod{\`{e}}les et Analyses
-  R{\'{e}}seau : Approches Math{\'{e}}matiques et Informatiques (MARAMI)},
-  2013, pp. 1--12.
 
 \end{thebibliography}
