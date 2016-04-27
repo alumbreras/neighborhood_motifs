@@ -32,7 +32,7 @@ source('R/plotting.r')
 ##########################################################
 # Load Data
 ##########################################################
-load('./R_objects/dfposts_podemos.Rda')
+load('./R_objects/dfposts_4chan.Rda')
 df.posts$date <- as.numeric(df.posts$date)
 df.posts <- data.frame(df.posts) %>% arrange(date)
 df.posts <- df.posts[1:75000,] # Paper
@@ -60,7 +60,7 @@ cat('Number of active users', nrow(filter(df.users, posts>MIN_POSTS)))
 # Only long threads
 #df.threads <- filter(df.threads, length>10)
 
-chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/235))
+chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/135))
 length(chunks)
 
 if(FALSE){
@@ -100,12 +100,13 @@ stopCluster(cl)
 res <- merge.motif.counts(res.parallel)
 # save(res, file='./R_objects/res_time_75000_podemos.Rda') 
 # save(res, file='./R_objects/res_order_75000_podemos.Rda') 
-save(res, file='./R_objects/res_struct_75000_podemos.Rda') 
+#save(res, file='./R_objects/res_struct_75000_podemos.Rda') 
 # save(res, file='./R_objects/res_time_75000_gameofthrones.Rda') 
 # save(res, file='./R_objects/res_order_75000_gameofthrones.Rda') 
+#save(res, file='./R_objects/res_struct_75000_gameofthrones.Rda') 
 # save(res, file='./R_objects/res_time_75000_4chan.Rda')
 # save(res, file='./R_objects/res_order_75000_4chan.Rda')
-
+save(res, file='./R_objects/res_struct_75000_4chan.Rda')
 #load("res_time_75000.Rda")
 
 #save(res, file='./R_objects/res_order_2_4_75000_4chan.Rda') 
