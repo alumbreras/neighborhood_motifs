@@ -50,18 +50,16 @@ names(df.threads.pod)[2] <- "length"
 names(df.users.pod)[2] <- "posts"
 df.posts.pod$forum <- 'podemos'
 
-load('./R_objects/dfposts_4chan.Rda')
-df.posts.4ch <- df.posts
-df.posts.4ch$date <- as.numeric(df.posts.4ch$date)
-df.posts.4ch <- data.frame(df.posts.4ch) %>% arrange(date)
-df.posts.4ch <- df.posts.4ch[1:75000,] # Paper
-df.threads.4ch <- plyr::count(df.posts.4ch, "thread")
-df.users.4ch <- plyr::count(df.posts.4ch, 'user')                                                                                                                                   
-names(df.threads.4ch)[2] <- "length"
-names(df.users.4ch)[2] <- "posts"
-df.posts.4ch$forum <- '4chan'
-
-#df.posts <- rbind(df.posts.got, df.posts.pod, df.posts.4ch)
+# load('./R_objects/dfposts_4chan.Rda')
+# df.posts.4ch <- df.posts
+# df.posts.4ch$date <- as.numeric(df.posts.4ch$date)
+# df.posts.4ch <- data.frame(df.posts.4ch) %>% arrange(date)
+# df.posts.4ch <- df.posts.4ch[1:75000,] # Paper
+# df.threads.4ch <- plyr::count(df.posts.4ch, "thread")
+# df.users.4ch <- plyr::count(df.posts.4ch, 'user')                                                                                                                                   
+# names(df.threads.4ch)[2] <- "length"
+# names(df.users.4ch)[2] <- "posts"
+# df.posts.4ch$forum <- '4chan'
 
 ########################################################
 # Load neighbourhoods
@@ -112,7 +110,7 @@ colnames(df.posts.got)[which(names(df.posts.got) == "motif")] <- "motif.time"
 n <- as.numeric(table(df.posts.got$motif.time))
 all(n == cummin(n))
 
-#################################################
+#####################
 load("./R_objects/res_struct_75000_podemos.Rda")
 res.pod.struct <- res
 
@@ -155,56 +153,56 @@ colnames(df.posts.pod)[which(names(df.posts.pod) == "motif")] <- "motif.time"
 n <- as.numeric(table(df.posts.pod$motif.time))
 all(n == cummin(n))
 
-#########
-load("./R_objects/res_struct_75000_4chan.Rda")
-res.4ch.struct <- res
-
-# Add motif info to posts dataframe and sort by frequency
-#df.post.motif  <- res.4ch.order$posts.motifs
-#motifs <- res$motifs
-df.posts.4ch <- merge(df.posts.4ch, res.4ch.struct$posts.motifs, all=FALSE, sort=FALSE)
-idx <- order(tabulate(df.posts.4ch$motif), decreasing = TRUE) # get order by frequency
-df.posts.4ch$motif <- match(df.posts.4ch$motif, idx) # re-arrange pointers to motifs
-motifs.4ch.struct <- res.4ch.struct$motifs[idx] # re-sort motifs
-colnames(df.posts.4ch)[which(names(df.posts.4ch) == "motif")] <- "motif.struct"
-
-# Check they are sorted by frequency (they should be)
-n <- as.numeric(table(df.posts.4ch$motif.struct))
-all(n == cummin(n))
-
-#################################
-load("./R_objects/res_order_75000_4chan.Rda")
-
-res.4ch.order <- res
-
-# Add motif info to posts dataframe and sort by frequency
-df.posts.4ch <- merge(df.posts.4ch, res.4ch.order$posts.motifs, all=FALSE, sort=FALSE)
-idx <- order(tabulate(df.posts.4ch$motif), decreasing = TRUE) # get order by frequency
-df.posts.4ch$motif <- match(df.posts.4ch$motif, idx) # re-arrange pointers to motifs
-motifs.4ch.order <- res.4ch.order$motifs[idx] # re-sort motifs
-colnames(df.posts.4ch)[which(names(df.posts.4ch) == "motif")] <- "motif.order"
-
-# Check the motifs ids are sorted by frequency (they should be)
-n <- as.numeric(table(df.posts.4ch$motif.order))
-all(n == cummin(n))
-
-#################################
-load("./R_objects/res_time_75000_4chan.Rda")
-res.4ch.time <- res
-
-# Add motif info to posts dataframe and sort by frequency
-df.posts.4ch <- merge(df.posts.4ch, res.4ch.time$posts.motifs, all=FALSE, sort=FALSE)
-idx <- order(tabulate(df.posts.4ch$motif), decreasing = TRUE) # get order by frequency
-df.posts.4ch$motif <- match(df.posts.4ch$motif, idx) # re-arrange pointers to motifs
-motifs.4ch.time <- res.4ch.time$motifs[idx] # re-sort motifs
-colnames(df.posts.4ch)[which(names(df.posts.4ch) == "motif")] <- "motif.time"
-
-# Check they are sorted by frequency (they should be)
-n <- as.numeric(table(df.posts.4ch$motif.time))
-all(n == cummin(n))
+##############
+# load("./R_objects/res_struct_75000_4chan.Rda")
+# res.4ch.struct <- res
+# 
+# # Add motif info to posts dataframe and sort by frequency
+# #df.post.motif  <- res.4ch.order$posts.motifs
+# #motifs <- res$motifs
+# df.posts.4ch <- merge(df.posts.4ch, res.4ch.struct$posts.motifs, all=FALSE, sort=FALSE)
+# idx <- order(tabulate(df.posts.4ch$motif), decreasing = TRUE) # get order by frequency
+# df.posts.4ch$motif <- match(df.posts.4ch$motif, idx) # re-arrange pointers to motifs
+# motifs.4ch.struct <- res.4ch.struct$motifs[idx] # re-sort motifs
+# colnames(df.posts.4ch)[which(names(df.posts.4ch) == "motif")] <- "motif.struct"
+# 
+# # Check they are sorted by frequency (they should be)
+# n <- as.numeric(table(df.posts.4ch$motif.struct))
+# all(n == cummin(n))
+# 
+# #################################
+# load("./R_objects/res_order_75000_4chan.Rda")
+# 
+# res.4ch.order <- res
+# 
+# # Add motif info to posts dataframe and sort by frequency
+# df.posts.4ch <- merge(df.posts.4ch, res.4ch.order$posts.motifs, all=FALSE, sort=FALSE)
+# idx <- order(tabulate(df.posts.4ch$motif), decreasing = TRUE) # get order by frequency
+# df.posts.4ch$motif <- match(df.posts.4ch$motif, idx) # re-arrange pointers to motifs
+# motifs.4ch.order <- res.4ch.order$motifs[idx] # re-sort motifs
+# colnames(df.posts.4ch)[which(names(df.posts.4ch) == "motif")] <- "motif.order"
+# 
+# # Check the motifs ids are sorted by frequency (they should be)
+# n <- as.numeric(table(df.posts.4ch$motif.order))
+# all(n == cummin(n))
+# 
+# #################################
+# load("./R_objects/res_time_75000_4chan.Rda")
+# res.4ch.time <- res
+# 
+# # Add motif info to posts dataframe and sort by frequency
+# df.posts.4ch <- merge(df.posts.4ch, res.4ch.time$posts.motifs, all=FALSE, sort=FALSE)
+# idx <- order(tabulate(df.posts.4ch$motif), decreasing = TRUE) # get order by frequency
+# df.posts.4ch$motif <- match(df.posts.4ch$motif, idx) # re-arrange pointers to motifs
+# motifs.4ch.time <- res.4ch.time$motifs[idx] # re-sort motifs
+# colnames(df.posts.4ch)[which(names(df.posts.4ch) == "motif")] <- "motif.time"
+# 
+# # Check they are sorted by frequency (they should be)
+# n <- as.numeric(table(df.posts.4ch$motif.time))
+# all(n == cummin(n))
 
 # A single dataset for all
-df.posts <- rbind(df.posts.got, df.posts.pod, df.posts.4ch)
+df.posts <- rbind(df.posts.got, df.posts.pod)
 df.posts <- select(df.posts, -parent, -user, -date, -thread)
 
 ################################################################################################
@@ -313,23 +311,27 @@ res <- merge.dictionaries(motifs.global, motifs.pod.struct)
 df.posts.global[mask,]$motif.struct <- res$mapping[df.posts.global[mask,]$motif.struct]
 motifs.global <- res$dict
 
-save(df.posts.global, file="df.posts.global.Rda")
-save(motifs.global, file="motifs.global.Rda")
+#save(df.posts.global, file="df.posts.global.Rda")
+#save(motifs.global, file="motifs.global.Rda")
+
+load("df.posts.global.Rda")
+load("motifs.global.Rda")
+
 
 # 4chan
-mask <- df.posts.global$forum == '4chan'
+#mask <- df.posts.global$forum == '4chan'
 
-res <- merge.dictionaries(motifs.global, motifs.4ch.time)
-df.posts.global[mask,]$motif.time <- res$mapping[df.posts.global[mask,]$motif.time]
-motifs.global <- res$dict
+#res <- merge.dictionaries(motifs.global, motifs.4ch.time)
+#df.posts.global[mask,]$motif.time <- res$mapping[df.posts.global[mask,]$motif.time]
+#motifs.global <- res$dict
 
-res <- merge.dictionaries(motifs.global, motifs.4ch.order)
-df.posts.global[mask,]$motif.order <- res$mapping[df.posts.global[mask,]$motif.order]
-motifs.global <- res$dict
+#res <- merge.dictionaries(motifs.global, motifs.4ch.order)
+#df.posts.global[mask,]$motif.order <- res$mapping[df.posts.global[mask,]$motif.order]
+#motifs.global <- res$dict
 
-res <- merge.dictionaries(motifs.global, motifs.4ch.struct)
-df.posts.global[mask,]$motif.struct <- res$mapping[df.posts.global[mask,]$motif.struct]
-motifs.global <- res$dict
+#res <- merge.dictionaries(motifs.global, motifs.4ch.struct)
+#df.posts.global[mask,]$motif.struct <- res$mapping[df.posts.global[mask,]$motif.struct]
+#motifs.global <- res$dict
 
 # Now we have df.posts.motif.global that indicate the motif (neighbourhood) of each post
 # and motifs.global where we store the motifs
@@ -341,9 +343,6 @@ df.posts.global$motif.order <- match(df.posts.global$motif.order, idx) # re-arra
 df.posts.global$motif.time <- match(df.posts.global$motif.time, idx) # re-arrange pointers to motifs
 df.posts.global$motif.struct <- match(df.posts.global$motif.struct, idx) # re-arrange pointers to motifs
 motifs.global <- motifs.global[idx] # re-sort motifs
-
-# TODO:  Make sure it makes sense
-
 
 #######################################################
 # Confusion between neighbourhood types 
@@ -395,6 +394,10 @@ plot(df.posts.global$motif.struct, df.posts.global$motif.time, cex=0.1, pch=19,
 #confusion <- m1%*%t(m2) 
 confusion.order_time <- acast(df.posts.global, motif.order~motif.time, fun.aggregate = length) # faster?
 confusion.time_struct <- acast(df.posts.global, motif.time~motif.struct, fun.aggregate = length) # faster?
+#save(confusion.order_time, file="confusion.order_time.Rda")
+#save(confusion.time_struct, file="confusion.time_struct.Rda")
+load("confusion.order_time.Rda")
+load("confusion.time_struct.Rda")
 
 # % of agreement
 df.agree <- filter(df.posts.global, motif.order==motif.time, motif.time==motif.struct)
@@ -413,9 +416,6 @@ df.agree <- filter(df.posts.global, motif.order==motif.struct)
 nrow(df.agree)/nrow(df.posts.global)
 # 41.48%
 
-#save(confusion.order_time, file="confusion.order_time.Rda")
-#save(confusion.time_struct, file="confusion.time_struct.Rda")
-
 #######################################################################
 # Census of the 3 types of neighbourhood in the same forum
 #######################################################################
@@ -423,8 +423,9 @@ nrow(df.agree)/nrow(df.posts.global)
 # Plot the census population in this base 
 # if a motif has not isomorphisms in another XX-based, the coount in XX-base in 0
 
-df.posts <- filter(df.posts.global, forum=='podemos')
-#df.posts <- filter(df.posts, forum=='podemos')
+df.posts <- df.posts.global[df.posts.global$forum=='podemos',]
+df.posts <- filter(df.posts.global, forum=='gameofthrones')
+#df.posts <- filter(df.posts.global, forum=='podemos')
 
 ntop <- 50
 top.struct <- order(tabulate(df.posts$motif.struct), decreasing = TRUE)[1:ntop]
@@ -441,19 +442,72 @@ census.order <- sapply(top, function(x) sum(counts.order==x))
 census.time <- sapply(top, function(x) sum(counts.time==x))
 
 par(mfrow=c(1,1))
-plot(1:length(top), census.order, 
-     axes=FALSE,
-     pch=19, type='l',
-     xlab='Neighborhood', ylab='Frequency', col='red')
-axis(1, at=1:length(top), labels=top, cex=0.2) 
-axis(2) 
+plot(1:length(top), census.order, pch=19, col='red',
+     type='l',xlab='Neighborhood', ylab='Frequency', axes=FALSE)
 lines(1:length(top), census.time, pch=19, col='black')
 lines(1:length(top), census.struct, pch=19, col='blue')
+axis(1, at=1:length(top), labels=top, cex=0.2) 
+axis(2) 
 legend(length(top)-15,12000, c('order-based', 'time_based', 'struct-based'), col=c('red', 'black', 'blue'), pch=c(18,20))
-title('Neighbourhood census in Podemos')
+title('Neighbourhood census in Game of Thrones')
 
 
 plot.trees(motifs.global[top], top)
+
+# maybe its clearer with comparing each type of neighbourhood in two forums
+# and analyizing which one is more sensitive to changes
+##########################
+
+# struct
+##########
+motifs.podemos <- filter(df.posts.global, forum=='podemos')$motif.struct
+motifs.gameofthrones <- filter(df.posts.global, forum=='gameofthrones')$motif.struct 
+motifs <- sort(union(motifs.podemos, motifs.gameofthrones))[1:50]
+
+census.struct.podemos <- sapply(motifs, function(x) sum(motifs.podemos==x))
+census.struct.gameofthrones <- sapply(motifs, function(x) sum(motifs.gameofthrones==x))
+
+plot(1:length(motifs), census.struct.podemos, col='blue', 
+     type = 'l', axes=FALSE, xlab='Neighborhood', ylab='Frequency')
+lines(1:length(motifs), census.struct.gameofthrones, col='red')
+axis(1, at=1:length(motifs), labels = motifs)
+axis(2)
+legend(length(motifs)-15,6000, c('podemos', 'gameofthrones'), col=c('blue', 'red'), pch=c(18,20))
+title('Structure-based census')
+
+# order
+##########
+motifs.podemos <- filter(df.posts.global, forum=='podemos')$motif.order
+motifs.gameofthrones <- filter(df.posts.global, forum=='gameofthrones')$motif.order 
+motifs <- sort(union(motifs.podemos, motifs.gameofthrones))[1:50]
+
+census.struct.podemos <- sapply(motifs, function(x) sum(motifs.podemos==x))
+census.struct.gameofthrones <- sapply(motifs, function(x) sum(motifs.gameofthrones==x))
+
+plot(1:length(motifs), census.struct.podemos, col='blue', 
+     type = 'l', axes=FALSE, xlab='Neighborhood', ylab='Frequency')
+lines(1:length(motifs), census.struct.gameofthrones, col='red')
+axis(1, at=1:length(motifs), labels = motifs)
+axis(2)
+legend(length(motifs)-15,6000, c('podemos', 'gameofthrones'), col=c('blue', 'red'), pch=c(18,20))
+title('Order-based census')
+
+# time
+##########
+motifs.podemos <- filter(df.posts.global, forum=='podemos')$motif.time
+motifs.gameofthrones <- filter(df.posts.global, forum=='gameofthrones')$motif.time 
+motifs <- sort(union(motifs.podemos, motifs.gameofthrones))[1:50]
+
+census.struct.podemos <- sapply(motifs, function(x) sum(motifs.podemos==x))
+census.struct.gameofthrones <- sapply(motifs, function(x) sum(motifs.gameofthrones==x))
+
+plot(1:length(motifs), census.struct.podemos, col='blue', 
+     type = 'l', axes=FALSE, xlab='Neighborhood', ylab='Frequency')
+lines(1:length(motifs), census.struct.gameofthrones, col='red')
+axis(1, at=1:length(motifs), labels = motifs)
+axis(2)
+legend(length(motifs)-15,6000, c('podemos', 'gameofthrones'), col=c('blue', 'red'), pch=c(18,20))
+title('Time-based census')
 ############################################################################
 ############################################################################
 ############################################################################

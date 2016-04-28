@@ -63,7 +63,7 @@
 
 % *** MATH PACKAGES ***
 %
-%\usepackage{amsmath}
+\usepackage{amsmath}
 % A popular package from the American Mathematical Society that provides
 % many useful and powerful commands for dealing with mathematics.
 %
@@ -223,7 +223,7 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title{You are the way you structurally talk: structural-temporal neighbourhoods of posts to characterize users in online forums}
+\title{Structural-temporal neighbourhoods of posts to characterize conversations in online forums}
 
 
 % author names and affiliations
@@ -290,7 +290,7 @@ marie.guegan@technicolor.com}}
 
 
 \section{Introduction}
-The interactions between users in online forums are often modelled as complex networks. As such, they can be studied from many levels, each of which is represented by a graph where vertices and edges may represent different things. The most studied graph is a graph where vertices represent users and edges represent interactions between users (a post from one user replying to a post from other user). From the point of view of the community, some typically analysed properties are the degree distribution, the clustering coefficient, density, or diameter of the graph. From the point of view of the individual users, analyses are typically focused either on the centrality of users, on the community structure or in blockmodeling (groups of users that tend to interact with the same other groups) \cite{McCallum2007a}. Another common graph is a tree graph where vertices represent posts (or e-mails) and and edges from one vertex to another indicates that the first is a reply to the second. Given the different discussion trees of a forum (a forest) the global analyses include the depth distribution, branching factors, or even the time between two posts \cite{Bhatt2012}. representation include depth distribution of discussions, branching factors and so. Studying discussion trees from the point of view of the users means, since trees are discussions, studying the user at a conversational level. Unfortunately, there is a lack of structural tools to perform this analysis. In this paper, we propose to fill this gap through the concept of \textit{structural-temporal neighbourhood}.  
+The interactions between users in online forums are often modelled as complex networks. As such, they can be studied from many levels, each of which is represented by a graph where vertices and edges may represent different things. The most studied graph is a graph where vertices represent users and edges represent interactions between users (a post from one user replying to a post from another user). From the point of view of the community, some typically analysed properties are the degree distribution, the clustering coefficient, density, or the diameter of the graph. From the point of view of the individual users, analyses are typically focused either on the centrality of users, on the community structure or in blockmodeling (groups of users that tend to interact with the same other groups) \cite{McCallum2007a}. Another common graph is a tree graph where vertices represent posts (or e-mails) and edges from one vertex to another indicate that the first is a reply to the second. Given the different discussion trees of a forum (a forest) the global analyses include depth distribution, branching factors, or even the time between two posts \cite{Bhatt2012}. Studying discussion trees from the point of view of the users means, since trees are discussions, studying the user at a conversational level. Unfortunately, there is a lack of structural tools to perform this analysis. In this paper, we propose to fill this gap through the concept of \textit{structural-temporal neighbourhood}.  
 %El esquema debe ser;
 %- SNA: 
 %*** comunidad: degree distribution, density, clustering coefficient etc
@@ -323,39 +323,39 @@ We represent a discussion thread by a tree graph $G=(V,E)$ where $V$ is a set of
 
 %Others: \cite{Gaumont2016}
 
-\section{Structural neighbourhoods}
+\section{Structural neighbourhoods}\label{sec:structural}
 Extending the classic definition of neighbourhood according to which two vertices are neighbours if the distance between them is one, we start by the following definition of \textit{structural neighbourhood}:
 
 \begin{definition}
-Given a tree graph $G$, the \textit{structure-based neighbourhood} of radius $r$ of post $i$, denoted as $\mathcal{N}_i(r)$, is the induced graph composed of all the vertices that are at distance equal or less than $r$ from post $i$.
+Given a tree graph $G$, the \textit{structure-based neighbourhood} of radius $r$ of post $i$, denoted as $\mathcal{N}_i(r)$, is the induced graph composed by all the vertices that are at distance equal or less than $r$ from post $i$.
 \end{definition}
 % pros and cons
-In the context of discussion threads, this definition has two limitations. First, the decision on whether to include some post in the neighbourhood is only based on the structural distance, and therefore two posts that are at distance $d\leq r$ are considered neighbours of $i$ regardless of the time when they were written. In conversations, time plays an important role, therefore this is an important limitation. Another consequence of looking only at the structure is that the number of possible neighbourhoods within a radius $r$ is infinite. This poses a problem when trying to categorize conversations since many conversations, while structurally different, can be considered semantically equivalent.
+In the context of discussion threads, this definition has two limitations. First, the decision on whether to include some post in the neighbourhood is only based on the structural distance, and therefore two posts that are at distance $d\leq r$ are considered neighbours of $i$ regardless of the time when they were written. In conversations, time plays an important role, therefore this is an important limitation. Another consequence of looking only at the structure is that the number of possible neighbourhoods within a radius $r$ is infinite. This poses a problem when trying to categorize conversations since many conversations, while structurally different, can be considered semantically similar.
 
-\section{Structural-temporal neighbourhoods}
-As we have discussed, structural neighbourhood falls short in the analysis of conversational structures. Instead, we propose two new definitions of neighbourhood that take into account the order and time in which posts are written. 
+\section{Structural-temporal neighbourhoods}\label{sec:temporal}
+We propose two refinements of the structure-based neighbourhood to take into account the order and time in which posts are written. As we will see, the criteria to choose which posts are neighbours of a post $i$  is not only based on the structural distance but also on the temporal distance to $i$. In the order-based definition, a new radius is set to include at most the $n$ closest posts in time.  In the time-based definition, the new radius is set to include all posts (in the structural-neighbourhood) until the first point where the conversation slows down. 
+
 
 \begin{figure}
 \centering
 \includegraphics[width=0.45\textwidth]{order_neighbourhood}
 \includegraphics[width=0.45\textwidth]{breakpoints}
-\caption{Illustration of order-based (left) and time-based (right) neighbourhoods. Grey nodes represent the ego post. Nodes with circles are those in the neighbourhood. Numbers indicate the order of the post. The order-based neighbourhood has parameters $r=3$, $n=6$. In the time-based neighbourhood, horizontal changepoints (yellow) and vertical changepoints (orange) represent posts that are temporally far from their predecessors (siblings or parents) and therefore set the limits of the neighbourhood.}
+\caption{Illustration of order-based (top) and time-based (bottom) neighbourhoods. Grey nodes represent the ego post. Nodes with circles are those in the neighbourhood. Numbers indicate the order of the post. The order-based neighbourhood has parameters $r=3$, $n=6$. The time-based neighbourhood has parameter $r=3$. In the time-based neighbourhood, horizontal changepoints (yellow) and vertical changepoints (orange) represent posts that are temporally far from their predecessors (siblings or parents) and therefore set the limits of the neighbourhood.}
 \label{fig:cutpoints}
 \end{figure}
 \subsection{Order-based}
-Our first definition is based on the order in which posts are attached to the tree. 
 \begin{definition}
-Given a ordered tree graph $G$, the \textit{order-based neighbourhood} of radius $r$ of vertex $i$, denoted as $\mathcal{N}_{i}^T(r,n)$ is the induced subgraph from its structural neighbourhood composed the $n$ vertices that are closest to $i$ in time and for which there exists a path to $i$ in $\mathcal{N}_{i}^T(r,n)$.  
+Given a ordered tree graph $G$, the \textit{order-based neighbourhood} of radius $r$ and order $n$ of vertex $i$, denoted as $\mathcal{N}_{i}^T(r,n)$ is the induced subgraph from its structural neighbourhood composed by the $n$ vertices that are closest to $i$ in time and for which there exists a path to $i$ in $\mathcal{N}_{i}^T(r,n)$.  
 \end{definition}
-An example of order-based neighbourhood is given in Figure~\ref{fig:cutpoints} (left).
-This definition has two advantages over the \textit{structural neighbourhood}. First, the temporal aspect of the conversation is better taken into account since the neighbourhood only includes posts that are not only near to $i$ in the structure but also in time. Second, the size of the neighbourhood has an upper bound of $min(|\mathcal{N}_i(r))|, n)$ thus making the space of possible neighbourhood structures finite. The main limitation of this definition is that the obtained neighbourhoods might be very different with different choices of $r$ and $n$, and we have no \textit{a priori} criteria to choose the proper parameters other than making them small so that the neighbourhoods capture the local dynamic of the conversation around the post $i$.
+An example of order-based neighbourhood is given in Figure~\ref{fig:cutpoints}.
+This definition has two advantages over the \textit{structural neighbourhood}. First, the temporal aspect of the conversation is better taken into account since the neighbourhood only includes posts that are not only near to $i$ in the structure but also in time. Second, the size of the neighbourhood has an upper bound of $min(|\mathcal{N}_i(r))|, n)$ thus making the space of possible neighbourhood structures finite. The main limitation of this definition is that the we have no \textit{a priori} criteria to choose the proper parameter $n$ other than making it small to capture only the local dynamic of the conversation around the post $i$.
 
 \subsection{Time-based}
-In a first attempt to take time into account, one might set fixed time-based boundaries for the neighbourhood and include only those posts whose timestamp $t_j$ is at distance less than $\tau$ from the ego post $i$, $|t_j-t_i|<\tau$. However, the pace at which posts are added to the conversation may be very different between conversation threads (and also within a thread) and we have no \textit{a priori} criteria for a proper choice of $\tau$. 
+In order to take time explicitly into account, one might set fixed time-based boundaries for the neighbourhood and include only those posts whose timestamp $t_j$ is at distance less than $\tau$ from the ego post $i$, $|t_j-t_i|<\tau$. However, the pace at which posts are added to the conversation may be very different between conversation threads (and also within a thread) and we have no \textit{a priori} criteria for a proper choice of $\tau$. 
 
-Rather than looking for a fixed time radius, we may look at changes in the pace how new posts are added to the thread. In statistical analysis, a \textit{changepoint} in a sequence $x_1,...x_n$ is a point that comes from a different probability distribution than its precedent values. If sequences are timestamps, they are monotonic increasing, therefore the changepoints will correspond to sudden pauses in the conversation. If applied either to the timestamps of posts in a branch (vertical sequence) or to the timestamps of the replies to the same post (horizontal sequence), we say that a sequence posts with timestamps $t_1,...,t_n$ belong to the same (vertical or horizontal) \textit{local dynamic} if there is no changepoint $t_i$ in the sequence such that $1 < i \leq n$. For the detection of changepoints we use the PELT algorithm \cite{Killick2012}\footnote{An implementation of this algorithm written by its own authors is available in the R library \texttt{changepoint}.}. Now we can introduce our second definition of neighbourhood.
+Rather than looking for a fixed time radius, we may instead decide it by looking at changes in the pace how new posts are added to the thread. In statistical analysis, a \textit{changepoint} in a sequence $x_1,...x_n$ is a point that comes from a different probability distribution than its precedent values. If sequences are timestamps, they are monotonic increasing, therefore the changepoints will correspond to sudden pauses in the conversation. If applied either to the timestamps of posts in a branch (vertical sequence) or to the timestamps of the replies to the same post (horizontal sequence), we say that a sequence posts with timestamps $t_1,...,t_n$ belong to the same (vertical or horizontal) \textit{local dynamic} if there is no changepoint $t_i$ in the sequence such that $1 < i \leq n$. For the detection of changepoints we use the PELT algorithm \cite{Killick2012}\footnote{An implementation of this algorithm written by its own authors is available in the R library \texttt{changepoint}.}. Now we can introduce our second definition of neighbourhood.
 \begin{definition}
-Given a tree graph $G$, the \textit{time-based neighbourhood} of vertex $i$, denoted as $\mathcal{N}_{i}^T(r)$, is the maximal subgraph of the structural neighbourhood $\mathcal{N}_i(r)$ where all the vertices  belong to the same vertical and horizontal local dynamic than $i$.
+Given a tree graph $G$, the \textit{time-based neighbourhood} of radius $r$ of vertex $i$, denoted as $\mathcal{N}_{i}^T(r)$, is the maximal subgraph of the structural neighbourhood $\mathcal{N}_i(r)$ where all the vertices  belong to the same vertical and horizontal local dynamic than $i$.
 \end{definition}
 Note that we still have a radius parameter $r$ to guarantee that the resulting structure remains local even if no changepoint is detected near the post $i$. 
 
@@ -437,34 +437,25 @@ Our data consists of two different forums of Reddit, namely the Podemos dataset 
 The Podemos dataset contains 75,000 posts corresponding to 4,262 threads written by 9,160 users between the April 25th and October 20th 2014. The Game of Thrones dataset contains 75,000 posts corresponding to 5,862 threads written by 18,907 users.
 
 \subsection{Neighbourhood extraction}
-As a previous step for all further analysis we detect the neighbourhood around every post in our datasets. Each neighbourhood structure (including colours) is given a unique integer number. Unfortunately, it is not practical to give a number to every theoretically possible structure since, even if we could enumerate all the possible trees up to a given size, a lot of of these trees would not be seen in the data. It appears then a much more practical approach to enumerate only those trees that are seen in the data. The consequence of this is that every dataset will have its own dictionary of trees. 
+As a previous step for all further analysis we extract the structure-based ($r=2$), the order-based ($r=2, n=4$) and the time-based ($r=2$) neighbourhood around every post for the two forums. We label every structure with a unique integer number, where a structure is a coloured graph. Two neighbours have the same structure, and therefore they have the same integer number, if their coloured graphs are isomorphic.   
 
-We detect the order-based and time-based neighbourhood of every post as follows. A counter for every neighbourhood structure is created the first time it us detected. For every post, we extract its neighbourhood (order-based or time-based) colour and prune it as explained above (Section~\ref{sec:colouring_pruning}). Then we check whether it is isomorphic to some of the already seen neighbourhoods. If this is the case, then we increment the counter for the neighbourhood previously seen. Otherwise we create a new entry for the current neighbourhood. The computational cost of this operation has a upper bound of $\mathcal O(n^2)$, $n$ being the number of posts, for the case where each neighbourhood occurs only once. \footnote{TODO: It's actually much less, probably logarithmic, since the size dictionary grows incrementally}
-Some of the anlysis in the next section requires that, if two type of neighbourhoods are isomorphics, they have the same label. Thus, we merge the dictionaries to obtain a global dictionary of neighbours. Figure XXX shows some frequent neighbourhoods that will be discussed later.
+Unfortunately, it is not practical to give a number to every theoretically possible structure since, even if we could enumerate all the possible trees up to a given size, a lot of of these trees would not be seen in the data. It appears then a much more practical approach to enumerate only those trees that are seen in the data. In order to share a unique labelling of structures among the two forums and the three types of neighbourhoods (which gives 6 different labellings) we re-label the structures after the extraction for every post is finished. We will call this final labelling a \textit{dictionary} of neighbourhoods.
+
+Given a type of neighbourhood (struture-based, order-based or time-based) we extract the neighbourhood around every post of a forum as follows. A counter for every neighbourhood structure is created the first time it us detected. For every post, we extract its neighbourhood, colour and prune it (Sections~\ref{sec:structural} and \ref{sec:temporal}). Then we check whether it is isomorphic to some of the neighbourhoods that we have already seen. If this is the case, then we increment the counter for the neighbourhood previously seen. Otherwise we create a new entry for the current neighbourhood. 
+
+Once the six extractions are finished we merge there dictionaries into a global one and sort the labels by frequency of the neighbourhood (1 for the most frequent and so forth). Figure \ref{fig:dictionary} shows some frequent neighbourhoods that will be discussed later.
+
+% Computational cost
+In the worst case, where every post has a unique neighbourhood, every extracted neighbourhood should be compared against every neighbourhood in already in the dictionary before concluding that it needs a new entry. In this case, the computational cost of this operation is $\mathcal{O}(n^2)$ where $n$ is the number of posts. In practice, however, the bigger the number of posts processed, the less likely that we go through all the dictionary without finding and isomorphism. Moreover, if we keep the dictionary sorted by frequency, a large number of neighbourhoods will find and isomorphism among the first neighbours of the dictionary. 
 
 \subsection{Comparing neighbourhood methods}
 In this section we compare different aspects of our three classes of neighbourhood, namely (a) the size and frequency distribution of the neighbours for each class, (b) the discrepancies between methods when they extract the neighbourhood of a same post, (c) the neighbourhood census obtained for each class in a same forum. 
 
 \subsubsection{Size and frequency distribution}
-The detection of the time-based and order-based neighbourhood in the Game of Thrones dataset gave us a list of 2000 different (non-isomorphic) time-based neighbourhoods and 180 different (non-isomorphic) \footnote{TODO: Review numbers} order-based neighbourhoods, which means that the time-based is able to capture a much wider set of structures. Of course, this is not necessarily and advantage since these extra structures may be just spurious and only occur a very small number of times. Indeed, Figure~\ref{fig:census_distributions} shows that around half of the time-based neighbourhoods occur only once, and that we only need 384 time-based to cover 95\% of the census, while for the order-based, 53 structures are enough to cover the same percentage. Moreover, there is no much difference, in terms of frequency, between the 50 most frequent neighbours of each type. The main reason why the frequency of the order-based neighbourhoods decay faster is that the most frequent neighbourhood (id XX) is much more frequent (upper-left red point in the left plot of figure \ref{fig:census_distributions}) than the most frequent time-based neighbourhood. 
-
-\subsubsection{Discrepancies}
-The divergent number of neighbourhoods between order-based and times-based suggests that posts with different time-based neighbourhoods have similar order-based neighbourhoods. Figure~\ref{fig:confusion} shows, for every post, its time-based neighbourhood and its order-based neighbourhood. Those in the diagonal (34\%) see no difference between the time-based and order-based. Out of the diagonal, there are two rows indicating a high number of posts being assign the same order-based neighbourhood but very different time-based neighbourhoods. These order-based neighbourhoods are the number 1 and the number 50. These collapse of many time-based neighbourhoods into one is significant because it happens a lot among very frequent time-based neighbourhood. Other order-based neighbourhoods that collapse many of the most frequent time-based neighbourhoods are the 22, 17, 26, 29, 49, 56, 47 and 101. 
-The right figure \\TODO: expliquer... c'est time vs structure
-
-
-\begin{figure*}
-\centering
-\includegraphics[width=0.5\textwidth]{confusion_time_order}%
-\includegraphics[width=0.5\textwidth]{confusion_struct_time}
-\includegraphics[width=0.5\textwidth]{confusion_time_order_zoom}%
-\includegraphics[width=0.5\textwidth]{confusion_struct_time_zoom}
-\caption{Neighbourhood of posts from the point of view of order-based and time-based. Neighbourhoods with the same label in the order-based and the time-based axes are isomorphic. The points in the diagonal correspond to posts to whom the two methods assign exactly the same neighbourhood. Horizontal rows of points correspond to posts that are assigned many different time-based neighbourhoods but the same single order-based neighbourhood.}
-\label{fig:confusion}
-\end{figure*}
-
-\subsubsection{Neighbourhood census}
-Given a set of local structures and a graph under study, a census is a counting of how many times does each structure appear in the graph. In the context of online discussion forums, triad census has been sometimes used in the graph of users interactions are often used (in these graphs, an edge exists from user $u$ to user $v$ if $u$ wrote a post reply to some of the posts written by $v$ in some thread.) \cite{Adamic2008, Lumbreras2013}. However, triads are poor objects when studying trees since there are only three possible structures with, at most, three nodes: a single vertex, a directed dyad (reply), star (two replies to the same post) and a chain (reply and reply to the reply). On the contrary, our neighbourhoods are potentially richer structures that capture the real structure of conversations.
+We detected, in the the whole dataset, 3791 different structure-based neighbourhoods, 174 different order-based and 1488 different time-based. which means that the structure-based captures a much wider set of structures. Of course, this is not necessarily and advantage since these extra structures may be just spurious and only occur a very small number of times. Indeed, Figure~\ref{fig:census_distributions} shows that around half of the time-based neighbourhoods (41\%) and the structure-based neighbourhoods (60\%) occur only once, while the number of neighbourhoods that appear more than 100 times (among 150,000 posts) is similar for the three  types of neighbourhood. To cover 95\% of the posts we need 623 structure-based neighbourhoods, 40 order-based and 155 time-based. 
+ 
+% Why order-based is not good enough
+The main reason why the frequency of the order-based neighbourhoods decay faster is that the most frequent neighbourhood (id 1) is much more frequent (upper-left red point in the left plot of figure \ref{fig:census_distributions}) than the most frequent time-based neighbourhood. This is the main handicap of the order-based neighbourhood since, as we will see later, it avoids finding richer structures.
 
 \begin{figure*}
 \centering
@@ -474,19 +465,43 @@ Given a set of local structures and a graph under study, a census is a counting 
 \label{fig:census_distributions}
 \end{figure*}
 
+\subsubsection{Discrepancies}
+The divergent number of neighbourhoods between structure-based, order-based and times-based suggests that some neighbourhoods, for instance, in time-based, might be systematically mapped to the same neighbourhoods in order-based. Or that some structure-base neighbourhoods are systematically mapped into the same time-based neighbourhoods. Figure~\ref{fig:confusion} gives a general overview of these mappings. The left figure shows, for every post, its time-based neighbourhood and its order-based neighbourhood, while the right figure shows the time-based and the structure-based. The points in the diagonal correspond to posts that have been assigned the same neighbourhood by the two compared methods. 
+
+The diagonal of the time-based / order-based plot contains 36\% of posts. The diagonal of the structure-based / time-based plot contains 40\% of the posts. For the order-based / struct-based (not shown) there are 41\% of posts in the diagonal. In general, the structures with bigger agreement are among the most frequent. This is comprehensible since the most frequent tend to be also the most simple structures with less room for discrepancy. There is a 30.75\% of posts that are assigned the same neighbourhood structure by the three methods. 
+
+Rather than looking at where the methods agree, it is even more interesting to see where they disagree, since this will reveal whether one of the methods is incapable of detecting some interesting conversational structure. 
+
+%por aqui
+
+
+Out of the diagonal, there are two rows indicating a high number of posts being assigned to the same order-based neighbourhood but to very different time-based neighbourhoods. These order-based neighbourhoods are the number 1 and the number 50. These collapse of many time-based neighbourhoods into one is significant because it happens a lot among very frequent time-based neighbourhood. Other order-based neighbourhoods that collapse many of the most frequent time-based neighbourhoods are the 22, 17, 26, 29, 49, 56, 47 and 101. 
+The right figure \\TODO: expliquer... c'est time vs structure
+
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.5\textwidth]{confusion_time_order}%
+\includegraphics[width=0.5\textwidth]{confusion_struct_time}
+\caption{Neighbourhood of posts from the point of view of order-based and time-based. Neighbourhoods with the same label in the order-based and the time-based axes are isomorphic. The points in the diagonal correspond to posts to whom the two methods assign exactly the same neighbourhood. Horizontal rows of points correspond to posts that are assigned many different time-based neighbourhoods but the same single order-based neighbourhood.}
+\label{fig:confusion}
+\end{figure*}
+
+\subsubsection{Neighbourhood census}
+Given a set of local structures and a graph under study, a census is a counting of how many times does each structure appear in the graph. In the context of online discussion forums, triad census has been sometimes used in the graph of users interactions are often used (in these graphs, an edge exists from user $u$ to user $v$ if $u$ wrote a post reply to some of the posts written by $v$ in some thread.) \cite{Adamic2008, Lumbreras2013}. However, triads are poor objects when studying trees since there are only three possible structures with, at most, three nodes: a single vertex, a directed dyad (reply), star (two replies to the same post) and a chain (reply and reply to the reply). On the contrary, our neighbourhoods are potentially richer structures that capture the real structure of conversations.
 
 In Figure \ref{fig:census_compare} we compare the neighbourhood census in the Podemos and the Game of Thrones forums for the 20 most frequent neighbourhood of each type. Because some of the most frequent neighbourhoods in one method are also among the most frequent in the other methods, the total set contains 30 different neighbourhoods.
 
 Interestingly, two time-based neighbourhoods are  more than three times likelier in the Game of Thrones. These neighbourhoods correspond to a discussion between two users (21) and to XXXXXX (25). The same comparison for the order-based triad is harder to interpret, since the outstanding neighbourhoods in the Game of Thrones correspond to XXXX (25) and ... (27), suggesting that this method fails to capture some relevant structures.
 
-
-\begin{figure*}
+\begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{time_neighbourhood_census_compare_forums}%
-\includegraphics[width=0.5\textwidth]{order_neighbourhood_census_compare_forums}
-\caption{Comparison of census for two different forums.}
+\includegraphics[width=0.5\textwidth]{structure_based_census}
+\includegraphics[width=0.5\textwidth]{order_based_census}
+\includegraphics[width=0.5\textwidth]{time_based_census}
+\caption{Comparison of neighbourhood census obtained by each type of neighbourhood in two different forums. Order-based is more similar across forums since its most frequent neighbourhood dominates the census.}
 \label{fig:census_compare}
-\end{figure*}
+\end{figure}
 
 We conclude that, even if at the cost of a sparser set of structures, the time-based neighbourhood does a better job in capturing structures that have both a real meaning and a level of frequency that makes them relevant in the analysis.
 
@@ -549,9 +564,8 @@ We can see many applications of this kind of neighbourhood.
 	\centering
 	\includegraphics[width=0.8\textwidth]{dictionary1}
 	\includegraphics[width=0.8\textwidth]{dictionary2}
-	%\includegraphics[width=0.75\textwidth]{census_orderbased_3}
 	\caption{Neighbourhoods reference list}
-	\label{fig:census_orderbased}
+	\label{fig:dictionary}
 \end{figure*}
 
 
@@ -570,20 +584,30 @@ We can see many applications of this kind of neighbourhood.
 \bibliographystyle{IEEEtran}
 \bibliography{bibliography}
 \newpage
-\section*{Appendix 2}
+\section*{Appendix  (WILL ME REMOVED)}
+
+\begin{figure*}
+\centering
+%\includegraphics[width=0.5\textwidth]{time_neighbourhood_census_compare_forums}%
+%\includegraphics[width=0.5\textwidth]{order_neighbourhood_census_compare_forums}
+\includegraphics[width=0.5\textwidth]{neighbourhood_census_compare_gameofthrones}%
+\includegraphics[width=0.5\textwidth]{neighbourhood_census_compare_podemos}
+\caption{Comparison of census for two different forums. POUR BERTRAND. WE CANT SEE ANYTHING HERE}
+\label{fig:census_compare}
+\end{figure*}
 
 \begin{figure*}
 	\centering
-	\includegraphics[width=0.8\textwidth]{census_orderbased_1}
-	\includegraphics[width=0.8\textwidth]{census_orderbased_2}
+%	\includegraphics[width=0.8\textwidth]{census_orderbased_1}
+%	\includegraphics[width=0.8\textwidth]{census_orderbased_2}
 	%\includegraphics[width=0.75\textwidth]{census_orderbased_3}
 	\caption{Most frequent order-based neighbourhoods with $r=2$ and $n=4$ (Podemos)}
 	\label{fig:census_orderbased}
 \end{figure*}
 \begin{figure*}
 	\centering
-	\includegraphics[width=0.8\textwidth]{census_timebased_1}
-	\includegraphics[width=0.8\textwidth]{census_timebased_2}
+%	\includegraphics[width=0.8\textwidth]{census_timebased_1}
+%	\includegraphics[width=0.8\textwidth]{census_timebased_2}
 	%\includegraphics[width=0.8\textwidth]{neighbourhoods_time_3}
 	\caption{Most frequent time-based neighbourhoods (Podemos)}
 	\label{fig:neighbourhoods_time}
@@ -591,7 +615,7 @@ We can see many applications of this kind of neighbourhood.
 
 \begin{figure*}
 \centering
-\includegraphics[width=1\textwidth]{confusion_time_order_motifs_gameofthrones_1}
+%\includegraphics[width=1\textwidth]{confusion_time_order_motifs_gameofthrones_1}
 \caption{Most popular time-based neighbourhoods (up) and how they are mostly detected in order-based neighbourhood (down).}
 \label{fig:census_size_vs_freq}
 \end{figure*}
