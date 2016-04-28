@@ -138,7 +138,7 @@ count_motifs_by_post <- function(threads,
           eg <- neighborhood.temporal.order(gp, j, rad, max.neighbors)
         }
         if(neighbourhood=='time'){
-          eg <- neighborhood.temporal(gp, j, 2, breakpoints.v, breakpoints.h)
+          eg <- neighborhood.temporal(gp, j, rad, breakpoints.v, breakpoints.h)
         }
         if(neighbourhood=='struct'){
           eg <- make_ego_graph(gp, rad, nodes=j)[[1]]
@@ -164,7 +164,6 @@ count_motifs_by_post <- function(threads,
 
         # If neighbourhood is too big, sometimes isomorphism check takes too long
         if(vcount(eg)>10){
-          #cat("\nSkipping neighbourhood isomorphism in thread ", threads[i])
           next
         }
 
