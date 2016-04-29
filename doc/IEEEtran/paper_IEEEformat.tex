@@ -418,15 +418,15 @@ Since some posts might correspond to several colors, we perform a sequential ass
 
 We do not claim this choice of labels to be of universal. Indeed, other labellings might also give interesting results since they would look at conversations from new points of view (e.g.: a colour for leaf vertices, colours according to the length of the post, or colours to represent the sentiment of the post). 
 
-\begin{figure*}
+\begin{figure}
 \centering
-\includegraphics[width=0.2\textwidth]{neighbourhood_time_342}
+%\includegraphics[width=0.2\textwidth]{neighbourhood_time_342}
 \includegraphics[width=0.19\textwidth]{neighbourhood_time_456}
 \includegraphics[width=0.18\textwidth]{neighbourhood_time_501}
-\includegraphics[width=0.18\textwidth]{neighbourhood_time_524}
+%\includegraphics[width=0.18\textwidth]{neighbourhood_time_524}
 \caption{Illustration of different real structures using different colors for the root (white), the ego (red) and other posts written by the same author (orange) the ego parent and other posts written by the same author (yellow), posts previous to the ego (grey) and posts posterior to the ego.}
 \label{fig:colors}
-\end{figure*}
+\end{figure}
 
 \subsection{Pruning}
 At this point, we can still find structures whose only difference is that one of them has more leafs hanging from some of the nodes. Thus, we prune every neighbourhood by leaving a maximum of two consecutive siblings of the same color and where neither of them has any children. The reason of setting the limit to two is that it is the minimum necessary to distinguish between \textit{zero}, \textit{one} and \textit{more than one} consecutive occurrences. In other words, we consider that the difference between one and zero replies to a post is relevant, but that five and six replies do not make any difference worth being represented.    
@@ -486,9 +486,13 @@ In retrospective, these results are not surprising. What we see is simply that s
 \subsubsection{Neighbourhood census}
 Given a set of local structures and a graph under study, a census is a counting of how many times does each structure appear in the graph. In the context of online discussion forums, triad census has been sometimes used in the graph of users interactions are often used (in these graphs, an edge exists from user $u$ to user $v$ if $u$ wrote a post reply to some of the posts written by $v$ in some thread.) \cite{Adamic2008, Lumbreras2013}. However, triads are poor objects when studying trees since there are only three possible structures with, at most, three nodes: a single vertex, a directed dyad (reply), star (two replies to the same post) and a chain (reply and reply to the reply). On the contrary, our neighbourhoods are potentially richer structures that respect the real structure of conversations.
 
-In Figure \ref{fig:census_compare} we compare the neighbourhood census in the Podemos and the Game of Thrones forums for the 20 most frequent neighbourhood of each type. Because some of the most frequent neighbourhoods in one method are also among the most frequent in the other methods, the total set contains 30 different neighbourhoods.
+In Figure \ref{fig:census_compare} we show, for every neighbourhood method, the resulting census in the two forums. For each method, the neighbourhoods shown are those among the 30 most frequent in either of the forums. Out of this selection, we checked that no neighbourhood has a frequency higher than 1000 (near a 1.5\% of the posts in each forum), which guarantees that we are not missing important information in the plots. 
 
-Interestingly, two time-based neighbourhoods are  more than three times likelier in the Game of Thrones. These neighbourhoods correspond to a discussion between two users (21) and to XXXXXX (25). The same comparison for the order-based triad is harder to interpret, since the outstanding neighbourhoods in the Game of Thrones correspond to XXXX (25) and ... (27), suggesting that this method fails to capture some relevant structures.
+According to the structure-based method, the Podemos census has a bigger presence of 9 and 20, though 9 is also dominant in Game of Thrones. The Game of Thrones has a bigger presence of 10, 11 and 27. The 20 is interesting since it represents chain discussions between two users, which in the context of a political forum suggests a debate. The 11 represents the ego user opening a new discussion but getting only one reply, which means an unsuccessful thread. This structure is much less frequent in Podemos meaning that, for some reason, in Podemos discussions have easier success. The 27 represents a user replying, among others, to the same post which is, in its turn, a reply to another regular post.
+
+According to the order-based method, the Podemos census has a bigger presence of 1, 3, 2, 13, 4 and 18, most of them representing chains. The Game of Thrones has a bigger presence of 1, 12, 9, 3, 11 and 5. Although it captures some of the chain structure in the Podemos forum, the dominance of the motifs 1 clearly deteriorates the census.
+
+Lastly, the time-based method gives the Podemos census a bigger presence of  2,3,4 and 8. The Game of Thrones has a bigger presence of 5, 9, 11 and 25.  As seen in the structure-based, 9 and 11 suggest threads that did not attract the attention of the users.
 
 \begin{figure}
 \centering
@@ -499,7 +503,7 @@ Interestingly, two time-based neighbourhoods are  more than three times likelier
 \label{fig:census_compare}
 \end{figure}
 
-We conclude that, even if at the cost of a sparser set of structures, the time-based neighbourhood does a better job in capturing structures that have both a real meaning and a level of frequency that makes them relevant in the analysis.
+It is clear from the last sections that the order-based does not do a good job on capturing all the richness of the conversational structures. Nevertheless, it is harder to decide between the time-based or the structure-based in terms of the richness of the captured conversations. There are two other reasons to choose the time-neighbourhood over the structure based. First, the time-base has less spurious structures, covering 95\% of posts with 155 neighbourhoods, against the 623 neighbours necessary to cover that amount with the structure-based. Second, the time-based neighbourhood has more grounded criteria to decide where the neighbourhood ends, while the structure-based has no criteria at all.
 
 \subsection{Conversation-based clustering of users}
 In this section, we cluster users in the Podemos dataset based on the neighbourhoods of their posts. Our intuition is that some users like participating in some kind of discussion rather than other. Certainly, most part of the information necessary to understand the nature of a discussion in in its textual content. However, due to the huge diversity of topics, vocabulary, and the difficulty of current algorithms to capture the language subtleties such as humour, irony, or context, we turn our attention towards the structure of the discussions, which can also contain some information. We work under the  hypothesis that the structural-neighbourhoods in which a user post in embedded reflect the kind of conversation in that part of the thread. 

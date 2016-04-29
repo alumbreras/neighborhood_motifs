@@ -434,87 +434,110 @@ df.posts <- df.posts.global[df.posts.global$forum=='podemos',]
 df.posts <- filter(df.posts.global, forum=='gameofthrones')
 #df.posts <- filter(df.posts.global, forum=='podemos')
 
-ntop <- 50
-top.struct <- order(tabulate(df.posts$motif.struct), decreasing = TRUE)[1:ntop]
-top.order <- order(tabulate(df.posts$motif.order), decreasing = TRUE)[1:ntop]
-top.time <- order(tabulate(df.posts$motif.time), decreasing = TRUE)[1:ntop]
-top <- union(union(top.order, top.time), top.struct) %>% sort
-#top <- 1:max(top) # fill the gaps
+# We don't see anything clear in this plots
+if(FALSE){
+  ntop <- 50
+  top.struct <- order(tabulate(df.posts$motif.struct), decreasing = TRUE)[1:ntop]
+  top.order <- order(tabulate(df.posts$motif.order), decreasing = TRUE)[1:ntop]
+  top.time <- order(tabulate(df.posts$motif.time), decreasing = TRUE)[1:ntop]
+  top <- union(union(top.order, top.time), top.struct) %>% sort
+  #top <- 1:max(top) # fill the gaps
+  
+  counts.struct <- df.posts$motif.struct[df.posts$motif.struct %in% top]
+  counts.order <- df.posts$motif.order[df.posts$motif.order %in% top]
+  counts.time <- df.posts$motif.time[df.posts$motif.time %in% top]
+  census.struct <- sapply(top, function(x) sum(counts.struct==x))
+  census.order <- sapply(top, function(x) sum(counts.order==x))
+  census.time <- sapply(top, function(x) sum(counts.time==x))
+  
+  par(mfrow=c(1,1))
+  plot(1:length(top), census.order, pch=19, col='red',
+       type='l',xlab='Neighborhood', ylab='Frequency', axes=FALSE)
+  lines(1:length(top), census.time, pch=19, col='black')
+  lines(1:length(top), census.struct, pch=19, col='blue')
+  axis(1, at=1:length(top), labels=top, cex=0.2) 
+  axis(2) 
+  legend(length(top)-15,12000, c('order-based', 'time_based', 'struct-based'), col=c('red', 'black', 'blue'), pch=c(18,20))
+  title('Neighbourhood census in Game of Thrones')
+  
+  plot.trees(motifs.global[top], top)
+  
+}
 
-counts.struct <- df.posts$motif.struct[df.posts$motif.struct %in% top]
-counts.order <- df.posts$motif.order[df.posts$motif.order %in% top]
-counts.time <- df.posts$motif.time[df.posts$motif.time %in% top]
-census.struct <- sapply(top, function(x) sum(counts.struct==x))
-census.order <- sapply(top, function(x) sum(counts.order==x))
-census.time <- sapply(top, function(x) sum(counts.time==x))
-
-par(mfrow=c(1,1))
-plot(1:length(top), census.order, pch=19, col='red',
-     type='l',xlab='Neighborhood', ylab='Frequency', axes=FALSE)
-lines(1:length(top), census.time, pch=19, col='black')
-lines(1:length(top), census.struct, pch=19, col='blue')
-axis(1, at=1:length(top), labels=top, cex=0.2) 
-axis(2) 
-legend(length(top)-15,12000, c('order-based', 'time_based', 'struct-based'), col=c('red', 'black', 'blue'), pch=c(18,20))
-title('Neighbourhood census in Game of Thrones')
-
-
-plot.trees(motifs.global[top], top)
-
-# maybe its clearer with comparing each type of neighbourhood in two forums
+# Its clearer with comparing each type of neighbourhood in two forums
 # and analyizing which one is more sensitive to changes
+# for each neighbourhood method, use as x-axis the top frequent motifs for this method
 ##########################
+
+
 
 # struct
 ##########
+ntop <- 30
 motifs.podemos <- filter(df.posts.global, forum=='podemos')$motif.struct
-motifs.gameofthrones <- filter(df.posts.global, forum=='gameofthrones')$motif.struct 
-motifs <- sort(union(motifs.podemos, motifs.gameofthrones))[1:50]
+motifs.gameofthrones <- filter(df.posts.global, forum=='gameofthrones')$motif.struct
 
-census.struct.podemos <- sapply(motifs, function(x) sum(motifs.podemos==x))
-census.struct.gameofthrones <- sapply(motifs, function(x) sum(motifs.gameofthrones==x))
+# top frequent motifs in each forum
+top.motifs.podemos <- sort(table(motifs.podemos), decreasing = TRUE)[1:ntop] %>% names %>% as.numeric
+top.motifs.gameofthrones  <- sort(table(motifs.gameofthrones), decreasing = TRUE)[1:ntop] %>% names %>% as.numeric
+motifs <- sort(union(top.motifs.podemos, top.motifs.gameofthrones))
 
-plot(1:length(motifs), census.struct.podemos, col='blue', 
+census.podemos <- sapply(motifs, function(x) sum(motifs.podemos==x))
+census.gameofthrones <- sapply(motifs, function(x) sum(motifs.gameofthrones==x))
+
+plot(1:length(motifs), census.podemos, col='blue', 
      type = 'l', axes=FALSE, xlab='Neighborhood', ylab='Frequency')
-lines(1:length(motifs), census.struct.gameofthrones, col='red')
+lines(1:length(motifs), census.gameofthrones, col='red')
 axis(1, at=1:length(motifs), labels = motifs)
 axis(2)
-legend(length(motifs)-15,6000, c('podemos', 'gameofthrones'), col=c('blue', 'red'), pch=c(18,20))
-title('Structure-based census')
+legend(length(motifs)-10,5800, c('podemos', 'gameofthrones'), col=c('blue', 'red'), pch=c(18,20))
+title('Structure-based')
 
 # order
 ##########
+ntop <- 30
 motifs.podemos <- filter(df.posts.global, forum=='podemos')$motif.order
-motifs.gameofthrones <- filter(df.posts.global, forum=='gameofthrones')$motif.order 
-motifs <- sort(union(motifs.podemos, motifs.gameofthrones))[1:50]
+motifs.gameofthrones <- filter(df.posts.global, forum=='gameofthrones')$motif.order
 
-census.struct.podemos <- sapply(motifs, function(x) sum(motifs.podemos==x))
-census.struct.gameofthrones <- sapply(motifs, function(x) sum(motifs.gameofthrones==x))
+# top frequent motifs in each forum
+top.motifs.podemos <- sort(table(motifs.podemos), decreasing = TRUE)[1:ntop] %>% names %>% as.numeric
+top.motifs.gameofthrones <- sort(table(motifs.gameofthrones), decreasing = TRUE)[1:ntop] %>% names %>% as.numeric
+motifs <- sort(union(top.motifs.podemos, top.motifs.gameofthrones))
 
-plot(1:length(motifs), census.struct.podemos, col='blue', 
+census.podemos <- sapply(motifs, function(x) sum(motifs.podemos==x))
+census.gameofthrones <- sapply(motifs, function(x) sum(motifs.gameofthrones==x))
+
+plot(1:length(motifs), census.podemos, col='blue', 
      type = 'l', axes=FALSE, xlab='Neighborhood', ylab='Frequency')
-lines(1:length(motifs), census.struct.gameofthrones, col='red')
+lines(1:length(motifs), census.gameofthrones, col='red')
 axis(1, at=1:length(motifs), labels = motifs)
 axis(2)
-legend(length(motifs)-15,6000, c('podemos', 'gameofthrones'), col=c('blue', 'red'), pch=c(18,20))
-title('Order-based census')
+legend(length(motifs)-10,14000, c('podemos', 'gameofthrones'), col=c('blue', 'red'), pch=c(18,20))
+title('Order-based')
+
 
 # time
 ##########
+ntop <- 30
 motifs.podemos <- filter(df.posts.global, forum=='podemos')$motif.time
-motifs.gameofthrones <- filter(df.posts.global, forum=='gameofthrones')$motif.time 
-motifs <- sort(union(motifs.podemos, motifs.gameofthrones))[1:50]
+motifs.gameofthrones <- filter(df.posts.global, forum=='gameofthrones')$motif.time
 
-census.struct.podemos <- sapply(motifs, function(x) sum(motifs.podemos==x))
-census.struct.gameofthrones <- sapply(motifs, function(x) sum(motifs.gameofthrones==x))
+# top frequent motifs in each forum
+top.motifs.podemos <- sort(table(motifs.podemos), decreasing = TRUE)[1:ntop] %>% names %>% as.numeric
+top.motifs.gameofthrones <- sort(table(motifs.gameofthrones), decreasing = TRUE)[1:ntop] %>% names %>% as.numeric
+motifs <- sort(union(top.motifs.podemos, top.motifs.gameofthrones))
 
-plot(1:length(motifs), census.struct.podemos, col='blue', 
+census.podemos <- sapply(motifs, function(x) sum(motifs.podemos==x))
+census.gameofthrones <- sapply(motifs, function(x) sum(motifs.gameofthrones==x))
+
+plot(1:length(motifs), census.podemos, col='blue', 
      type = 'l', axes=FALSE, xlab='Neighborhood', ylab='Frequency')
-lines(1:length(motifs), census.struct.gameofthrones, col='red')
+lines(1:length(motifs), census.gameofthrones, col='red')
 axis(1, at=1:length(motifs), labels = motifs)
 axis(2)
-legend(length(motifs)-15,6000, c('podemos', 'gameofthrones'), col=c('blue', 'red'), pch=c(18,20))
-title('Time-based census')
+legend(length(motifs)-10,5800, c('podemos', 'gameofthrones'), col=c('blue', 'red'), pch=c(18,20))
+title('Time-based')
+
 ############################################################################
 ############################################################################
 ############################################################################
