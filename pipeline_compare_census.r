@@ -538,94 +538,11 @@ axis(2)
 legend(length(motifs)-10,5800, c('podemos', 'gameofthrones'), col=c('blue', 'red'), pch=c(18,20))
 title('Time-based')
 
-############################################################################
-############################################################################
-############################################################################
-#############################################################
-# Get first motifs of first dataset as reference and plot 
-# and compare occurences between the two à la Adamic 
-# Podemos vs Game of Thrones
-############################################################
-library(igraph)
-
-load('./R_objects/dfposts_podemos.Rda')
-df.posts$date <- as.numeric(df.posts$date)
-df.posts <- data.frame(df.posts) %>% arrange(date)
-df.posts <- df.posts[1:75000,] # Paper
-
-df.threads <- plyr::count(df.posts, "thread")
-df.users <- plyr::count(df.posts, 'user')                                                                                                                                   
-names(df.threads)[2] <- "length"
-names(df.users)[2] <- "posts"
-
-#load("./R_objects/res_time_75000_podemos.Rda")
-load("./R_objects/res_order_2_4_75000_podemos.Rda")
-
-# Add motif info to posts dataframe and sort by frequency
-df.post.motif  <- res$posts.motifs
-motifs <- res$motifs
-df.posts <- merge(df.posts, df.post.motif, all=FALSE, sort=FALSE)
-idx <- order(tabulate(df.posts$motif), decreasing = TRUE)
-df.posts$motif <- match(df.posts$motif, idx)
-motifs <- motifs[idx]
-
-# unique name
-df.posts.1 <- df.posts
-motifs.1 <- motifs
-
-#################
-load('./R_objects/dfposts_gameofthrones.Rda')
-df.posts$date <- as.numeric(df.posts$date)
-df.posts <- data.frame(df.posts) %>% arrange(date)
-df.posts <- df.posts[1:75000,] # Paper
-
-df.threads <- plyr::count(df.posts, "thread")
-df.users <- plyr::count(df.posts, 'user')                                                                                                                                   
-names(df.threads)[2] <- "length"
-names(df.users)[2] <- "posts"
-
-#load("./R_objects/res_time_75000_gameofthrones.Rda")
-load("./R_objects/res_order_2_4_75000_gameofthrones.Rda")
-
-# Add motif info to posts dataframe and sort by frequency
-df.post.motif  <- res$posts.motifs
-motifs <- res$motifs
-df.posts <- merge(df.posts, df.post.motif, all=FALSE, sort=FALSE)
-idx <- order(tabulate(df.posts$motif), decreasing = TRUE)
-df.posts$motif <- match(df.posts$motif, idx)
-motifs <- motifs[idx]
-
-# unique name
-df.posts.2 <- df.posts
-motifs.2 <- motifs
-
-counters.1 <- rep(0,50)
-counters.2 <- rep(0,50)
-for(i in 1:50){
-  cat('\n ', i)
-  counters.1[i] <- sum(df.posts.1$motif==i)
-  for(j in 1:length(motifs.2)){
-    
-    # the vf2 does not like graphs of different size
-    if(vcount(motifs.1[[i]]) != vcount(motifs.2[[j]])){      
-      next
-    }          
-    
-    if(is_isomorphic_to(motifs.1[[i]], motifs.2[[j]], method='vf2')){        
-      counters.2[i] <- sum(df.posts.2$motif==j)  
-      break
-    }  
-  }
-}
-
-par(mfrow=c(1,1))
-plot(counters.1, pch=18, type='o', xlab='Neighborhood', ylab='Frequency', col='black')
-lines(counters.2, pch=20, type='o', col='red')
-#par(mar=c(0, 0, 0, 0))
-altura <- 10
-legend(40,20300, c('Podemos', 'Game of Thrones'), col=1:2, pch=c(18,20))
-#title('Neighbourhood census (time-based)')
-title('Neighbourhood census (order-based)')
+#############################################################################
+#############################################################################
+# EXTRA EXPERIMENTS
+#############################################################################
+#############################################################################
 
 ###################################################################
 # Size vs coverage
@@ -664,82 +581,6 @@ plot(coverages.1, type='b', xlim=c(0,11), ylim=c(0,max(coverages.2)), xlab='neig
 lines(coverages.2, type='b', col='red')
 title('Neighbourhoods size distribution')
 
-#################################################################################
-# What are the equivalents between structural, order and time-based neighbourhood
-# (or posts with time-based neighbourhood i what is its order-based neighbourhood?)
-#################################################################################
-
-# Load a dataframe of posts, motifs.struct, motifs.order, motifs.time
-load("./R_objects/res_order_2_4_75000_gameofthrones.Rda")
-df.posts.motif.order  <- res$posts.motifs
-motifs.order <- res$motifs
-
-load("./R_objects/res_time_75000_gameofthrones.Rda")
-df.posts.motif.time <- res$posts.motifs
-motifs.time <- res$motifs
-
-load("./R_objects/res_struct_75000_gameofthrones.Rda")
-
-# Create a common list of motifs for the three kind of neighbourhoods
-motifs.global <- motifs.time
-last.pos <- length(motifs.global)
-mapping <- vector()
-for(i in 1:length(motifs.order)){
-  dupl <- FALSE
-  for(j in 1:length(motifs.time)){
-    if(vcount(motifs.order[[i]]) != vcount(motifs.time[[j]])){
-      next
-    }
-    if(is_isomorphic_to(motifs.order[[i]], motifs.time[[j]], method='vf2')){
-      dupl <- TRUE
-      mapping[i] <- j
-      cat("\n", i, " -> ", j)
-      break
-    }
-  }
-  # if motif.2 not found among motifs.1, give him its own position in 1
-  if(!dupl){
-    new.pos <- last.pos + 1
-    motifs.global[[new.pos]] <- motifs.order[[i]] # copy motif graph
-    mapping[i] <- new.pos
-    cat("\nnew ", i, " -> ", new.pos)
-    last.pos <- last.pos + 1
-  }
-}
-df.posts.motif.order$motif <- mapping[df.posts.motif.order$motif]
-df.posts.motif.global <- data.frame(postid = df.posts.motif.time$postid,
-                                    motif.time = df.posts.motif.time$motif,
-                                    motif.order = df.posts.motif.order$motif)
-
-# Plot matrix
-plot(df.posts.motif.global$motif.time, df.posts.motif.global$motif.order, cex=0.1, pch=19,
-     xlab='time-based neighbourhood', ylab='order-based neighbourhood', xlim=c(0,500), ylim=c(0,500))
-# and closer
-plot(df.posts.motif.global$motif.time, df.posts.motif.global$motif.order, cex=0.1, pch=19,
-     xlab='time-based neighbourhood', ylab='order-based neighbourhood', xlim=c(0,100), ylim=c(0,100))
-
-
-# other ways
-ma <- matrix(0, length(motifs.global), length(motifs.global))
-for (i in 1:nrow(df.posts.motif.global)){
-  a <- df.posts.motif.global$motif.time[i]
-  b <- df.posts.motif.global$motif.order[i]
-  ma[a,b] <- ma[a,b] + 1
-}
-# how many are in the diagonal?
-sum(diag(ma))/69484
-
-apply(ma,2, function(x) sum(x>0))
-top.atractors <- order(apply(ma,2, function(x) sum(x>0)), decreasing = TRUE)[1:10]
-apply(ma,2, function(x) sum(x>0))[top.atractors]
-
-# we dont see nothing here :(
-image(ma[1:100,1:100], col = rev(grey(seq(0, 1, length = max(ma)))))
-# neither
-contour(1:max(ma), 1:max(ma), ma)
-
-#pse
-levelplot(ma)
 
 # Which are the most frequent matchings?
 x <- which(ma>=sort(ma, decreasing = T)[100], arr.ind = T)
@@ -751,15 +592,6 @@ df.confusions <- data.frame(motif.time = max.positions[,1],
                             counts = ma[max.positions],
                             freq.motif.time = freqs)
 
-# Where do match the most popular time-based neighbourhoods?
-most.frequent.time <- 1:20
-confounded.by <- apply(ma[most.frequent.time,], 1, which.max) #most frequent order-based counterparts
-positions <- cbind(most.frequent.time, confounded.by)
-freqs <- rowSums(ma[most.frequent.time,])
-df.confusions <- data.frame(motif.time = most.frequent.time, 
-                            motif.order = confounded.by, 
-                            counts = ma[positions],
-                            freq.motif.time = freqs)
 ####################################################
 # Plot selection of neighborhoods
 ####################################################
