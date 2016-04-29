@@ -416,6 +416,13 @@ df.agree <- filter(df.posts.global, motif.order==motif.struct)
 nrow(df.agree)/nrow(df.posts.global)
 # 41.48%
 
+# Which order-based neighgbourhoods have a bigger diversity of time-based ounterparts?
+# use the confusion matrices, it will be easier
+n.sources <- apply(confusion.order_time, 1, function(x) length(unique(x)))
+sort(n.sources[1:100], decreasing = TRUE)
+
+n.sources <- apply(confusion.time_struct, 1, function(x) length(unique(x)))
+sort(n.sources[1:100], decreasing = TRUE)
 #######################################################################
 # Census of the 3 types of neighbourhood in the same forum
 #######################################################################

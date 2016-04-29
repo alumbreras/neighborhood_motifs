@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.3.11)  28 APR 2016 21:03
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.3.11)  29 APR 2016 09:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -635,7 +635,7 @@ Package pdftex.def Info: ./img/compare_census_distribution_gameofthones_cum.png
 File: ./img/confusion_time_order.png Graphic file (type png)
 
 <use ./img/confusion_time_order.png>
-Package pdftex.def Info: ./img/confusion_time_order.png used on input line 484.
+Package pdftex.def Info: ./img/confusion_time_order.png used on input line 480.
 
 (pdftex.def)             Requested size: 258.0pt x 209.37752pt.
 
@@ -643,11 +643,11 @@ Package pdftex.def Info: ./img/confusion_time_order.png used on input line 484.
 File: ./img/confusion_struct_time.png Graphic file (type png)
 
 <use ./img/confusion_struct_time.png>
-Package pdftex.def Info: ./img/confusion_struct_time.png used on input line 485
+Package pdftex.def Info: ./img/confusion_struct_time.png used on input line 481
 .
 (pdftex.def)             Requested size: 258.0pt x 209.37752pt.
 
-Underfull \vbox (badness 2035) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [5 <./img/neighbourhood_time_342.png> <./img/neighbourhood_time_456.png> <./im
 g/neighbourhood_time_501.png> <./img/neighbourhood_time_524.png> <./img/compare
@@ -658,106 +658,108 @@ File: ./img/structure_based_census.png Graphic file (type png)
 
 <use ./img/structure_based_census.png>
 Package pdftex.def Info: ./img/structure_based_census.png used on input line 49
-9.
+5.
 (pdftex.def)             Requested size: 258.0pt x 188.43681pt.
 
 <./img/order_based_census.png, id=44, 661.72218pt x 483.30562pt>
 File: ./img/order_based_census.png Graphic file (type png)
 
 <use ./img/order_based_census.png>
-Package pdftex.def Info: ./img/order_based_census.png used on input line 500.
+Package pdftex.def Info: ./img/order_based_census.png used on input line 496.
 (pdftex.def)             Requested size: 258.0pt x 188.43681pt.
 
 <./img/time_based_census.png, id=45, 661.72218pt x 483.30562pt>
 File: ./img/time_based_census.png Graphic file (type png)
 
 <use ./img/time_based_census.png>
-Package pdftex.def Info: ./img/time_based_census.png used on input line 501.
+Package pdftex.def Info: ./img/time_based_census.png used on input line 497.
 (pdftex.def)             Requested size: 258.0pt x 188.43681pt.
 
-Overfull \hbox (6.0pt too wide) in paragraph at lines 499--502
+Overfull \hbox (6.0pt too wide) in paragraph at lines 495--498
  [][] 
  []
 
 
-Overfull \hbox (6.0pt too wide) in paragraph at lines 499--502
+Overfull \hbox (6.0pt too wide) in paragraph at lines 495--498
  [] 
  []
 
 
-Overfull \hbox (6.0pt too wide) in paragraph at lines 499--502
+Overfull \hbox (6.0pt too wide) in paragraph at lines 495--498
  [] 
  []
 
-<./img/whiskers.png, id=46, 656.4525pt x 479.54156pt>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [6 <./img/confusion_time_order.png> <./img/confusion_struct_time.png>]
+<./img/whiskers.png, id=51, 656.4525pt x 479.54156pt>
 File: ./img/whiskers.png Graphic file (type png)
  <use ./img/whiskers.png>
-Package pdftex.def Info: ./img/whiskers.png used on input line 526.
+Package pdftex.def Info: ./img/whiskers.png used on input line 522.
 (pdftex.def)             Requested size: 258.0pt x 188.46925pt.
 
-Overfull \hbox (6.0pt too wide) in paragraph at lines 526--527
+Overfull \hbox (6.0pt too wide) in paragraph at lines 522--523
  [][] 
  []
 
-[6 <./img/confusion_time_order.png> <./img/confusion_struct_time.png>]
-<./img/dictionary1.png, id=52, 575.14874pt x 428.35031pt>
+[7 <./img/structure_based_census.png (PNG copy)> <./img/order_based_census.png 
+(PNG copy)> <./img/time_based_census.png (PNG copy)> <./img/whiskers.png (PNG c
+opy)>] <./img/dictionary1.png, id=56, 575.14874pt x 428.35031pt>
 File: ./img/dictionary1.png Graphic file (type png)
 
 <use ./img/dictionary1.png>
-Package pdftex.def Info: ./img/dictionary1.png used on input line 565.
+Package pdftex.def Info: ./img/dictionary1.png used on input line 561.
 (pdftex.def)             Requested size: 412.80157pt x 307.45117pt.
 
-<./img/dictionary2.png, id=53, 575.14874pt x 428.35031pt>
+<./img/dictionary2.png, id=57, 575.14874pt x 428.35031pt>
 File: ./img/dictionary2.png Graphic file (type png)
 
 <use ./img/dictionary2.png>
-Package pdftex.def Info: ./img/dictionary2.png used on input line 566.
+Package pdftex.def Info: ./img/dictionary2.png used on input line 562.
 (pdftex.def)             Requested size: 412.80157pt x 307.45117pt.
- (./paper_IEEEformat.bbl [7 <./img/structure_based_census.png (PNG copy)> <./im
-g/order_based_census.png (PNG copy)> <./img/time_based_census.png (PNG copy)> <
-./img/whiskers.png (PNG copy)>] [8 <./img/dictionary1.png (PNG copy)> <./img/di
-ctionary2.png (PNG copy)>]
+ (./paper_IEEEformat.bbl
 Underfull \hbox (badness 2644) in paragraph at lines 56--61
 \OT1/ptm/m/n/8 r[]oles dans les com-mu-naut[]es virtuelles : d[]efinitions et p
 remi[]eres
  []
 
 )
-<./img/neighbourhood_census_compare_gameofthrones.png, id=61, 575.14874pt x 428
+<./img/neighbourhood_census_compare_gameofthrones.png, id=58, 575.14874pt x 428
 .35031pt>
 File: ./img/neighbourhood_census_compare_gameofthrones.png Graphic file (type p
 ng)
  <use ./img/neighbourhood_census_compare_gameofthrones.png>
 Package pdftex.def Info: ./img/neighbourhood_census_compare_gameofthrones.png u
-sed on input line 593.
+sed on input line 589.
 (pdftex.def)             Requested size: 258.0pt x 192.15453pt.
 
-<./img/neighbourhood_census_compare_podemos.png, id=62, 575.14874pt x 428.35031
+<./img/neighbourhood_census_compare_podemos.png, id=59, 575.14874pt x 428.35031
 pt>
 File: ./img/neighbourhood_census_compare_podemos.png Graphic file (type png)
  <use ./img/neighbourhood_census_compare_podemos.png>
 Package pdftex.def Info: ./img/neighbourhood_census_compare_podemos.png used on
- input line 594.
+ input line 590.
 (pdftex.def)             Requested size: 258.0pt x 192.15453pt.
 
-<./img/PCA_cluster_orderbased.png, id=63, 982.67125pt x 759.83875pt>
+<./img/PCA_cluster_orderbased.png, id=60, 982.67125pt x 759.83875pt>
 File: ./img/PCA_cluster_orderbased.png Graphic file (type png)
 
 <use ./img/PCA_cluster_orderbased.png>
 Package pdftex.def Info: ./img/PCA_cluster_orderbased.png used on input line 62
-6.
+2.
 (pdftex.def)             Requested size: 464.39685pt x 359.08368pt.
 
-<./img/PCA_cluster_timebased.png, id=64, 976.64874pt x 755.82375pt>
+<./img/PCA_cluster_timebased.png, id=61, 976.64874pt x 755.82375pt>
 File: ./img/PCA_cluster_timebased.png Graphic file (type png)
 
 <use ./img/PCA_cluster_timebased.png>
-Package pdftex.def Info: ./img/PCA_cluster_timebased.png used on input line 627
+Package pdftex.def Info: ./img/PCA_cluster_timebased.png used on input line 623
 .
 (pdftex.def)             Requested size: 464.39685pt x 359.40059pt.
 
 
-LaTeX Warning: Float too large for page by 69.81624pt on input line 630.
+LaTeX Warning: Float too large for page by 69.81624pt on input line 626.
 
 
 ** Conference Paper **
@@ -770,9 +772,10 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[9] [10 <./img/neighbourhood_census_compare_gameofthrones.png (PNG copy)> <./im
-g/neighbourhood_census_compare_podemos.png (PNG copy)>] [11 <./img/PCA_cluster_
-orderbased.png (PNG copy)> <./img/PCA_cluster_timebased.png (PNG copy)>]
+[8] [9 <./img/dictionary1.png (PNG copy)> <./img/dictionary2.png (PNG copy)>]
+[10 <./img/neighbourhood_census_compare_gameofthrones.png (PNG copy)> <./img/ne
+ighbourhood_census_compare_podemos.png (PNG copy)>] [11 <./img/PCA_cluster_orde
+rbased.png (PNG copy)> <./img/PCA_cluster_timebased.png (PNG copy)>]
 (./paper_IEEEformat.aux)
 
 LaTeX Warning: There were multiply-defined labels.
@@ -800,7 +803,7 @@ re/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/
 utmri8a.pfb>
-Output written on paper_IEEEformat.pdf (11 pages, 903811 bytes).
+Output written on paper_IEEEformat.pdf (11 pages, 904369 bytes).
 PDF statistics:
  120 PDF objects out of 1000 (max. 8388607)
  69 compressed objects within 1 object stream
