@@ -55,21 +55,6 @@ res <- merge.dictionaries(motifs.global, motifs)
 df.posts$motif <- res$mapping[df.posts$motif]
 motifs <- res$dict
 
-
-# Because the counting is based on threads, there might be some posts that were 
-# recovered in df.post.motif but that were cut in df.posts[1:N]
-# so re-sort again motifs by frequency
-# Sort by frequency (and relabel: 1 for the most frequent and so forth)
-# make NA appear in table so that they are convetred to 0
-idx <- order(tabulate(df.posts$motif), decreasing = TRUE)
-df.posts$motif <- match(df.posts$motif, idx)
-motifs <- motifs[idx]
-
-
-# Check they are STILL sorted by frequency (they should be)
-n <- as.numeric(table(df.posts$motif))
-all(n == cummin(n))
-
 ######################################################
 # Count motifs in which each user appears
 ######################################################

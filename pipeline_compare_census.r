@@ -283,6 +283,8 @@ sum(cumsum(n2) < th)
 #######################################################################
 # Create a common neighbourhood dictionary index
 #######################################################################
+if(FALSE){
+  
 df.posts.global <- df.posts
 motifs.global <- motifs.got.time
 
@@ -313,7 +315,7 @@ motifs.global <- res$dict
 
 #save(df.posts.global, file="df.posts.global.Rda")
 #save(motifs.global, file="motifs.global.Rda")
-
+}
 load("df.posts.global.Rda")
 load("motifs.global.Rda")
 
@@ -394,6 +396,7 @@ plot(df.posts.global$motif.struct, df.posts.global$motif.time, cex=0.1, pch=19,
 #confusion <- m1%*%t(m2) 
 confusion.order_time <- acast(df.posts.global, motif.order~motif.time, fun.aggregate = length) # faster?
 confusion.time_struct <- acast(df.posts.global, motif.time~motif.struct, fun.aggregate = length) # faster?
+
 #save(confusion.order_time, file="confusion.order_time.Rda")
 #save(confusion.time_struct, file="confusion.time_struct.Rda")
 load("confusion.order_time.Rda")
@@ -493,6 +496,11 @@ axis(2)
 legend(length(motifs)-10,5800, c('podemos', 'gameofthrones'), col=c('blue', 'red'), pch=c(18,20))
 title('Structure-based')
 
+# for the table in the paper
+recall.podemos <- cumsum(sapply(top.motifs.podemos, function(x) sum(motifs.podemos==x)/length(motifs.podemos))*100)
+recall.gameofthrones <- cumsum(sapply(top.motifs.gameofthrones, function(x) sum(motifs.gameofthrones==x)/length(motifs.gameofthrones))*100)
+cbind(top.motifs.podemos, recall.podemos)
+cbind(top.motifs.gameofthrones, recall.gameofthrones)
 # order
 ##########
 ntop <- 30
@@ -515,6 +523,11 @@ axis(2)
 legend(length(motifs)-10,14000, c('podemos', 'gameofthrones'), col=c('blue', 'red'), pch=c(18,20))
 title('Order-based')
 
+# for the table in the paper
+recall.podemos <- cumsum(sapply(top.motifs.podemos, function(x) sum(motifs.podemos==x)/length(motifs.podemos))*100)
+recall.gameofthrones <- cumsum(sapply(top.motifs.gameofthrones, function(x) sum(motifs.gameofthrones==x)/length(motifs.gameofthrones))*100)
+cbind(top.motifs.podemos, recall.podemos)
+cbind(top.motifs.gameofthrones, recall.gameofthrones)
 
 # time
 ##########
@@ -537,6 +550,12 @@ axis(1, at=1:length(motifs), labels = motifs)
 axis(2)
 legend(length(motifs)-10,5800, c('podemos', 'gameofthrones'), col=c('blue', 'red'), pch=c(18,20))
 title('Time-based')
+
+# for the table in the paper
+recall.podemos <- cumsum(sapply(top.motifs.podemos, function(x) sum(motifs.podemos==x)/length(motifs.podemos))*100)
+recall.gameofthrones <- cumsum(sapply(top.motifs.gameofthrones, function(x) sum(motifs.gameofthrones==x)/length(motifs.gameofthrones))*100)
+cbind(top.motifs.podemos, recall.podemos)
+cbind(top.motifs.gameofthrones, recall.gameofthrones)
 
 #############################################################################
 #############################################################################

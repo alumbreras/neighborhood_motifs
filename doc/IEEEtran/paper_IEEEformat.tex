@@ -236,7 +236,7 @@ alberto.lumbreras@univ-lyon2.fr\\
 julien.velcin@univ-lyon2.fr}
 \and
 \IEEEauthorblockN{Bertrand Jouve}
-\IEEEauthorblockA{FRAMESPA/IMT\\Université de Toulouse 2, France\\
+\IEEEauthorblockA{FRAMESPA/IMT\\Université de Toulouse, France\\
 jouve@univ-tlse2.fr}
 \and
 \IEEEauthorblockN{Marie Guégan}
@@ -303,18 +303,10 @@ The interactions between users in online forums are often modelled as complex ne
 Our goal in this paper is two-fold: on the one hand, to illustrate how structural-temporal neighbourhoods can play the role of triads for conversation trees, in the sense that they show us the local structures or dynamics from which the bigger graph emerges. On the other hand, to show how structural-temporal neighbourhoods can be used for the detection of different types of conversationalists in online forums or any other type of online discussion that is representable by a tree structure (e.g.: e-mails).
 
 The remaining of the paper is as follows. We first discuss about the convenience of the classic neighbourhood definition in dynamic graphs such as discussion trees. Then we introduce our two definitions of structural-temporal neighbourhoods. To illustrate the kind of neighbourhoods that we obtain in a real data, we analyse the neighbourhood census of a Reddit forum. Finally, we apply both neighbourhood definitions to detect clusters of users that tend to appear in the same neighbourhoods. We close the paper with some suggestions of future research.
-%\begin{figure}
-%	\centering
-	%\includegraphics[width=0.3\textwidth]{tree1}
-%	\includegraphics[width=0.3\textwidth]{tree2}
-	%\includegraphics[width=0.3\textwidth]{tree3}
-%	\caption{Representation of discussion threads with post tree graphs. Vertex represent posts and edges represent replies between posts.}
-%	\label{fig:trees}
-%\end{figure}
 
 \section{Discussion trees}
 % Introduce el objeto y la nomenclatura
-We represent a discussion thread by a tree graph $G=(V,E)$ where $V$ is a set of $n$ vertices representing the posts (also called messages or comments) and $E$ is a set of $n-1$ directed edges that say which posts replied to which post. Vertices have two attributes namely time and author. If for two given vertices $v_i,v_j$ there exists an edge  $e=(v_i, v_j) \in E$ then $v_j$ is called the \textit{parent} of $v_i$, denoted as $p(v_i)=v_j$. The \textit{root} of the tree is the only vertex with no parent, and corresponds to the post that starts the discussion. We say that two vertices $v_i,v_j$ are \textit{siblings} if and only if $p(v_i)=p(v_j)$. A vertex $v_i$ is an ancestor of a vertex $v_j$ and $v_j$ is descendant of $v_i$ if and only if $v_i$ is in the path from $v_j$ to the root. A \textit{leaf} is a post with no replies. A \textit{branch} is the path between a leaf and the root. Two vertices $v_i$ and $v_i$ are said to be \textit{neighbours} if either $p(v_i)=v_j$ or $p(v_j)=v_i$ or, in other words, if their distance in the undirected version of $G$ is one.
+We represent a discussion thread by a tree graph $G=(V,E)$ where $V$ is a set of $n$ vertices representing the posts (also called messages or comments) and $E$ is a set of $n-1$ directed edges that say which posts replied to which post. Vertices have two attributes namely time and author. If for two given vertices $v_i,v_j$ there exists an edge  $e=(v_i, v_j) \in E$ then $v_j$ is called the \textit{parent} of $v_i$, denoted as $p(v_i)=v_j$. The \textit{root} of the tree is the only vertex with no parent, and corresponds to the post that starts the discussion. We say that two vertices $v_i,v_k$ are \textit{siblings} if and only if $p(v_i)=p(v_k)$. A vertex $v_l$ is an ancestor of a vertex $v_i$ and $v_i$ is descendant of $v_l$ if and only if $v_l$ is in the path from $v_i$ to the root. A \textit{leaf} is a post with no replies. A \textit{branch} is the path between a leaf and the root. Two vertices $v_i$ and $v_m$ are said to be \textit{neighbours} if either $p(v_i)=v_m$ or $p(v_m)=v_i$. The neighbours of a vertex $i$ are its parent and its children.
 
 %The interactions like those found in an online forum can be modelled, at least, by two sort of graphs. On the one hand, we can create a graph where vertices represent individuals and an edges represent an interaction between two individuals. At the individual level, this graph is suitable for a large set of analysis concerning the centrality of users, the detection of communities, the detection of groups that tend to interact with the same other groups. At the community level we can analyse properties such as the density of the graph, the clustering coefficient or the degree distribution. On the other hand, we can create a separate tree graph for every discussion where posts are represented by the vertices and and edge from one vertex to another indicates that first post is a reply to the second. This allows to analyse things like patterns of time delay between posts \cite{Bhatt2012}.
 
@@ -325,16 +317,16 @@ We represent a discussion thread by a tree graph $G=(V,E)$ where $V$ is a set of
 %Others: \cite{Gaumont2016}
 
 \section{Structural neighbourhoods}\label{sec:structural}
-Extending the classic definition of neighbourhood according to which two vertices are neighbours if the distance between them is one, we start by the following definition of \textit{structural neighbourhood}:
+Extending the classic definition of neighbourhood, we recall the definition of \textit{structural neighbourhood}\footnote{We coined the term \textit{structural} to differentiate if from the other neighbourhoods discussed in this paper.}:
 
 \begin{definition}
 Given a tree graph $G$, the \textit{structure-based neighbourhood} of radius $r$ of post $i$, denoted as $\mathcal{N}_i(r)$, is the induced graph composed by all the vertices that are at distance equal or less than $r$ from post $i$.
 \end{definition}
 % pros and cons
-In the context of discussion threads, this definition has two limitations. First, the decision on whether to include some post in the neighbourhood is only based on the structural distance, and therefore two posts that are at distance $d\leq r$ are considered neighbours of $i$ regardless of the time when they were written. In conversations, time plays an important role, therefore this is an important limitation. Another consequence of looking only at the structure is that the number of possible neighbourhoods within a radius $r$ is infinite. This poses a problem when trying to categorize conversations since many conversations, while structurally different, can be considered semantically similar.
+In the context of discussion threads, this definition has two limitations. First, the decision on whether to include some post in the neighbourhood is only based on the structural distance, and therefore two posts that are at distance $d\leq r$ are considered neighbours of $i$ regardless of the time when they were written although, in conversations, time plays an important role. Another consequence of looking only at the structure is that the number of possible neighbourhoods within a radius $r$ is infinite. This poses a problem when trying to categorize conversations since many conversations, while structurally different, can be considered semantically similar (e.g.: we might not want to put in different categories two structures representing, respectively, a post with 50 replies and another with 40).
 
 \section{Structural-temporal neighbourhoods}\label{sec:temporal}
-We propose two refinements of the structure-based neighbourhood to take into account the order and time in which posts are written. As we will see, the criteria to choose which posts are neighbours of a post $i$  is not only based on the structural distance but also on the temporal distance to $i$. In the order-based definition, a new radius is set to include at most the $n$ closest posts in time.  In the time-based definition, the new radius is set to include all posts (in the structural-neighbourhood) until the first point where the conversation slows down. 
+We propose two refinements of the structure-based neighbourhood to take into account the order and time at which posts are written. In the order-based definition, a new radius is set to include at most the $n$ closest posts in time.  In the time-based definition, the new radius is set to include all posts (in the structural-neighbourhood) until the first point where the conversation slows down. 
 
 
 \begin{figure}
@@ -346,7 +338,7 @@ We propose two refinements of the structure-based neighbourhood to take into acc
 \end{figure}
 \subsection{Order-based}
 \begin{definition}
-Given a ordered tree graph $G$, the \textit{order-based neighbourhood} of radius $r$ and order $n$ of vertex $i$, denoted as $\mathcal{N}_{i}^T(r,n)$ is the induced subgraph from its structural neighbourhood composed by the $n$ vertices that are closest to $i$ in time and for which there exists a path to $i$ in $\mathcal{N}_{i}^T(r,n)$.  
+Given an ordered tree graph $G$, the \textit{order-based neighbourhood} of radius $r$ and order $n$ of vertex $i$, denoted as $\mathcal{N}_{i}^O(r,n)$ is the induced subgraph from its structural neighbourhood $\mathcal{N}_{i}(r)$ composed by the $n$ vertices that are closest to $i$ in time and for which there exists a path to $i$ in $\mathcal{N}_{i}^O(r,n)$.  
 \end{definition}
 An example of order-based neighbourhood is given in Figure~\ref{fig:cutpoints}.
 This definition has two advantages over the \textit{structural neighbourhood}. First, the temporal aspect of the conversation is better taken into account since the neighbourhood only includes posts that are not only near to $i$ in the structure but also in time. Second, the size of the neighbourhood has an upper bound of $min(|\mathcal{N}_i(r))|, n)$ thus making the space of possible neighbourhood structures finite. The main limitation of this definition is that the we have no \textit{a priori} criteria to choose the proper parameter $n$ other than making it small to capture only the local dynamic of the conversation around the post $i$.
@@ -354,49 +346,49 @@ This definition has two advantages over the \textit{structural neighbourhood}. F
 \subsection{Time-based}
 In order to take time explicitly into account, one might set fixed time-based boundaries for the neighbourhood and include only those posts whose timestamp $t_j$ is at distance less than $\tau$ from the ego post $i$, $|t_j-t_i|<\tau$. However, the pace at which posts are added to the conversation may be very different between conversation threads (and also within a thread) and we have no \textit{a priori} criteria for a proper choice of $\tau$. 
 
-Rather than looking for a fixed time radius, we may instead decide it by looking at changes in the pace how new posts are added to the thread. In statistical analysis, a \textit{changepoint} in a sequence $x_1,...x_n$ is a point that comes from a different probability distribution than its precedent values. If sequences are timestamps, they are monotonic increasing, therefore the changepoints will correspond to sudden pauses in the conversation. If applied either to the timestamps of posts in a branch (vertical sequence) or to the timestamps of the replies to the same post (horizontal sequence), we say that a sequence posts with timestamps $t_1,...,t_n$ belong to the same (vertical or horizontal) \textit{local dynamic} if there is no changepoint $t_i$ in the sequence such that $1 < i \leq n$. For the detection of changepoints we use the PELT algorithm \cite{Killick2012}\footnote{An implementation of this algorithm written by the authors themselves is available in the R library \texttt{changepoint}.}. Now we can introduce our second definition of neighbourhood.
+Rather than looking for a fixed time radius, we may instead decide it by looking at changes in the pace how new posts are added to the thread. In statistical analysis, a \textit{changepoint} in a sequence $x_1,...x_n$ is a point that comes from a different probability distribution than its precedent values. If sequences are timestamps, they are monotonic increasing, therefore the changepoints will correspond to sudden pauses in the conversation. In the following, we will differentiate \textit{horizontal changepoints}, that arise between siblings, from \textit{vertical changepoints}, that arise within a branch. We say that a sequence posts with timestamps $t_1,...,t_n$ belong to the same (vertical or horizontal) \textit{local dynamic} if there is no changepoint $t_i$ in the sequence such that $1 < i \leq n$. For the detection of changepoints we use the PELT algorithm \cite{Killick2012}\footnote{An implementation of this algorithm written by the authors themselves is available in the R library \texttt{changepoint}. We use their \texttt{cpt.meanvar} function.}. Now we can introduce our second definition of neighbourhood.
 \begin{definition}
-Given a tree graph $G$, the \textit{time-based neighbourhood} of radius $r$ of vertex $i$, denoted as $\mathcal{N}_{i}^T(r)$, is the maximal subgraph of the structural neighbourhood $\mathcal{N}_i(r)$ where all the vertices  belong to the same vertical and horizontal local dynamic than $i$.
+Given a tree graph $G$, the \textit{time-based neighbourhood} of radius $r$ of vertex $i$, denoted as $\mathcal{N}_{i}^T(r)$, is the maximal subgraph of the structural neighbourhood $\mathcal{N}_i(r)$ where all the vertices  belong to the same vertical and horizontal local dynamic as $i$.
 \end{definition}
 Note that we still have a radius parameter $r$ to guarantee that the resulting structure remains local even if no changepoint is detected near the post $i$. 
 
 % Explain algorithm
-Algorithm \ref{alg:temporal_neighbourhood} extracts time-based neighbourhoods of a given post according to the above definition. Since the breakpoints only depend on the tree and not on the particular post we analyse, we previously detect the horizontal and vertical breakpoints in the tree. In the case of multiple branches with some common posts, we consider that a common post is a vertical breakpoint if it is a vertical breakpoint in any of the branches. Once we have the breakpoints, we can proceed with the algorithm. First, we extract the structural-neighbourhood. The time-based neighbourhood will be a subset of the later. Then, we look for horizontal and vertical breakpoints, which mark the frontiers of the time-based neighbourhood. There are four possible cases:
+Algorithm \ref{alg:temporal_neighbourhood} extracts time-based neighbourhoods of a given post according to the above definition. Since the changepoints only depend on the tree and not on the particular post we analyse, we previously detect the horizontal and vertical changepoints in the tree. In the case of multiple branches with some common posts, we consider that a common post is a vertical changepoint if it is a vertical changepoint in any of the branches. Once we have the changepoints, we can proceed with the algorithm. First, we extract the structural-neighbourhood. The time-based neighbourhood will be a subset of the later. Then, we look for horizontal and vertical changepoints, which mark the frontiers of the time-based neighbourhood. There are four possible cases:
 
 \begin{itemize}
-\item A \textit{vertical breakpoint in the ancestors}: If the breakpoint is in the path between the post and the root, then the breakpoint started the new local dynamic to which the ego post belongs. Thus, we remove the ancestors of the breakpoint, but not the breakpoint itself.
-\item A \textit{vertical breakpoint in the descendants}: If the breakpoint is a descendant then it started a new different dynamic and therefore we must remove the descendants of the breakpoint and the breakpoint itself. 
-\item A \textit{horizontal breakpoint either in the older siblings or in the ancestors}: If the breakpoint is among the older siblings, then it started the horizontal dynamic to which the ego post belongs. Similarly, if the breakpoint is among the ancestors, then every older sibling of the breakpoint belongs to a previous local dynamic. In both cases, we remove the older siblings of the breakpoint but not the breakpoint itself.
-\item A \textit{horizontal breakpoint elsewhere}: In any other case, the horizontal breakpoint starts a different local dynamic and therefore we remove its younger siblings and the breakpoint. 
+\item A \textit{vertical changepoint in the ancestors}: If the changepoint is in the path between the post and the root, then the changepoint started the new local dynamic to which the ego post belongs. Thus, we remove the ancestors of the changepoint, but not the changepoint itself.
+\item A \textit{vertical changepoint in the descendants}: If the changepoint is a descendant then it started a new different dynamic and therefore we must remove the descendants of the changepoint and the changepoint itself. 
+\item A \textit{horizontal changepoint either in the older siblings or in the ancestors}: If the changepoint is among the older siblings, then it started the horizontal dynamic to which the ego post belongs. Similarly, if the changepoint is among the ancestors, then every older sibling of the changepoint belongs to a previous local dynamic. In both cases, we remove the older siblings of the changepoint but not the changepoint itself.
+\item A \textit{horizontal changepoint elsewhere}: In any other case, the horizontal changepoint starts a different local dynamic and therefore we remove its younger siblings and the changepoint. 
 \end{itemize}
-Any time a vertex is removed we also remove its descendants. The final neighbourhood will be connected induced subgraph from the structural neighbourhood. If there are no changepoints in the structural neighbourhood, the time-based neighbourhood will be exactly the structural neighbourhood.
+Any time a vertex is removed we also remove its descendants. $\mathcal{N}_i^T(r)$ is a connected induced subgraph of $\mathcal{N}_i(r)$.  If there are no changepoints in the structural neighbourhood, then $\mathcal{N}_i^T(r) = \mathcal{N}_i(r)$.
 
 %Example
 An example of time-based neighbourhood is given in Figure~\ref{fig:cutpoints} (right).
 
 \begin{algorithm}[H]
 \begin{algorithmic}
-\REQUIRE Posts tree $g$, vertical breakpoints, horizontal breakpoints, ego post $ego$
-\ENSURE Subgraph of $g$ with all vertices in $V(g)$
+\REQUIRE Posts tree $G$, vertical changepoints, horizontal changepoints, ego post $i$, radius $r$
+\ENSURE $\mathcal{N}_i^{T}(r)$: Time-based neighbourhood of $i$ at radius $r$
 \STATE Compute structural neighbourhood $\mathcal{N}_i(r)$
-\STATE ancestors $\leftarrow$  ancestors(ego) in $\mathcal{N}_i(r)$
-\STATE older\_siblings $\leftarrow$ older\_siblings(ego) in $\mathcal{N}_i(r)$
+\STATE ancestors $\leftarrow$  ancestors($i$) in $\mathcal{N}_i(r)$
+\STATE older\_siblings $\leftarrow$ older\_siblings($i$) in $\mathcal{N}_i(r)$
 \STATE dump $\leftarrow \varnothing$
-\FOR{bp $\in$ vertical breakpoints}
+\FOR{bp $\in$ vertical changepoints}
  \IF{bp $\in$ ancestors}
    \STATE dump $\leftarrow$ dump $\cup$ ancestors(bp)
  \ELSE
    \STATE dump $\leftarrow$ dump $\cup$ descendants(bp) $\cup$ bp
   \ENDIF
 \ENDFOR
-\FOR{bp $\in$ horizontal breakpoints}
+\FOR{bp $\in$ horizontal changepoints}
   \IF{bp $\in$ (older\_siblings $\cup$ ancestors)}
      \STATE dump $\leftarrow$ dump $\cup$ older\_siblings(bp)
    \ELSE
      \STATE dump $\leftarrow$ dump $\cup$ younger\_siblings(bp) $\cup$ bp
   \ENDIF
 \ENDFOR
-\STATE $\mathcal{N}_i^{(t)}(r) \leftarrow$ delete(dump\_posts $\cup$ descendants(dump\_posts)) from $\mathcal{N}_i(r)$
+\STATE $\mathcal{N}_i^{T}(r) \leftarrow$ delete(dump\_posts $\cup$ descendants(dump\_posts)) from $\mathcal{N}_i(r)$
 \end{algorithmic}
 \caption{Extraction of time-based neighbourhood}
 \label{alg:temporal_neighbourhood}
@@ -411,7 +403,7 @@ In particular, we assign the following colours:
 \begin{itemize}
 \item \textit{Red}: ego post.
 \item \textit{Orange}: other posts written by the author of ego. It allows to identify re-entries (when the same author participates several times in the discussion \cite{Backstrom2013})
-\item \textit{Yellow}: parent of ego post and other posts written by the same author. It allows to identify, for instance, debates between the ego author (red and orange) and the other author (yellow). We have observed this phenomena in our data, and it is often the cause of long chains.
+\item \textit{Yellow}: parent of ego post and other posts written by the same author. It allows to identify, for instance, debates between the ego author (red and orange) and this other author (yellow). We have observed this phenomena in our data, and it is often the cause of long chains.
 \item \textit{White}: root post. Differentiating the root post from the rest has been proven by previous research on online discussions. For instance, some types of users seem to get more replies than others when they initiate a thread (\cite{Himelboim2009,  Lumbreras2013}). Also, in terms of preferential attachment, root posts usually get more replies than the non-roots (\cite{Gomez2010, Gomez2012}).
 \item \textit{Black}: none of the above.
 \end{itemize}
@@ -420,21 +412,26 @@ Since some posts might correspond to several colours, we perform a sequential as
 We do not claim this choice of labels to be of universal. Indeed, other labellings might also give interesting results since they would look at conversations from new points of view (e.g.: a colour for leaf vertices, colours according to the post length, or colours to represent the sentiment of the post). 
 
 \subsection{Pruning}
-At this point, we can still find structures the only difference of which is that one of them has more leafs hanging from some of the nodes. Thus, we prune every neighbourhood by leaving a maximum of two consecutive siblings of the same colour and where neither of them has any children. The reason of setting the limit to two is that it is the minimum necessary to distinguish between \textit{zero}, \textit{one} and \textit{more than one} consecutive occurrences. In other words, we consider that the difference between one and zero replies to a post is relevant, but that five and six replies do not make any difference worth being represented.    
+At this point, we can still find structures the only difference of which is that one of them has more leafs hanging from some of the nodes. Thus, we prune every neighbourhood by leaving a maximum of two consecutive siblings of the same colour and where neither of them has any children. The reason of setting the limit to two is that it is the minimum necessary to distinguish between \textit{zero}, \textit{one} and \textit{more than one} consecutive occurrences. In other words, we consider that the difference between one and zero replies to a post is relevant, but that five and six replies do not make any difference worth being represented.  Moreover, this choice encourage smaller structures, which allows the computation of isomorphisms (Section~\ref{sec:extraction}) even in real time.  
 
 \section{Application to Reddit forums}
+
+
 Our data consists of two different forums of Reddit, namely the Podemos dataset \footnote{https://www.reddit.com/r/podemos} and the Game of Thrones dataset\footnote{https://www.reddit.com/r/gameofthrones}. The Podemos forum was conceived in March 2014 as a tool for internal democracy, and forum members used it to debate ideological and organizational principles that were later formalized in their first party congress hold in Madrid on October 18th and 19th, 2014. Nowadays, its members use it mainly to share and discuss about political news. The Game of Thrones forum is a casual discussion forum about the Game of Thrones TV series.
 The Podemos dataset contains 75,000 posts corresponding to 4,262 threads written by 9,160 users between April 25th and October 20th, 2014. The Game of Thrones dataset contains 75,000 posts corresponding to 5,862 threads written by 18,907 users.
 
-\subsection{Neighbourhood extraction}
-As a previous step for all further analysis, we extract the structure-based ($r=2$), the order-based ($r=2, n=4$) and the time-based ($r=2$) neighbourhood around every post for the two forums. We label every structure with a unique integer number, where a structure is a coloured graph. Two neighbours have the same structure, and therefore the same integer number, if their coloured graphs are isomorphic.   
-
-Unfortunately, it is not practical to give a number to every theoretically possible structure since, even if we could enumerate all the possible trees up to a given size, a lot of these trees would not be seen in the data. It appears then a much more practical approach to enumerate only those trees that are seen in the data. In order to share a unique labelling of structures among the two forums and the three types of neighbourhoods (which gives 6 different labellings), we re-label the structures after the extraction for every post is finished. We will call this final labelling a \textit{dictionary} of neighbourhoods.
+\subsection{Neighbourhood extraction}\label{sec:extraction}
+As a previous step for all further analysis, we extracted the structure-based ($r=2$), the order-based ($r=2, n=4$) and the time-based ($r=2$) neighbourhood around every post for the two forums. 
 
 Given a type of neighbourhood (structure-based, order-based or time-based) we extract the neighbourhood around every post of a forum as follows. A new label is assigned to every neighbourhood structure the first time it is detected. For every post, we extract its neighbourhood, colour and prune it (Sections~\ref{sec:structural} and \ref{sec:temporal}). Then we check whether it is isomorphic to some of the $n$ neighbourhoods that we have already seen. If this is the case, then the current neighbourhood is given the same label than the neighbourhood that we already saw. Otherwise we create a new label for the current neighbourhood. 
 
-Once the six extractions are finished, we merge the dictionaries into a global one and sort the labels by frequency of the neighbourhood (1 for the most frequent and so forth). Figure \ref{fig:dictionary} shows some frequent neighbourhoods that will be discussed later.
+%We identified every type of neighbourhood with a unique integer (label). Two neighbourhoods have the same label if their coloured graphs are isomorphic. 
 
+%In order to share a unique labelling of structures among the two forums and the three types of neighbourhoods (which gives 6 different labellings), we re-label the structures after the extraction for every post is finished. We will call this final labelling a \textit{dictionary} of neighbourhoods.
+
+The set of all neighbourhoods $\mathcal{N}_i(r)$, $\mathcal{N}_i^O(r,n)$ and  $\mathcal{N}_i^T(r)$ for the two forums constitutes our \textit{dictionary}.
+
+Once the six extractions are finished, we merge the dictionaries into a global one and sort the labels by frequency of the neighbourhood (1 for the most frequent and so forth). Figure \ref{fig:dictionary} shows some frequent neighbourhoods that will be discussed later.
 % Computational cost
 In the worst case, where every post has a unique neighbourhood, every extracted neighbourhood should be compared against every neighbourhood that already appears in the dictionary before concluding that it needs a new entry. In this case, the computational cost of this operation is $\mathcal{O}(n^2)$ where $n$ is the number of posts. In practice, however, the bigger the number of posts processed, the less likely we go through all the dictionary without finding an isomorphism. Moreover, if we keep the dictionary sorted by frequency, a large number of neighbourhoods will find an isomorphism among the first neighbours of the dictionary. 
 
@@ -458,35 +455,35 @@ The main reason why the frequency of the order-based neighbourhoods decays faste
 \begin{table}
  \begin{center}
    \tabcolsep = 0.8\tabcolsep
-   \begin{tabular}{|cc|cc|cc|}
+   \begin{tabular}{|rr|rr|rr|}
       \hline
       \multicolumn{2}{|c|}{struct-based} & \multicolumn{2}{|c|}{order-based} &  \multicolumn{2}{|c|}{time-based} \\
       %\hline
      	 POD & GOT 						& POD & GOT 		& POD & GOT\\
    \hline \hline
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 1 (12.5) &  1 (12.5) & 3 (12.5)\\    
-     1 (12.5)& 3(12.5)   &  2 (12.5) & 2 (12.5) &  1 (12.5) & 3 (12.5)\\ 
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\ 
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\    
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\ 
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\ 
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\    
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\ 
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\  
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\    
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\ 
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\ 
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\    
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\ 
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\ 
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\    
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\ 
-     1 (12.5)& 3(12.5)   &  1 (12.5) & 3 (12.5) &  1 (12.5) & 3 (12.5)\\          
+     7 (9.6)	& 7 (7.4)   		&  		1 (25.2) & 1 (25.2) &  4 (9.0) & 4 (6.4)\\    
+     3 (16.5)& 9 (12.6)   	&  	3 (32.1) & 3 (32.1) &  8 (17.2) & 8 (12.2)\\ 
+     2 (23.1)& 3 (17.8)   	&  	2 (38.8) & 2 (38.8) &  2 (25.3) & 2 (17.9)\\ 
+     20 (27.8)& 11 (22.9)   &  	13 (45.3) & 13 (45.3) &  3 (31.2) & 9 (23.2)\\    
+     4 (31.1)& 5 (27.8)   	&  	4 (50.1) & 4 (50.1) &  10 (36.6) & 14(28.4)\\ 
+     13 (34.1)& 2 (32.3)   	&  	18 (54.7) & 18 (54.7) &  14 (41.8) & 11(33.5)\\ 
+     6 (36.9)& 12 (36.1)   	&  	6 (58.9) & 6 (58.9) &  6 (45.8) & 10(38.5)\\    
+     5 (39.4)& 27 (38.8)   	&	  	12 (65.5) & 10 (62.8) &  15 (48.9) & 5 (43.1)\\ 
+     15 (41.9)& 4 (41.4)   	&  	16 (68.5) & 12 (65.5) &  19 (51.5) & 6 (47.4)\\  
+     12 (43.7)& 6 (43.9)   	&  	5 (70.6) & 16 (68.1) &  5 (53.9) & 3 (51.3)\\    
+     21 (45.3)& 21 (45.9)   	&  	17 (72.8) & 5 (70.7) &  7 (55.9) & 25(55.1)\\ 
+     30 (46.9)& 15 (47.7)   	&  	23 (75.5) & 17 (72.8)&  16 (57.6) & 15(57.8)\\ 
+     16 (48.4)& 13 (49.2)   	&  	31 (76.1) & 23 (74.5)&  36 (59.4) & 12(60.2)\\    
+     39 (49.8)& 20 (50.6)   	&  	19 (77.5) & 31 (76.1) &  25 (61.2) & 7 (62.2)\\ 
+     44 (51.2)& 30 (51.9)   	&  	22 (79.0) & 19 (77.5) &  21 (62.6) & 21(63.9)\\ 
+     8 (52.4)& 22 (53.1)   	&	  	24 (80.3) & 22 (78.9) &  34 (63.9) & 19(65.5)\\    
+     22 (53.3)& 43 (54.2)   	&  	26 (81.5) & 24 (80.3) &  38 (65.1) & 17(66.7)\\ 
+     51 (54.2)& 8 (55.2)   	&  	29 (82.7)& 26 (81.5) &  23 (66.4) & 36(68.0)\\          
    \hline
    \end{tabular}
 \label{tab:table}
  \end{center}
- \caption{Frequence}
+ \caption{Frequence this is an example}
 \end{table}
 
 
