@@ -270,7 +270,7 @@ marie.guegan@technicolor.com}}
 
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
-\begin{abstract}Users of social networks are often characterised by extracting some relevant features from the graphs associated to that network. The structural dynamic of the conversation are usually forgotten due to a lack of proper tools. We present a purely graph-based method to cluster users in online forums. 
+\begin{abstract}Social network analysis provides tools to analyse the global and the local structure of graphs when these graphs represent users interactions. In the context of online conversations, usually represented by trees, there is a lack of tools to analyse the local structure of these conversations. In this paper, we introduced two novel definitions of neighbourhood adapted to conversation trees. We analyse them in two Reddit forum and, finally, we show that they can successfully detect different types of conversationalists in online forums. 
 \end{abstract}
 
 % no keywords
@@ -291,18 +291,14 @@ marie.guegan@technicolor.com}}
 
 
 \section{Introduction}
-The interactions between users in online forums are often modelled as complex networks. As such, they can be studied from many levels, each of which is represented by a graph where vertices and edges may represent different things. The most studied graph is a graph where vertices represent users and edges represent interactions between users (a post from one user replying to a post from another user). From the point of view of the community, some typically analysed properties are the degree distribution, the clustering coefficient, density, or the diameter of the graph. From the point of view of the individual users, analyses are typically focused either on the centrality of users, on the community structure or in blockmodeling (groups of users that tend to interact with the same other groups) \cite{McCallum2007a}. Another common graph is a tree graph where vertices represent posts (or e-mails) and edges from one vertex to another indicate that the first is a reply to the second. Given the different discussion trees of a forum (a forest) the global analyses include depth distribution, branching factors, or even the time between two posts \cite{Bhatt2012}. Studying discussion trees from the point of view of the users means, since trees are discussions, studying the user at a conversational level. Unfortunately, there is a lack of structural tools to perform this analysis. In this paper, we propose to fill this gap through the concept of \textit{structural-temporal neighbourhood}.  
-%El esquema debe ser;
-%- SNA: 
-%*** comunidad: degree distribution, density, clustering coefficient etc
-%*** usuario: centrality
-%- Tree/forest:
-%*** global properties: degree distribution, depth distribution, inter-message times,...
-%** Individual properties: ... 
+The interactions between users in online forums are often modelled as complex networks. As such, they can be studied from many levels, each of which is represented by a graph where vertices and edges may represent different things. The most studied graph is a graph where vertices represent users and edges represent interactions between users (a post from one user replying to a post from another user). From the point of view of the community, some typically analysed properties are the degree distribution, the clustering coefficient, density, or the diameter of the graph. From the point of view of the individual users, analyses are typically focused either on the centrality of users, on the community structure or in blockmodeling (groups of users that tend to interact with the same other groups) \cite{McCallum2007a}. Another common graph is a tree graph where vertices represent posts (or e-mails) and edges from one vertex to another indicate that the first is a reply to the second. Given the different discussion trees of a forum (a forest) the global analyses include depth distribution, branching factors, or even the time between two posts \cite{Bhatt2012, Gaumont2016,Dorat2007}. 
+
+Studying discussion trees from the point of view of the users means, since trees are discussions, studying the user at a conversational level. Unfortunately, there is a lack of tools to perform an structural analysis of the conversation trees at a local level. In this paper, we propose to fill this gap through the concept of \textit{structural-temporal neighbourhood}.  
+
 
 Our goal in this paper is two-fold: on the one hand, to illustrate how structural-temporal neighbourhoods can play the role of triads for conversation trees, in the sense that they show us the local structures or dynamics from which the bigger graph emerges. On the other hand, to show how structural-temporal neighbourhoods can be used for the detection of different types of conversationalists in online forums or any other type of online discussion that is representable by a tree structure (e.g.: e-mails).
 
-The remaining of the paper is as follows. We first discuss about the convenience of the classic neighbourhood definition in dynamic graphs such as discussion trees. Then we introduce our two definitions of structural-temporal neighbourhoods. To illustrate the kind of neighbourhoods that we obtain in a real data, we analyse the neighbourhood census of a Reddit forum. Finally, we apply both neighbourhood definitions to detect clusters of users that tend to appear in the same neighbourhoods. We close the paper with some suggestions of future research.
+The remaining of the paper is as follows. We first discuss about the convenience of the classic neighbourhood definition in dynamic graphs such as discussion trees. Then we introduce our two new definitions of structural-temporal neighbourhoods. To illustrate the kind of neighbourhoods that we obtain in a real data, we analyse two Reddit forums. Finally, we apply our time-based neighbourhood definition to detect clusters of users that tend to appear in the same neighbourhoods. We close the paper with some suggestions of future research.
 
 \section{Discussion trees}
 % Introduce el objeto y la nomenclatura
@@ -423,26 +419,21 @@ The Podemos dataset contains 75,000 posts corresponding to 4,262 threads written
 \subsection{Neighbourhood extraction}\label{sec:extraction}
 As a previous step for all further analysis, we extracted the structure-based ($r=2$), the order-based ($r=2, n=4$) and the time-based ($r=2$) neighbourhood around every post for the two forums. 
 
-Given a type of neighbourhood (structure-based, order-based or time-based) we extract the neighbourhood around every post of a forum as follows. A new label is assigned to every neighbourhood structure the first time it is detected. For every post, we extract its neighbourhood, colour and prune it (Sections~\ref{sec:structural} and \ref{sec:temporal}). Then we check whether it is isomorphic to some of the $n$ neighbourhoods that we have already seen. If this is the case, then the current neighbourhood is given the same label than the neighbourhood that we already saw. Otherwise we create a new label for the current neighbourhood. 
+For each method (structure-based, order-based or time-based) we extract the neighbourhood around every post of a forum as follows. A new label is assigned to every neighbourhood structure the first time it is detected. For every post, we extract its neighbourhood, colour and prune it (Sections~\ref{sec:structural} and \ref{sec:temporal}). Then we check whether it is isomorphic to some of the $n$ neighbourhoods that we have already seen. If this is the case, then the current neighbourhood is given the same label than the neighbourhood that we already saw. Otherwise we create a new label for the current neighbourhood. The set of neighbourhoods found and their labels constitutes a \textit{dictionary}. 
 
-%We identified every type of neighbourhood with a unique integer (label). Two neighbourhoods have the same label if their coloured graphs are isomorphic. 
+Once the six extractions are finished, we merge the dictionaries into a global one and re-label the neighbourhoods by frequency (1 for the most frequent and so forth). Figure \ref{fig:dictionary} shows some frequent neighbourhoods that will be discussed later.
 
-%In order to share a unique labelling of structures among the two forums and the three types of neighbourhoods (which gives 6 different labellings), we re-label the structures after the extraction for every post is finished. We will call this final labelling a \textit{dictionary} of neighbourhoods.
-
-The set of all neighbourhoods $\mathcal{N}_i(r)$, $\mathcal{N}_i^O(r,n)$ and  $\mathcal{N}_i^T(r)$ for the two forums constitutes our \textit{dictionary}.
-
-Once the six extractions are finished, we merge the dictionaries into a global one and sort the labels by frequency of the neighbourhood (1 for the most frequent and so forth). Figure \ref{fig:dictionary} shows some frequent neighbourhoods that will be discussed later.
 % Computational cost
 In the worst case, where every post has a unique neighbourhood, every extracted neighbourhood should be compared against every neighbourhood that already appears in the dictionary before concluding that it needs a new entry. In this case, the computational cost of this operation is $\mathcal{O}(n^2)$ where $n$ is the number of posts. In practice, however, the bigger the number of posts processed, the less likely we go through all the dictionary without finding an isomorphism. Moreover, if we keep the dictionary sorted by frequency, a large number of neighbourhoods will find an isomorphism among the first neighbours of the dictionary. 
 
 \subsection{Comparing neighbourhood methods}
-In this section we compare different aspects of our three classes of neighbourhoods, namely (a) the size and frequency distribution of the neighbours for each class, (b) the discrepancies between methods when they extract the neighbourhood of a same post, and (c) the neighbourhood census obtained for each class in the same forum. 
+In this section we compare different aspects of the three methods, namely (a) the size and frequency distribution of the neighbours for each method, (b) the discrepancies between methods when they extract the neighbourhood of a same post.
 
 \subsubsection{Size and frequency distribution}
-We detected in the the whole dataset 3,791 different structure-based neighbourhoods, 174 different order-based and 1,488 different time-based, which means that the structure-based captures a much wider set of structures. Of course, this is not necessarily an advantage since these extra structures may be just spurious and only occur a very small number of times. Indeed, Figure~\ref{fig:census_distributions} shows that around half of the time-based neighbourhoods (41\%) and the structure-based neighbourhoods (60\%) occur only once, while the number of neighbourhoods that appear more than 100 times (among 150,000 posts) is similar for the three types of neighbourhood. To cover 95\% of the posts we need 623 structure-based neighbourhoods, 40 order-based and 155 time-based. 
+We detected in the whole dataset 3,791 different structure-based neighbourhoods, 174 different order-based and 1,488 different time-based, which means that the structure-based captures a much wider set of structures. Of course, this is not necessarily an advantage since these extra structures may be just spurious and only occur a very small number of times. Indeed, Figure~\ref{fig:census_distributions} shows that around half of the time-based neighbourhoods (41\%) and the structure-based neighbourhoods (60\%) occur only once, while the number of neighbourhoods that appear more than 100 times (among 150,000 posts) is similar for the three types of neighbourhood. To cover 95\% of the posts we need 623 structure-based neighbourhoods, 40 order-based and 155 time-based. 
  
 % Why order-based is not good enough
-The main reason why the frequency of the order-based neighbourhoods decays faster is that the most frequent neighbourhood (id 1) is much more frequent (upper-left red point in the left plot of figure \ref{fig:census_distributions}) than the most frequent time-based neighbourhood. This is the main handicap of the order-based neighbourhood since, as we will see later, it avoids finding richer structures.
+The main reason why the frequency of the order-based neighbourhoods decays faster is that the most frequent neighbourhood (id 1) is much more frequent (upper-left red point in the left plot of figure \ref{fig:census_distributions}) than the most frequent time-based neighbourhood. This is the main handicap of the order-based neighbourhood since, as we will see later, it avoids finding richer structures. Table~{\ref{tab:table}} shows the most frequent neighbourhoods for the three methods in each forum. The results are quite sensitive to the choice of the neighbourhood. Note that the order-based detects less differences among the most frequent neighbourhoods in both forums. Besides, it seems that when the time-based detects the neighbourhood 4, the structure-based detects the neighbourhood 7. This illustrate the effect of the changepoint: the presence of an horizontal changepoint in 7 (many posts replying to the root) converts it, from the point of view of the time-based neighbourhood, to a 4, which indicates that the ego has at most two siblings in the same period of time.
 
 \begin{figure*}
 \centering
@@ -452,6 +443,7 @@ The main reason why the frequency of the order-based neighbourhoods decays faste
 \label{fig:census_distributions}
 \end{figure*}
 
+%\begin{figure}
 \begin{table}
  \begin{center}
    \tabcolsep = 0.8\tabcolsep
@@ -483,15 +475,14 @@ The main reason why the frequency of the order-based neighbourhoods decays faste
    \end{tabular}
 \label{tab:table}
  \end{center}
- \caption{Frequence this is an example}
+ \caption{Most frequent neighbourhoods (and cummulative frequence) for the three methods if Podemos (POD) and Game of Thrones (GOT) forums.}
 \end{table}
-
-
+%\end{figure}
 
 \subsubsection{Discrepancies}
-The divergent number of neighbourhoods between structure-based, order-based and times-based suggests that some neighbourhoods, for instance, time-based, might be systematically mapped to the same neighbourhoods in order-based. Or similarly, that some structure-based neighbourhoods are systematically mapped into the same time-based neighbourhoods. Figure~\ref{fig:confusion} gives a general overview of these mappings. The left figure shows, for every post, its time-based neighbourhood and its order-based neighbourhood, while the right figure shows the time-based and the structure-based. The points in the diagonal correspond to posts that have been assigned the same neighbourhood by the two compared methods. 
+The divergent number of non-isomorphic neighbourhoods between structure-based, order-based and times-based methods suggests that some neighbourhoods, for instance, time-based, might be systematically mapped to the same neighbourhoods in order-based. Or similarly, that some structure-based neighbourhoods are systematically mapped into the same time-based neighbourhoods. Figure~\ref{fig:confusion} gives a general overview of these mappings. The left figure shows, for every post, its time-based neighbourhood and its order-based neighbourhood, while the right figure shows the time-based and the structure-based. The points in the diagonal correspond to posts that have been assigned the same neighbourhood by the two compared methods. 
 
-The diagonal of the time-based / order-based plot contains 36\% of the posts. The diagonal of the structure-based / time-based plot contains 40\% of the posts. For the order-based / struct-based (not shown) there are 41\% of the posts in the diagonal. In general, the structures with a bigger agreement are among the most frequent. This is comprehensible since the most frequent tend to be also the most simple structures with less room for discrepancy. There is a 30.75\% of the posts that are assigned the same neighbourhood structure by the three methods. 
+The diagonal of the time-based / order-based plot contains 36\% of the posts. The diagonal of the structure-based / time-based plot contains 40\% of the posts. For the order-based / struct-based (not shown) there are 41\% of the posts in the diagonal. In general, the structures with a bigger agreement are among the most frequent. This is probably due to the fact that a high amount of threads are small and therefore there is less room for discrepancy. There is a 30.75\% of the posts that are assigned the same neighbourhood structure by the three methods. 
 
 Rather than looking at where the methods agree, it is even more interesting to see where they disagree, since this will reveal whether one of the methods is incapable of detecting some interesting conversational structure. In Figure~\ref{fig:confusion} some horizontals lines can be spotted specially in the lower part of the plots. These correspond to posts with different time-based neighbourhoods that are assigned the same order-based neighbourhood (left), and different time-based neighbourhoods that are assigned the same order-based neighbourhood (right). Looking for the order-based neighbourhoods that have a correspondence with a larger set of time-based neighbourhoods, we detect that these correspond to neighbourhoods 1 (77 different time-based) and 50 (57 different time-based), 17 and 18. Looking for the time-based neighbourhoods that have a correspondence with a larger set of structure-based neighbourhoods, we detect that these are neighbourhoods 10, 4, 8, 19, 14.
 
@@ -508,65 +499,48 @@ In retrospective, these results are not surprising. What we see is simply that s
 
 
 
-It is clear from the last sections that the order-based does not do a good job on capturing all the richness of the conversational structures. There are two other reasons to choose the time-neighbourhood over the structure based. First, the time-based has less spurious structures, covering 95\% of posts with 155 neighbourhoods, against the 623 neighbours necessary to cover that amount with the structure-based. Second, the time-based neighbourhood has more grounded criteria to decide where the neighbourhood ends, while the structure-based has no criteria at all.
+It is clear from the this analysis that the order-based does not do a good job on capturing all the richness of the conversational structures due to the dominance of neighbourhood 1. There are two other reasons to choose the time-neighbourhood over the structure based. First, the time-based has less spurious structures, covering 95\% of posts with 155 neighbourhoods, against the 623 neighbours necessary to cover that amount with the structure-based. Second, the time-based neighbourhood has more grounded criteria to decide where the neighbourhood ends, while the structure-based has no criteria at all.
 
 \subsection{Conversation-based clustering of users}
-In this section, we cluster users in the Podemos dataset based on the neighbourhoods of their posts. Our intuition is that some users like participating in some kind of discussion rather than other. Certainly, most part of the information necessary to understand the nature of a discussion in in its textual content. However, due to the huge diversity of topics, vocabulary, and the difficulty of current algorithms to capture the language subtleties such as humour, irony, or context, we turn our attention towards the structure of the discussions, which can also contain some information. We work under the  hypothesis that the structural-neighbourhoods in which a user post in embedded reflect the kind of conversation in that part of the thread. 
+In this section, we apply the time-based neighbourhoods to cluster users in the Podemos dataset based on the neighbourhoods of their posts. Our intuition is that some users like participating in some kind of discussion rather than other. Certainly, most part of the information necessary to understand the nature of a discussion in in its textual content. However, due to the huge diversity of topics, vocabulary, and the difficulty of current algorithms to capture the language subtleties such as humour, irony, or context, we turn our attention towards the structure of the discussions, which can also contain some information. We work under the  hypothesis that the structural-neighbourhoods in which a user post in embedded reflect the kind of conversation in that part of the thread. 
 
 Our dataset contains a set of 100 \textit{active users} who wrote more than 100 posts. For those users, we create an initial feature matrix $U\times N$ where $U$ is the number of users and $N$ is the number of neighbourhoods in the dictionary, and where the the position $(u,n)$ is a counter of the number of times that a post written by user $u$ has a neighbourhood isomorphic to $n$. We drop those feature columns that are zero for every user (these are neighbourhoods seen only around posts of users with low-level activity). To make the feature vector of a user independent on the number of posts, we transform the counts into percentages. And since some features have much higher percentages than others for most users, we scale and normalize the matrix so that every feature has mean 0 and variance 1. To avoid non-significant scores, we remove also the feature column corresponding to neighbourhoods that have a frequency less than 50 among the active users.
 
 We use k-means to find the clusters, though one can use any other clustering method. Since the plot over the Within-Cluster Sum of Squares for $k=1,...20$ did not show any clear elbow we chose $k=3$ clusters so that clusters are easier to interpret. We did the clustering over a feature matrix with order-based neighbourhoods and another feature matrix with time-based neighbourhoods.
 
-Since the set of feature dimension is relatively large, we show in Figure \ref{fig:whiskers} how the users in a cluster are distributed for each feature. The features shown are the ones that have an bigger absolute value (in mean) for each cluster.
+Since the set of feature dimension is relatively large, we show in Figure \ref{fig:whiskers} how the users in a cluster are distributed for each feature. The features shown are the ones that have an bigger absolute value (in mean) for each cluster (above the percentile 0.95).
 
 % Explicacion
 \begin{itemize}
-\item The green cluster (attraction for X, X, repulsion XXX) correspond to users that...
-\item The red cluster...
-\item The blue cluster...
+\item Green cluster: these users are prominent  in conversations 8, 4, 15, which correspond to replies to the root in threads where the root post attracted some attention.
+
+\item Red cluster: these users tend to appear in 20, 3, 19, 14, 13, and 18, which are almost all cascades, sometimes between only two users (20, 18).  
+
+\item Blue cluster: these users seems to avoid cascades (3, 19) while they do not limit themselves to reply to the root, but instead the participate deeper in the discussion (6).
 \end{itemize}
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.5\textwidth]{whiskers}
+	\includegraphics[width=0.5\textwidth]{cluster_whiskers}
 	\caption{Whiskers plots in the most relevant features (time-based)}
 	\label{fig:whiskers}
 \end{figure}
 
-% TODO: Paragraph to explain similarity between clusters assignments
-
-% TODO: Paragraph to explain which motifs are prefered for every cluster
-
-%Interpretation
 
 \section{Conclusions}
-The goal of is paper was to shed some light on what would be a proper method to characterise the discussion in which a post is embedded. For that, we proposed three different kinds of neighbourhood applicable to tree structures by which conversation threads are represented. We named this three types of neighbourhood structure-based, order-based and time-based. While the first one is a mere extension of the classical concept of neighbourhood in a graph, the aim of the other two is to explicitly consider time when deciding which are the neighbours of a given post.
+The goal of is paper was to shed some light on what would be a proper method to characterise discussions online forums. For that, we analysed three different kinds of neighbourhood applicable to tree structures by which conversation threads are represented. We named this three types of neighbourhood structure-based, order-based and time-based. While the first one is a mere extension of the classical concept of neighbourhood in a graph, the aim of the other two is to explicitly consider time when deciding which are the neighbours of a given post.
 
-We showed the limitations of the order-based to capture the structure of conversations. We think this finding is relevant because, in some contexts, order is more relevant than real time, and assuming that posts (or whatever vertices represent) arrive in homogeneous intervals gives excellent results \cite{Gomez2012}.
+We showed the limitations of the order-based to capture the structure of conversations. We think this finding is relevant because, in some contexts, order is more relevant than real time, and assuming that posts (or whatever vertices represent) arrive in homogeneous intervals gives excellent results \cite{Gomez2012}. 
 
-We also showed that the main contribution of the time-based neighbourhood with respect to the most basic structure-based is that, thanks to the use of changepoints to set limits of the neighbourhoods, the space of neighbourhoods is considerably reduced and with less occasional neighbourhoods that occur only once. Besides, it prevents neighbourhoods from being too big, even though some post-pruning is still necessary.
+In the context of online discussions, time is critical and must be considered in the definition of the neighbourhood motifs. Our choice has been to use \textit{changepoints}, variations in the pace of the discussion, to decide where a neighbourhood ends. Besides explicitly considering time, this method gives in practice relatively small neighbourhoods, which guarantees its scalability since isomorphisms are considerably fast to compute in small graphs.  
 
-We analysed the time .......
+We also showed that, thanks to the use of changepoints to set limits of the neighbourhoods, the space of neighbourhoods is considerably reduced with respect to the structural neighbourhood. 
 
- the  it is common in the literature to use the order rather than the real time. The    
-
-We introduced three different  a method to characterise conversations of users in online threads. Due to the tree nature of online threads, traditional patters such as triads are not able to capture much of relevant dynamics of a conversation. Our defined order-based and temporal-based neighbourhoods 
-are able to capture a very rich variety of structures. We used this neighbourhoods to characterise users in terms of the structure of the conversations they participate in and showed that, indeed, there are different types of structural conversationalists
+Finally, we used this neighbourhoods to characterise users in terms of the structure of the conversations they participate in and showed that, indeed, there are different types of structural conversationalists.
 
 %Future
-The concept of structural-temporal neighbourhood opens the door to some interesting paths of research. One might wonder whether other pruning are more pertinent than the proposed here. Also, even after pruning some neighbourhoods suggest the same type of conversation, so a manual merge might be convenient. Maybe sociologists can help to merge the found neighbourhoods in a meaningful way.   
+The concept of structural-temporal neighbourhood opens the door to some interesting paths of research.  The space of neighbourhoods is still quite large and, besides using pruning strategies more aggressive, it would be interesting to analyse which neighbourhoods, despite of being non-isomorphic, may represent the same type of conversation. Such analyse would allow to merge some of the neighbourhoods resulting in an even more reduced and meaningful space. Also, other kind of neighbourhoods can also be studied to analyse different phenomena. For instance, we might take only those neighbours which are descendants of the ego post. Such kind of neighbourhood may be used to classify users in terms in the reaction they trigger in the discussion. The inverse technique, that is, take all the neighbours that are not descendants of the ego, may help to understand the kind of discussion that a users tends to be attracted to. This might be useful for posts recommendations or even to improve current generative models that try to reproduce the way how a thread grows \cite{Gomez2012, Kumar2010}.
 
-\section{Future work}
-In this paper we focused on the comparative analysis between three kind of neighbourhoods in order to demonstrate that the time-based neighbourhoods are able to capture relevant structures that other definitions of neighbourhood cannot. We also showed that it can be used to characterise users according to the kind of conversation in which they participate.
-
-We can see many applications of this kind of neighbourhood.
-
-\begin{itemize}
-\item  Caracterise reactions to user posts: instead of capturing the neighbours all around a post, we can limit we neighbourhood to the descendants. This would allow to cluster users from a slightly (but maybe important) point of view. 
-\item The boundaries of our time-based neighbourhood are decided by the changepoint algorithm PELT. How sensible is time-based neighbourhood to the choice of the algorithm?  
-\item Merge more neighbourhoods with sociological criteria.
-\item Use different coulours to represent different phenomena.
-\end{itemize}
 
 \begin{figure*}
 	\centering

@@ -125,5 +125,13 @@ volume = {14},
 year = {2009}
 }
 
+@inproceedings{Backstrom2013,
+author = {Backstrom, Lars and Kleinberg, Jon and Lee, Lillian and Danescu-Niculescu-Mizil, Cristian},
+booktitle = {Proceedings of the Sixth ACM International Conference on Web Search and Data Mining},
+pages = {13--22},
+title = {{Characterizing and Curating Conversation Threads: Expansion, Focus, Volume, Re-entry}},
+year = {2013}
+}
+
 
 
