@@ -1,0 +1,308 @@
+\documentclass{beamer}
+
+\usepackage{default}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+
+
+\DeclareGraphicsExtensions{{.pdf},{.png},{.jpg}}
+\graphicspath{ {./img/} }
+
+\hypersetup{colorlinks,urlcolor=blue}
+\AtBeginSection[]
+{
+	\begin{frame}
+		\begin{NoHyper}
+		\tableofcontents[currentsection]
+		\end{NoHyper}
+	\end{frame}
+}
+\AtBeginSubsection[]
+{
+	\begin{frame}
+		\begin{NoHyper}
+		\tableofcontents[currentsection, currentsubsection]
+		\end{NoHyper}
+	\end{frame}
+}
+\AtBeginSubsubsection[]
+{
+	\begin{frame}
+		\begin{NoHyper}
+		\tableofcontents[currentsection, currentsusubbsection]
+		\end{NoHyper}
+	\end{frame}
+}
+\begin{document}
+
+
+\addtobeamertemplate{footline}{\insertframenumber/\inserttotalframenumber}
+
+	
+\title{You are the way you (structurally) talk:  Structural-temporal neighbourhoods of posts to characterize users in online forums}
+\author{Alberto Lumbreras \\Jouve B., Velcin J., Guégan, M.}
+\date{May 3, 2016}
+\maketitle
+
+\begin{frame}\frametitle{Overview} 
+\begin{NoHyper}
+\tableofcontents
+\end{NoHyper}
+\end{frame}
+
+\section{Introduction}
+\subsection{The data}
+
+\begin{frame}{The data}{Reddit. A forum of forums}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.1\textwidth]{reddit-logo}	
+	\end{figure}
+	Download monthly dumps from:
+	\href{http://couch.whatbox.ca:36975/reddit/comments/monthly/}{http://couch.whatbox.ca:36975/reddit/comments/monthly/}
+	
+	\vfill
+	Extract forum of interest:\\
+	\href{www.reddit.com/r/podemos}{www.reddit.com/r/{\color{red}science}}\\
+	\href{www.reddit.com/r/podemos}{www.reddit.com/r/{\color{red}france}}\\
+	\href{www.reddit.com/r/podemos}{www.reddit.com/r/{\color{red}sociology}}\\
+	\href{www.reddit.com/r/podemos}{www.reddit.com/r/{\color{red}complexsystems}}\\
+	\href{www.reddit.com/r/gameofthrones}{www.reddit.com/r/{\color{red}gameofthrones}} $\leftarrow$ in this presentation\\
+	\href{www.reddit.com/r/podemos}{www.reddit.com/r/{\color{red}podemos}} $\leftarrow$ in this presentation\\
+	...
+\end{frame}
+
+\subsection{The graph representations of the data}
+
+\begin{frame}{Graph representations}{Graph of user interactions (a social network)}
+	\begin{figure}
+		\centering
+		\includegraphics[width=1\textwidth]{sna}	
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Graph representations}{Trees of posts}
+\begin{figure}
+	\centering
+	\includegraphics[width=1\textwidth]{forest}	
+\end{figure}
+\end{frame}
+
+\begin{frame}{Graph representations}{Conversations are trees}
+
+\begin{itemize}
+\item Explicit structure.
+\item Dynamic (order, time)
+\end{itemize}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.3\textwidth]{tree1}	
+	\includegraphics[width=0.3\textwidth]{tree2}	
+	\includegraphics[width=0.3\textwidth]{tree4}	
+\end{figure}
+\end{frame}
+
+\section{Structures of conversations}
+\subsection{Basic idea}
+\begin{frame}{Intuition}
+\textit{Hypothesis}: different individuals have tendency towards different types of conversations and these types are reflected in the structure of their interactions.
+
+\end{frame}
+
+
+\subsection{Triadic structures}
+\begin{frame}{Triadic structures}{Triads are not enough}
+	\begin{figure}
+		\centering
+		\includegraphics[width=1\textwidth]{triads}
+	\end{figure}
+	
+Triads in \textbf{trees of posts}:
+	\begin{itemize}
+		\item Only 3 possible triads (dyad, chain and star)
+	\end{itemize}
+
+Triads in  \textbf{social graph}:
+	\begin{itemize}
+		\item Order (therefore dynamic) is missing.
+	\end{itemize}
+\vfill
+We need something richer that captures the dynamics of conversations.
+\end{frame}
+
+\subsection{Neighbourhood structures}
+\begin{frame}{Order-based neighbourhoods}{Definition}
+\begin{itemize}
+	\item 1. Extract neighbourhood of post $i$ with radius $r$.
+	\item 2. Keep only the $n$ posts that are closest (in time) to post $i$. 
+\end{itemize}
+	\begin{figure}
+		\centering
+		\includegraphics[width=01\textwidth]{order_neighbourhood}
+	\end{figure}
+Easy to compute, but how to choose the parameters $r,n$ ?  	
+\end{frame}
+
+\begin{frame}{Time-based neighbourhoods}{Definition}
+\begin{itemize}
+	\item 1. Extract neighbourhood of post $i$ with radius $r$.
+	\item 2. Detect changes of speed (vertical/horizontal \textit{changepoints}) (PELT algo)
+	\item 3. From $i$, get the posts around until a changepoint is found.
+\end{itemize}
+%\vspace{cm}  
+	\begin{figure}
+		\centering
+		\includegraphics[width=1\textwidth]{breakpoints2}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Colouring}
+Label special nodes:
+\begin{itemize}
+	\item Red: ego.
+	\item Yellow: parent of ego (and posts of same author)
+	\item Orange: other posts by ego author
+	\item White: root
+\end{itemize}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.3\textwidth]{colouring}
+	\end{figure}
+
+\end{frame}
+\begin{frame}{Some frequent neighbourhoods}{}
+	\begin{figure}
+		\centering
+		\includegraphics[width=1\textwidth]{dictionary1}
+	\end{figure}
+\end{frame}
+\begin{frame}{Some frequent neighbourhoods}{}
+	\begin{figure}
+		\centering
+		\includegraphics[width=1\textwidth]{dictionary2}
+	\end{figure}
+\end{frame}
+
+\subsection{Comparing neighbourhoods}
+\begin{frame}{Frequency distribution}{}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\textwidth]{compare_census_distribution}
+	\end{figure}
+Time-based (black) reduces the space w.r.t structure-based (blue)
+\end{frame}
+
+
+\begin{frame}{Frequency distribution}{}
+	\begin{figure}
+		\centering
+		\includegraphics[width=1\textwidth]{compare_census_distribution_cum}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Discrepancies}{Time-based vs Order-based neighbourhood}
+	\begin{figure}
+		\centering
+		\includegraphics[width=1\textwidth]{confusion_time_order}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Discrepancies}{Basic neighbourhood vs Time-based neighbourhood}
+	\begin{figure}
+		\centering
+		\includegraphics[width=1\textwidth]{confusion_struct_time}
+	\end{figure}
+\end{frame}
+
+
+\begin{frame}{Structure-based vs Order-based vs Time-based}
+Structure-based:
+\begin{itemize}
+\item  too big (and too many) neighbourhoods.
+\end{itemize}
+Order-based:
+\begin{itemize}
+\item  Dominance of monoid hides richer conversational structures.
+\end{itemize}
+Time-based:
+\begin{itemize}
+\item Space more reduced than simple structure-based.
+\item Criteria to choose radius dynamically (r = until conversation slows down)
+\end{itemize}
+\end{frame}
+
+\section{Conversation-based clustering}
+\begin{frame}{Methodology}
+	\begin{itemize}
+	\item Create a user $\times$ neighborhood matrix of counts.
+	\item Z-normalize (users characterized by their deviation from the mean)
+	\item Cluster!
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Conversation-based clustering}{Time-based}
+	\begin{figure}
+		\centering
+		\includegraphics[width=1\textwidth]{cluster_whiskers}
+	\end{figure}	
+\end{frame}
+
+\begin{frame}{Conversation-based clustering}{Interpretation}
+	Greens:
+	\begin{figure}
+		\centering
+		\includegraphics[height=0.17\textwidth]{motif8}
+		\includegraphics[height=0.17\textwidth]{motif4}
+		\includegraphics[height=0.17\textwidth]{motif15}
+	\end{figure}	
+	Reds:
+	\begin{figure}
+		\centering
+		\includegraphics[height=0.17\textwidth]{motif20}
+		\includegraphics[height=0.17\textwidth]{motif3}
+		\includegraphics[height=0.17\textwidth]{motif19}	
+		\includegraphics[height=0.17\textwidth]{motif14}	
+		\includegraphics[height=0.17\textwidth]{motif13}	
+		\includegraphics[height=0.17\textwidth]{motif18}	
+	\end{figure}	
+	Blues (avoid these motifs):
+	\begin{figure}
+		\centering
+		\includegraphics[height=0.17\textwidth]{motif3}
+		\includegraphics[height=0.17\textwidth]{motif19}
+	\end{figure}	
+	\end{frame}
+
+\section{Conclusions}
+\begin{frame}{Conclusions}
+	\begin{itemize}
+	\item \textbf{Q: Can we use graph structure to characterise users?}
+	\item A: Yes!
+	\end{itemize}	
+	\begin{itemize}
+	\item \textbf{Q: By using triads}?
+	\item A: No. They are not useful in trees.
+	\end{itemize}
+	\begin{itemize}
+	\item \textbf{Q: So, what kind of structure?}
+	\item A: Posts neighbourhoods that are time/order sensitive.
+	\end{itemize}
+	\begin{itemize}
+	\item \textbf{Q: What about language?}
+	\item A: It's ok, but structure is more directly linked to thread dynamics (future work)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\Huge Merci !
+	\begin{figure}
+		\centering
+		%\includegraphics[width=0.1\textwidth]{reddit-logo}
+		%\includegraphics[width=0.2\textwidth]{reddit_french}	
+		%\includegraphics[width=0.5\textwidth]{reddit_questions}
+		\includegraphics[width=0.1\textwidth]{reddit_sans_culotte}
+	\end{figure}
+\end{center}
+\end{frame}
+\end{document}

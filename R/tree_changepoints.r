@@ -294,37 +294,26 @@ neighborhood.temporal <- function(gp, j, rad, breakpoints.v, breakpoints.h){
   # in the middle of the operations
   to.delete <- vector('list', 100)
   n <- 1
-  #adj <- get.adjacency(eg, sparse=FALSE)
-  #mat.sibling <- adj%*%t(adj)
+
   if (sum(V(eg)$bp.h)>0){
     breakpoints.h.ego <- V(eg)[V(eg)$bp.h==TRUE]
-    #cat("\n#bp.h: ", length(breakpoints.h.ego))
     for (k in 1:length(breakpoints.h.ego)){
       bp <- breakpoints.h.ego[k]
       bp.date <- bp$date
-
-      #bp.idx <- which(names(adj)==bp$name)
       if((bp %in% ego.older.siblings) || (bp %in% ego.ascendants)){
         # if antecedent or older brother of ego, delete older brothers
         # (= delete previous dynamics)
-        bp.parent <- neighbors(eg, bp, mode='out')
-        siblings <- neighbors(eg, bp.parent, mode='in')
-        
-        #siblings <- names(mat.sibling[bp.idx, mat.sibling[bp.idx,]==1])
-        #siblings <- V(eg)[siblings]
+        bp.parent <- neighbors(eg, V(eg)[bp], mode='out') #V(eg)[bp] to avoid bug
+        siblings <- neighbors(eg, V(eg)[bp.parent], mode='in')
         
         bp.older.siblings <- siblings[siblings$date < bp$date]
         to.delete[[n]] <- bp.older.siblings
         n <- n+1
-      }
-      else{
+      }else{
         # else, delete younger brothers and breakpoint
         # (= delete next dynamics)
-        bp.parent <- neighbors(eg, bp, mode='out')
-        siblings <- neighbors(eg, bp.parent, mode='in')
-        
-        #siblings <- names(mat.sibling[bp.idx, mat.sibling[bp.idx,]==1])
-        #siblings <- V(eg)[siblings]
+        bp.parent <- neighbors(eg, V(eg)[bp], mode='out')
+        siblings <- neighbors(eg, V(eg)[bp.parent], mode='in')
         
         bp.younger.siblings <- siblings[siblings$date > bp.date]
         to.delete[[n]] <- bp.younger.siblings
@@ -336,8 +325,7 @@ neighborhood.temporal <- function(gp, j, rad, breakpoints.v, breakpoints.h){
   
   if (sum(V(eg)$bp.v)>0){
     breakpoints.v.ego <- V(eg)[V(eg)$bp.v==TRUE]
-    #cat("\n#bp.v: ", length(breakpoints.v.ego))
-    
+
     for (k in 1:length(breakpoints.v.ego)){
       bp <- breakpoints.v.ego[k]
       bp.date <- bp$date

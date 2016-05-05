@@ -16,15 +16,15 @@ MIN_POSTS <- 100 # number of post to consider a user as active
 # Load data
 ###################################################
 load('./R_objects/dfposts_podemos.Rda')
+df.posts <- df.posts
 df.posts$date <- as.numeric(df.posts$date)
 df.posts <- data.frame(df.posts) %>% arrange(date)
-#df.posts <- df.posts[1:75000,] # Paper
-df.posts <- df.posts[17100:17109,] # Debug
-
+df.posts <- df.posts[1:75000,] # Paper
 df.threads <- plyr::count(df.posts, "thread")
 df.users <- plyr::count(df.posts, 'user')                                                                                                                                   
 names(df.threads)[2] <- "length"
 names(df.users)[2] <- "posts"
+df.posts$forum <- 'podemos'
 
 # Print dates range
 start.date <- as.POSIXct(min(as.numeric(df.posts$date)), origin = "1970-01-01") 
@@ -36,34 +36,10 @@ cat('Number of threads: ', nrow(df.threads))
 cat('Number of users: ', nrow(df.users))
 cat('Number of active users', nrow(filter(df.users, posts>MIN_POSTS)))
 
-
-# Plot general overview of forum
-n <- hist(df.threads$length, breaks=0:max(df.threads$length))$counts
-plot(1:max(df.threads$length), n, log='xy', 
-     ylab='Number of threads', xlab='Length')
-title(main='Threads length')
-
-plot(cumsum(table(df.threads$length)), pch=19, cex=0.5,
-     ylab='Length (cum)', xlab='Thread')
-title('Threads length (cumulative)')
-
-n <- hist(df.users$posts, breaks=0:max(df.users$posts))$counts
-plot(1:max(df.users$posts), n, log='xy', 
-     ylab='Number of users', xlab='Posts')
-title(main='Users posts')
-
-plot(cumsum(table(df.users$posts)), pch=19, cex=0.5,
-     ylab='Posts (cum)', xlab='User')
-title('Users posts (cumulative)')
-
-
 #########################################
 # Load neighbourhoods previously extracted
 #########################################
-load("res_time_75000.Rda")
-
-df.posts.bck <- df.posts
-#df.posts <-df.posts.bck
+load("./R_objects/res_time_75000_podemos.Rda")
 df.post.motif  <- res$posts.motifs
 motifs <- res$motifs
 
@@ -74,36 +50,10 @@ all(n == cummin(n))
 # Add motif info to posts dataframe
 df.posts <- merge(df.posts, df.post.motif, all=FALSE, sort=FALSE)
 
-# Because the counting is based on threads, there might be some posts that were 
-# recovered in df.post.motif but that were cut in df.posts[1:N]
-# so re-sort again motifs by frequency
-# Sort by frequency (and relabel: 1 for the most frequent and so forth)
-# make NA appear in table so that they are convetred to 0
-idx <- order(tabulate(df.posts$motif), decreasing = TRUE)
-df.posts$motif <- match(df.posts$motif, idx)
-motifs <- motifs[idx]
-
-
-# Check they are STILL sorted by frequency (they should be)
-n <- as.numeric(table(df.posts$motif))
-all(n == cummin(n))
-
-###############################################
-# Census (deprecated. see pipeline_compare_census.r)
-###############################################
-par(mfrow=c(1,1))
-n <- hist(df.posts$motif, breaks=0:max(df.posts$motif))$counts
-plot(1:max(df.posts$motif), n, log='y', 
-     ylab='Frequency', xlab='Neighbourhood',
-     pch=19, cex=0.1)
-title(main='Neighbourhoods frequency')
-
-plot(cumsum(table(df.posts$motif)), pch=19, cex=0.5,
-     ylab='Frequency (cum)', xlab='Neighbourhood')
-title('Neighbourhoods frequency (cumulative)')
-
-# How many neighbourhoods we need to account for 90% (for instance) of occurrences
-names(table(df.posts$motif))[cumsum(table(df.posts$motif))<63000]
+# Re-index according to an external global dictionary
+res <- merge.dictionaries(motifs.global, motifs)
+df.posts$motif <- res$mapping[df.posts$motif]
+motifs <- res$dict
 
 ######################################################
 # Count motifs in which each user appears
@@ -223,6 +173,6 @@ p <- ggplot(points, aes(x=variable, y=value)) +
   geom_boxplot(aes(fill = cluster), position = position_dodge(width = 0.75))
 p <- p + theme_bw() +
   theme(text = element_text(size = 15),
-        legend.key = element_blank()) +
-  ggtitle("Clusters means and variances")
+        legend.key = element_blank()) #+
+  #ggtitle("Clusters means and variances")
 print(p)

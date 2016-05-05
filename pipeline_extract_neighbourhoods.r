@@ -32,11 +32,11 @@ source('R/plotting.r')
 ##########################################################
 # Load Data
 ##########################################################
-load('./R_objects/dfposts_gameofthrones.Rda')
+load('./R_objects/dfposts_podemos.Rda')
 df.posts$date <- as.numeric(df.posts$date)
 df.posts <- data.frame(df.posts) %>% arrange(date)
 df.posts <- df.posts[1:75000,] # Paper
-#df.posts <- df.posts[17100:17109,] # Debug
+#df.posts <- df.posts[1:5000,] # Debug
 
 df.threads <- plyr::count(df.posts, "thread")
 df.users <- plyr::count(df.posts, 'user')                                                                                                                                   
@@ -60,32 +60,32 @@ cat('Number of active users', nrow(filter(df.users, posts>MIN_POSTS)))
 # Only long threads
 #df.threads <- filter(df.threads, length>10)
 
-chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/300))
+chunks <- split(df.threads$thread, ceiling(seq_along(df.threads$thread)/1000))
 length(chunks)
 
 if(FALSE){
   
-chunks <- "t3_2bmb4v"
-
-# Profiling
-library(profvis)
-prof <- profvis({
-  res.seq <- count_motifs_by_post(as.vector(unlist(chunks))[1], 
+  chunks <- "t3_2bmb4v"
+  
+  # Profiling
+  library(profvis)
+  prof <- profvis({
+    res.seq <- count_motifs_by_post(as.vector(unlist(chunks))[1], 
+                                    database='reddit',
+                                    neighbourhood='struct')
+  })
+  
+  # sequential
+  res.seq <- count_motifs_by_post(as.vector(unlist(chunks)), 
                                   database='reddit',
-                                  neighbourhood='struct')
-})
-
-# sequential
-res.seq <- count_motifs_by_post(as.vector(unlist(chunks)), 
-                                database='reddit',
-                                neighbourhood='struct')
+                                  neighbourhood='time')
 }
 
 # parallel
-ncores <- detectCores() - 5
+ncores <- detectCores() - 2
 cl<-makeCluster(ncores, outfile="", port=11439)
 registerDoParallel(cl)
-pck <- c('RSQLite', 'data.table', 'changepoint')
+pck <- c('RSQLite', 'data.table', 'changepoint', 'digest')
 res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
   source('R/extract_from_db.r')
   #withTimeout(  count_motifs_by_post(chunks[[i]], 
@@ -94,21 +94,24 @@ res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
   #                                  120, onTimeout='warning')
   count_motifs_by_post(chunks[[i]], 
                        database='reddit',
-                       neighbourhood='time', rad=100, chunk.id=i)
+                       neighbourhood='time', chunk.id=i)
 }
 stopCluster(cl)
 res <- merge.motif.counts(res.parallel)
-# save(res, file='./R_objects/res_time_75000_podemos.Rda') 
+
+save(res, file='./R_objects/res_time_75000_podemos.Rda') 
 # save(res, file='./R_objects/res_order_75000_podemos.Rda') 
 #save(res, file='./R_objects/res_struct_75000_podemos.Rda') 
 # save(res, file='./R_objects/res_time_75000_gameofthrones.Rda') 
 # save(res, file='./R_objects/res_order_75000_gameofthrones.Rda') 
 #save(res, file='./R_objects/res_struct_75000_gameofthrones.Rda') 
-save(res, file='./R_objects/res_time_noradius_75000_gameofthrones.Rda') 
-
 # save(res, file='./R_objects/res_time_75000_4chan.Rda')
 # save(res, file='./R_objects/res_order_75000_4chan.Rda')
 #save(res, file='./R_objects/res_struct_75000_4chan.Rda')
+#save(res, file='./R_objects/res_struct_10000_4chan.Rda')
+#save(res, file='./R_objects/res_struct_5000_podemos.Rda')
+
+
 #load("res_time_75000.Rda")
 
 #save(res, file='./R_objects/res_order_2_4_75000_4chan.Rda') 

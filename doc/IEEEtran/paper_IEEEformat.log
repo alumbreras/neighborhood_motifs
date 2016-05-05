@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.3.11)  27 APR 2016 08:26
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.3.11)  30 APR 2016 12:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -145,23 +145,81 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen126
 \Gin@req@width=\dimen127
 )
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2013/01/14 v2.14 AMS math features
+\@mathmargin=\skip44
+
+For additional information on amsmath, use the `?' option.
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks16
+\ex@=\dimen128
+))
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen129
+)
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count95
+LaTeX Info: Redefining \frac on input line 210.
+\uproot@=\count96
+\leftroot@=\count97
+LaTeX Info: Redefining \overline on input line 306.
+\classnum@=\count98
+\DOTSCASE@=\count99
+LaTeX Info: Redefining \ldots on input line 378.
+LaTeX Info: Redefining \dots on input line 381.
+LaTeX Info: Redefining \cdots on input line 466.
+\Mathstrutbox@=\box28
+\strutbox@=\box29
+\big@size=\dimen130
+LaTeX Font Info:    Redeclaring font encoding OML on input line 566.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 567.
+\macc@depth=\count100
+\c@MaxMatrixCols=\count101
+\dotsspace@=\muskip10
+\c@parentequation=\count102
+\dspbrk@lvl=\count103
+\tag@help=\toks17
+\row@=\count104
+\column@=\count105
+\maxfields@=\count106
+\andhelp@=\toks18
+\eqnshift@=\dimen131
+\alignsep@=\dimen132
+\tagshift@=\dimen133
+\tagwidth@=\dimen134
+\totwidth@=\dimen135
+\lineht@=\dimen136
+\@envbody=\toks19
+\multlinegap=\skip45
+\multlinetaggap=\skip46
+\mathdisplay@stack=\toks20
+LaTeX Info: Redefining \[ on input line 2665.
+LaTeX Info: Redefining \] on input line 2666.
+)
 (/usr/share/texlive/texmf-dist/tex/latex/algorithms/algorithmic.sty
 Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
 )
-\c@ALC@unique=\count95
-\c@ALC@line=\count96
-\c@ALC@rem=\count97
-\c@ALC@depth=\count98
-\ALC@tlm=\skip44
-\algorithmicindent=\skip45
+\c@ALC@unique=\count107
+\c@ALC@line=\count108
+\c@ALC@rem=\count109
+\c@ALC@depth=\count110
+\ALC@tlm=\skip47
+\algorithmicindent=\skip48
 )
 (/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2008/03/30 v1.1d Input encoding file
-\inpenc@prehook=\toks16
-\inpenc@posthook=\toks17
+\inpenc@prehook=\toks21
+\inpenc@posthook=\toks22
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
@@ -380,7 +438,6 @@ Package: amssymb 2013/01/14 v3.01 AMS font symbols
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
-\@emptytoks=\toks18
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
@@ -392,54 +449,50 @@ nment
 
 (/usr/share/texlive/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count99
-\float@exts=\toks19
-\float@box=\box28
-\@float@everytoks=\toks20
-\@floatcapt=\box29
+\c@float@type=\count111
+\float@exts=\toks23
+\float@box=\box30
+\@float@everytoks=\toks24
+\@floatcapt=\box31
 )
-\@float@every@algorithm=\toks21
-\c@algorithm=\count100
+\@float@every@algorithm=\toks25
+\c@algorithm=\count112
 )
-\c@definition=\count101
-
-(./paper_IEEEformat.aux
-
-LaTeX Warning: Label `fig:PCA' multiply defined.
-
-
-LaTeX Warning: Label `fig:census_size_vs_freq' multiply defined.
-
+(/usr/share/texlive/texmf-dist/tex/latex/multirow/multirow.sty
+\bigstrutjot=\dimen137
 )
+\c@definition=\count113
+
+(./paper_IEEEformat.aux)
 \openout1 = `paper_IEEEformat.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 218.
-LaTeX Font Info:    ... okay on input line 218.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 218.
-LaTeX Font Info:    ... okay on input line 218.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 218.
-LaTeX Font Info:    ... okay on input line 218.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 218.
-LaTeX Font Info:    ... okay on input line 218.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 218.
-LaTeX Font Info:    ... okay on input line 218.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 218.
-LaTeX Font Info:    ... okay on input line 218.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 219.
+LaTeX Font Info:    ... okay on input line 219.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 219.
+LaTeX Font Info:    ... okay on input line 219.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 219.
+LaTeX Font Info:    ... okay on input line 219.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 219.
+LaTeX Font Info:    ... okay on input line 219.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 219.
+LaTeX Font Info:    ... okay on input line 219.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 219.
+LaTeX Font Info:    ... okay on input line 219.
 
 -- Lines per column: 56 (exact).
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count102
-\scratchdimen=\dimen128
-\scratchbox=\box30
-\nofMPsegments=\count103
-\nofMParguments=\count104
-\everyMPshowfont=\toks22
-\MPscratchCnt=\count105
-\MPscratchDim=\dimen129
-\MPnumerator=\count106
-\makeMPintoPDFobject=\count107
-\everyMPtoPDFconversion=\toks23
+\scratchcounter=\count114
+\scratchdimen=\dimen138
+\scratchbox=\box32
+\nofMPsegments=\count115
+\nofMParguments=\count116
+\everyMPshowfont=\toks26
+\MPscratchCnt=\count117
+\MPscratchDim=\dimen139
+\MPnumerator=\count118
+\makeMPintoPDFobject=\count119
+\everyMPtoPDFconversion=\toks27
 ) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -488,12 +541,12 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Font Info:    Try loading font information for U+msa on input line 316.
+LaTeX Font Info:    Try loading font information for U+msa on input line 305.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 316.
+LaTeX Font Info:    Try loading font information for U+msb on input line 305.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -505,203 +558,107 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: ./img/order_neighbourhood.png Graphic file (type png)
 
 <use ./img/order_neighbourhood.png>
-Package pdftex.def Info: ./img/order_neighbourhood.png used on input line 340.
+Package pdftex.def Info: ./img/order_neighbourhood.png used on input line 330.
 (pdftex.def)             Requested size: 232.19843pt x 169.62013pt.
 
 <./img/breakpoints.png, id=15, 575.90157pt x 466.74374pt>
 File: ./img/breakpoints.png Graphic file (type png)
 
 <use ./img/breakpoints.png>
-Package pdftex.def Info: ./img/breakpoints.png used on input line 341.
+Package pdftex.def Info: ./img/breakpoints.png used on input line 331.
 (pdftex.def)             Requested size: 232.19843pt x 188.18979pt.
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 356.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 345.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-) [2]
+) [2 <./img/order_neighbourhood.png> <./img/breakpoints.png (PNG copy)>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [3 <./img/order_neighbourhood.png> <./img/breakpoints.png (PNG copy)>]
-Underfull \hbox (badness 3158) in paragraph at lines 417--418
-\OT1/ptm/m/n/10 Since some posts might cor-re-spond to sev-eral col-ors,
+
+Underfull \hbox (badness 1931) in paragraph at lines 406--407
+\OT1/ptm/m/n/10 Since some posts might cor-re-spond to sev-eral colours,
  []
 
-<./img/neighbourhood_time_342.png, id=29, 273.02pt x 234.8775pt>
-File: ./img/neighbourhood_time_342.png Graphic file (type png)
-
-<use ./img/neighbourhood_time_342.png>
-Package pdftex.def Info: ./img/neighbourhood_time_342.png used on input line 42
-3.
-(pdftex.def)             Requested size: 103.19843pt x 88.7813pt.
-
-<./img/neighbourhood_time_456.png, id=30, 249.93375pt x 223.83624pt>
-File: ./img/neighbourhood_time_456.png Graphic file (type png)
-
-<use ./img/neighbourhood_time_456.png>
-Package pdftex.def Info: ./img/neighbourhood_time_456.png used on input line 42
-4.
-(pdftex.def)             Requested size: 98.04126pt x 87.80469pt.
-
-<./img/neighbourhood_time_501.png, id=31, 251.94125pt x 252.945pt>
-File: ./img/neighbourhood_time_501.png Graphic file (type png)
-
-<use ./img/neighbourhood_time_501.png>
-Package pdftex.def Info: ./img/neighbourhood_time_501.png used on input line 42
-5.
-(pdftex.def)             Requested size: 92.87622pt x 93.24467pt.
-
-<./img/neighbourhood_time_524.png, id=32, 262.9825pt x 263.98625pt>
-File: ./img/neighbourhood_time_524.png Graphic file (type png)
-
-<use ./img/neighbourhood_time_524.png>
-Package pdftex.def Info: ./img/neighbourhood_time_524.png used on input line 42
-6.
-(pdftex.def)             Requested size: 92.87622pt x 93.23038pt.
- [4]
-<./img/confusion_time_order_gameofthrones.png, id=36, 661.72218pt x 481.8pt>
-File: ./img/confusion_time_order_gameofthrones.png Graphic file (type png)
-
-<use ./img/confusion_time_order_gameofthrones.png>
-Package pdftex.def Info: ./img/confusion_time_order_gameofthrones.png used on i
-nput line 454.
-(pdftex.def)             Requested size: 258.0pt x 187.84978pt.
-
-<./img/confusion_time_order_gameofthrones_zoom.png, id=37, 661.72218pt x 481.8p
-t>
-File: ./img/confusion_time_order_gameofthrones_zoom.png Graphic file (type png)
-
- <use ./img/confusion_time_order_gameofthrones_zoom.png>
-Package pdftex.def Info: ./img/confusion_time_order_gameofthrones_zoom.png used
- on input line 455.
-(pdftex.def)             Requested size: 258.0pt x 187.84978pt.
-
-<./img/order_vs_time_census_distribution.png, id=38, 661.72218pt x 481.8pt>
-File: ./img/order_vs_time_census_distribution.png Graphic file (type png)
-
-<use ./img/order_vs_time_census_distribution.png>
-Package pdftex.def Info: ./img/order_vs_time_census_distribution.png used on in
-put line 465.
-(pdftex.def)             Requested size: 258.0pt x 187.84978pt.
-
-<./img/order_vs_time_census_distribution_cum.png, id=39, 661.72218pt x 481.8pt>
-File: ./img/order_vs_time_census_distribution_cum.png Graphic file (type png)
-<use ./img/order_vs_time_census_distribution_cum.png>
-Package pdftex.def Info: ./img/order_vs_time_census_distribution_cum.png used o
-n input line 466.
-(pdftex.def)             Requested size: 258.0pt x 187.84978pt.
-
-<./img/time_neighbourhood_census_compare_forums.png, id=40, 656.4525pt x 396.73
-22pt>
-File: ./img/time_neighbourhood_census_compare_forums.png Graphic file (type png
+[3]
+<./img/compare_census_distribution_gameofthones.png, id=29, 661.72218pt x 482.5
+5281pt>
+File: ./img/compare_census_distribution_gameofthones.png Graphic file (type png
 )
- <use ./img/time_neighbourhood_census_compare_forums.png>
-Package pdftex.def Info: ./img/time_neighbourhood_census_compare_forums.png use
-d on input line 477.
-(pdftex.def)             Requested size: 258.0pt x 155.92354pt.
+ <use ./img/compare_census_distribution_gameofthones.png>
+Package pdftex.def Info: ./img/compare_census_distribution_gameofthones.png use
+d on input line 440.
+(pdftex.def)             Requested size: 258.0pt x 188.1433pt.
 
-<./img/order_neighbourhood_census_compare_forums.png, id=41, 656.4525pt x 396.7
-322pt>
-File: ./img/order_neighbourhood_census_compare_forums.png Graphic file (type pn
-g)
- <use ./img/order_neighbourhood_census_compare_forums.png>
-Package pdftex.def Info: ./img/order_neighbourhood_census_compare_forums.png us
-ed on input line 478.
-(pdftex.def)             Requested size: 258.0pt x 155.92354pt.
+<./img/compare_census_distribution_gameofthones_cum.png, id=30, 661.72218pt x 4
+82.55281pt>
+File: ./img/compare_census_distribution_gameofthones_cum.png Graphic file (type
+ png)
+ <use ./img/compare_census_distribution_gameofthones_cum.png>
+Package pdftex.def Info: ./img/compare_census_distribution_gameofthones_cum.png
+ used on input line 441.
+(pdftex.def)             Requested size: 258.0pt x 188.1433pt.
 
-<./img/census_size_vs_freq_gameofthrones.png, id=42, 656.4525pt x 396.7322pt>
-File: ./img/census_size_vs_freq_gameofthrones.png Graphic file (type png)
-
-<use ./img/census_size_vs_freq_gameofthrones.png>
-Package pdftex.def Info: ./img/census_size_vs_freq_gameofthrones.png used on in
-put line 485.
-(pdftex.def)             Requested size: 258.0pt x 155.92354pt.
-
-Overfull \hbox (6.0pt too wide) in paragraph at lines 485--486
- [][] 
+Underfull \hbox (badness 1629) in paragraph at lines 483--484
+\OT1/ptm/m/n/10 neigh-bour-hoods be-tween structure-based, order-based and
  []
 
-[5 <./img/neighbourhood_time_342.png> <./img/neighbourhood_time_456.png> <./img
-/neighbourhood_time_501.png> <./img/neighbourhood_time_524.png> <./img/census_s
-ize_vs_freq_gameofthrones.png (PNG copy)>] [6 <./img/confusion_time_order_gameo
-fthrones.png> <./img/confusion_time_order_gameofthrones_zoom.png> <./img/order_
-vs_time_census_distribution.png (PNG copy)> <./img/order_vs_time_census_distrib
-ution_cum.png (PNG copy)> <./img/time_neighbourhood_census_compare_forums.png (
-PNG copy)> <./img/order_neighbourhood_census_compare_forums.png (PNG copy)>]
-<./img/whiskers.png, id=51, 656.4525pt x 479.54156pt>
-File: ./img/whiskers.png Graphic file (type png)
- <use ./img/whiskers.png>
-Package pdftex.def Info: ./img/whiskers.png used on input line 502.
-(pdftex.def)             Requested size: 258.0pt x 188.46925pt.
+[4]
+Underfull \vbox (badness 2662) has occurred while \output is active []
 
-Overfull \hbox (6.0pt too wide) in paragraph at lines 502--503
- [][] 
- []
 
-<./img/PCA_cluster_orderbased.png, id=52, 982.67125pt x 759.83875pt>
-File: ./img/PCA_cluster_orderbased.png Graphic file (type png)
+<./img/confusion_time_order.png, id=34, 575.14874pt x 466.74374pt>
+File: ./img/confusion_time_order.png Graphic file (type png)
 
-<use ./img/PCA_cluster_orderbased.png>
-Package pdftex.def Info: ./img/PCA_cluster_orderbased.png used on input line 51
-5.
-(pdftex.def)             Requested size: 464.39685pt x 359.08368pt.
+<use ./img/confusion_time_order.png>
+Package pdftex.def Info: ./img/confusion_time_order.png used on input line 494.
 
-<./img/PCA_cluster_timebased.png, id=53, 976.64874pt x 755.82375pt>
-File: ./img/PCA_cluster_timebased.png Graphic file (type png)
+(pdftex.def)             Requested size: 258.0pt x 209.37752pt.
 
-<use ./img/PCA_cluster_timebased.png>
-Package pdftex.def Info: ./img/PCA_cluster_timebased.png used on input line 516
+<./img/confusion_struct_time.png, id=35, 575.14874pt x 466.74374pt>
+File: ./img/confusion_struct_time.png Graphic file (type png)
+
+<use ./img/confusion_struct_time.png>
+Package pdftex.def Info: ./img/confusion_struct_time.png used on input line 495
 .
-(pdftex.def)             Requested size: 464.39685pt x 359.40059pt.
+(pdftex.def)             Requested size: 258.0pt x 209.37752pt.
 
+Underfull \vbox (badness 4954) has occurred while \output is active []
 
-LaTeX Warning: Float too large for page by 69.81624pt on input line 519.
+ [5 <./img/compare_census_distribution_gameofthones.png (PNG copy)> <./img/comp
+are_census_distribution_gameofthones_cum.png (PNG copy)>]
+<./img/cluster_whiskers.png, id=39, 631.60968pt x 438.13687pt>
+File: ./img/cluster_whiskers.png Graphic file (type png)
 
-(./paper_IEEEformat.bbl
-Underfull \hbox (badness 2644) in paragraph at lines 56--61
+<use ./img/cluster_whiskers.png>
+Package pdftex.def Info: ./img/cluster_whiskers.png used on input line 524.
+(pdftex.def)             Requested size: 258.0pt x 178.96873pt.
+
+Overfull \hbox (6.0pt too wide) in paragraph at lines 524--525
+ [][] 
+ []
+
+[6 <./img/confusion_time_order.png> <./img/confusion_struct_time.png>]
+<./img/dictionary1.png, id=45, 575.14874pt x 428.35031pt>
+File: ./img/dictionary1.png Graphic file (type png)
+
+<use ./img/dictionary1.png>
+Package pdftex.def Info: ./img/dictionary1.png used on input line 547.
+(pdftex.def)             Requested size: 412.80157pt x 307.45117pt.
+
+<./img/dictionary2.png, id=46, 575.14874pt x 428.35031pt>
+File: ./img/dictionary2.png Graphic file (type png)
+
+<use ./img/dictionary2.png>
+Package pdftex.def Info: ./img/dictionary2.png used on input line 548.
+(pdftex.def)             Requested size: 412.80157pt x 307.45117pt.
+ (./paper_IEEEformat.bbl
+Underfull \hbox (badness 1681) in paragraph at lines 73--78
 \OT1/ptm/m/n/8 r[]oles dans les com-mu-naut[]es virtuelles : d[]efinitions et p
 remi[]eres
  []
 
-) [7 <./img/whiskers.png (PNG copy)>] [8 <./img/PCA_cluster_orderbased.png (PNG
- copy)> <./img/PCA_cluster_timebased.png (PNG copy)>]
-<./img/census_orderbased_1.png, id=61, 982.67125pt x 759.83875pt>
-File: ./img/census_orderbased_1.png Graphic file (type png)
-
-<use ./img/census_orderbased_1.png>
-Package pdftex.def Info: ./img/census_orderbased_1.png used on input line 551.
-(pdftex.def)             Requested size: 412.80157pt x 319.18806pt.
-
-<./img/census_orderbased_2.png, id=62, 982.67125pt x 759.83875pt>
-File: ./img/census_orderbased_2.png Graphic file (type png)
-
-<use ./img/census_orderbased_2.png>
-Package pdftex.def Info: ./img/census_orderbased_2.png used on input line 552.
-(pdftex.def)             Requested size: 412.80157pt x 319.18806pt.
-
-<./img/census_timebased_1.png, id=63, 662.475pt x 483.30562pt>
-File: ./img/census_timebased_1.png Graphic file (type png)
-
-<use ./img/census_timebased_1.png>
-Package pdftex.def Info: ./img/census_timebased_1.png used on input line 559.
-(pdftex.def)             Requested size: 412.80157pt x 301.15819pt.
-
-<./img/census_timebased_2.png, id=64, 662.475pt x 483.30562pt>
-File: ./img/census_timebased_2.png Graphic file (type png)
-
-<use ./img/census_timebased_2.png>
-Package pdftex.def Info: ./img/census_timebased_2.png used on input line 560.
-(pdftex.def)             Requested size: 412.80157pt x 301.15819pt.
-
-<./img/confusion_time_order_motifs_gameofthrones_1.png, id=65, 656.4525pt x 369
-.63094pt>
-File: ./img/confusion_time_order_motifs_gameofthrones_1.png Graphic file (type 
-png)
- <use ./img/confusion_time_order_motifs_gameofthrones_1.png>
-Package pdftex.def Info: ./img/confusion_time_order_motifs_gameofthrones_1.png 
-used on input line 568.
-(pdftex.def)             Requested size: 516.0pt x 290.55008pt.
-
+)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -713,42 +670,34 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[9
-
-] [10 <./img/census_orderbased_1.png (PNG copy)> <./img/census_orderbased_2.png
- (PNG copy)>] [11 <./img/census_timebased_1.png (PNG copy)> <./img/census_timeb
-ased_2.png (PNG copy)>] [12 <./img/confusion_time_order_motifs_gameofthrones_1.
-png (PNG copy)>] (./paper_IEEEformat.aux)
-
-LaTeX Warning: There were multiply-defined labels.
-
- ) 
+[7 <./img/cluster_whiskers.png (PNG copy)>] [8 <./img/dictionary1.png (PNG copy
+)> <./img/dictionary2.png (PNG copy)>] (./paper_IEEEformat.aux) ) 
 Here is how much of TeX's memory you used:
- 3290 strings out of 494902
- 51826 string characters out of 6177496
- 111941 words of memory out of 5000000
- 6436 multiletter control sequences out of 15000+600000
- 44878 words of font info for 92 fonts, out of 8000000 for 9000
+ 3843 strings out of 494902
+ 56363 string characters out of 6177496
+ 128481 words of memory out of 5000000
+ 6980 multiletter control sequences out of 15000+600000
+ 47034 words of font info for 96 fonts, out of 8000000 for 9000
  65 hyphenation exceptions out of 8191
- 37i,8n,26p,1629b,431s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7
-.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.
-pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/sha
-re/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/t
-ype1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/
-utmri8a.pfb>
-Output written on paper_IEEEformat.pdf (12 pages, 812997 bytes).
+ 38i,8n,26p,1235b,435s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/te
+xlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pf
+b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/u
+tmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on paper_IEEEformat.pdf (8 pages, 430566 bytes).
 PDF statistics:
- 124 PDF objects out of 1000 (max. 8388607)
- 71 compressed objects within 1 object stream
+ 100 PDF objects out of 1000 (max. 8388607)
+ 63 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 106 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 46 words of extra memory for PDF output out of 10000 (max. 10000000)
 
