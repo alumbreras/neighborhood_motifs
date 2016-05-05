@@ -143,7 +143,12 @@ load("./R_objects/res_time_75000_podemos.Rda")
 res.pod.time <- res
 
 # Add motif info to posts dataframe and sort by frequency
-df.posts.pod <- merge(df.posts.pod, res.pod.time$posts.motifs, all=FALSE, sort=FALSE)
+df.posts.pod <- merge(df.posts.pod, res.pod.time$posts.motifs, all=FALSE, sort=FALSE) %>%
+                select(user, conversation, motif)
+df.posts.pod <- df.posts.pod %>% distinct
+# check whether some user A in same conversation has two or more different motifs
+test <- group_by(df.posts.pod, user, conversation) %>% summarise(length(unique(motif))) %>% as.data.frame
+
 idx <- order(tabulate(df.posts.pod$motif), decreasing = TRUE) # get order by frequency
 df.posts.pod$motif <- match(df.posts.pod$motif, idx) # re-arrange pointers to motifs
 motifs.pod.time <- res.pod.time$motifs[idx] # re-sort motifs
@@ -152,6 +157,8 @@ colnames(df.posts.pod)[which(names(df.posts.pod) == "motif")] <- "motif.time"
 # Check they are sorted by frequency (they should be)
 n <- as.numeric(table(df.posts.pod$motif.time))
 all(n == cummin(n))
+
+
 
 ##############
 # load("./R_objects/res_struct_75000_4chan.Rda")

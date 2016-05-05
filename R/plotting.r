@@ -2,20 +2,52 @@
 # Plotting functions
 #
 
-plot.tree <- function(gtree){
-  # Plots a tree graph
-  # Arguments:
-  #   gtree: a igraph object graph with no cycles (tree)
 
+plot.tree.breakpoints <- function(gtree, breakpoints.v, breakpoints.h, labels=c('name', 'id')){
   mypalette <- c("black", "yellow", "orange", "red", "white")
   par(mfrow=c(1,1))
   gtree.un <- as.undirected(gtree)
+  V(gtree.un)$color <- 'white'
+  V(gtree.un)[breakpoints.v]$color <- 'green'
+  V(gtree.un)[breakpoints.h]$color <- 'blue'
+  
+  V(gtree.un)$size <- 3
+  V(gtree.un)[breakpoints.v]$size <- 10
+  V(gtree.un)[breakpoints.h]$size <- 10  
+  
   la = layout_as_tree(gtree.un, mode='out', root=which.min(V(gtree.un)$date))
+  if (labels=='name'){
+    labels <- V(gtree)$name
+  }
+  else{
+    labels <- as.numeric(V(gtree))
+  }
   plot(gtree.un,
        layout = la,
-       vertex.color=mypalette[V(gtree.un)$color],
-       vertex.label = "",
-       vertex.size=1,
+       vertex.label = labels,
+       edge.arrow.size=0.6)
+}
+
+plot.tree <- function(gtree, labels=c('name', 'id')){
+  # Plots a tree graph
+  # Arguments:
+  #   gtree: a igraph object graph with no cycles (tree)
+  if (missing(labels)){
+    labels <- NA
+  }
+  else{
+  labels <- switch(labels, 
+                   'name' = V(gtree)$name, 
+                   'id' = as.numeric(V(gtree)))
+  }
+  par(mfrow=c(1,1))
+  gtree.un <- as.undirected(gtree)
+  la = layout_as_tree(gtree.un, mode='out', root=which.min(V(gtree.un)$date))
+
+  plot(gtree.un,
+       layout = la,
+       vertex.label = labels,
+       vertex.size=3,
        edge.arrow.size=0.6)
 }
 

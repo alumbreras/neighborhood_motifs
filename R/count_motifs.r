@@ -1,58 +1,12 @@
 library(RSQLite)
 library(data.table)
+library(digest)
 #library(R.utils)
 
 source('R/extract_from_db.r')
 source('R/tree_changepoints.r')
+source('R/pruning.r')
 
-
-prune <- function(motif){
-  # Arguments:
-  #   motif: a tree graph
-  # Returns:
-  #   a pruned motif
-  # 4 colors: 1(black) 2(red) 4(orange)
-  # we can only remove black nodes
-  # there can be only two black nodes together
-  # delete 
-  parents <- which(degree(motif, mode='in')>2)
-  to.delete <- c()
-  if(length(parents)==0){
-    return(motif)
-  }
-  # If more than two siblings with no children, keep only the first two
-  # (the most ancient)
-  for (p in 1:length(parents)){
-    siblings <- neighbors(motif, parents[p], mode='in')
-    siblings <- siblings[order(V(motif)$date[siblings])]
-    siblings.indegree <- degree(motif, v=siblings, mode='in')
-    
-    if(length(siblings)<3){
-      next
-    }
-    x <- siblings$color
-    
-    counts <- 1
-    delete <- rep(FALSE, length(x))
-    for(i in 2:length(x)){
-      if(x[i] != x[i-1]){
-        counts <- 1
-      }
-      else if(siblings.indegree[i]>0){
-        counts <- 1
-      }
-      else{
-        counts <- counts + 1
-      }
-      if(counts>2){
-        delete[i] <- TRUE
-      }
-    }
-    to.delete <- union(to.delete, siblings[delete])
-  }
-  motif <- delete.vertices(motif, to.delete)
-  motif
-}
 
 count_motifs_by_post <- function(threads, 
                                  database='reddit', 
@@ -82,13 +36,11 @@ count_motifs_by_post <- function(threads,
     tryCatch({
       
       write.table(threads[i], file="tried_threads.csv", row.names=FALSE, col.names=FALSE, append=TRUE)
-      #cat(threads[i], file=filelog, sep=",", append=TRUE)
-      
+
       #Extract the egos of every post
       g <- database.to.graph(threads[i], con, database)
       gp <- g$gp
-      #cat('graph', file=filelog, sep=",", append=TRUE)
-      
+
       size <- vcount(gp)
       cat('\n', i, '/', nthreads, '/', threads[i], ' size: ', size, ' chunk.id: ', chunk.id )
       if(size>1000){
@@ -102,8 +54,7 @@ count_motifs_by_post <- function(threads,
       V(gp)$date <- dates
       
       root.post <- V(gp)[which(degree(gp, mode='out')==0)]$name
-      #cat('root', file=filelog, sep=",", append=TRUE)
-      
+
       if(neighbourhood=='time'){
         breakpoints <- changepoints.cp(gp, vertical=T, horizontal=T)
         breakpoints.h <- breakpoints$breakpoints.h
@@ -116,7 +67,6 @@ count_motifs_by_post <- function(threads,
         V(gp)[breakpoints.v]$bp.v <- TRUE
         V(gp)[breakpoints.h]$bp.h <- TRUE
         V(gp)[breakpoints.vh]$bp.vh <- TRUE
-        #cat('bp', file=filelog, sep=",", append=TRUE)
       }
       
       for(j in 1:vcount(gp)){
@@ -129,10 +79,6 @@ count_motifs_by_post <- function(threads,
         user.name <- gp.ego$user
         post.id <- gp.ego$name
         
-        # slower
-        #user.name <- V(gp)[j]$user
-        #post.id <- V(gp)[j]$name
-        
         # Detect the neighborhood with the prefered method
         if(neighbourhood=='order'){
           eg <- neighborhood.temporal.order(gp, j, rad, max.neighbors)
@@ -144,18 +90,15 @@ count_motifs_by_post <- function(threads,
           eg <- make_ego_graph(gp, rad, nodes=j)[[1]]
         }
 
-        u <- V(eg)[post.id] # identify the ego vertex. Faster than V(eg)[V(eg)$name==post.id] 
-        uu <- V(eg)[V(eg)$user==user.name] # posts writen by ego author
+        u <- V(eg)[V(eg)$user==user.name] # posts writen by ego author
+        
+        #mypalette <- c("black", "yellow", "orange", "red", "white")
         
         V(eg)$color <- 1
-        # note the <= in case two siblings have the same date
-        #V(eg)$color[V(eg)$date<=V(eg)[u]$date] <- 1 
-        #V(eg)$color[V(eg)$date>V(eg)[u]$date] <- 2 
         if(degree(eg, v=u, mode='out')==1){
           p.user.name <- neighbors(eg, u, mode='out')$user
           V(eg)[V(eg)$user==p.user.name]$color <- 2 # posts writen by parent of ego
         }
-        V(eg)[uu]$color <- 3
         V(eg)[u]$color <- 4
         tryCatch({V(eg)[root.post]$color <- 5}, error = function(e){}) # exception if root not in there
         
@@ -200,7 +143,9 @@ count_motifs_by_post <- function(threads,
         }
         
         posts.motifs <- rbindlist(list(posts.motifs, 
-                                       data.frame(postid=post.id,motif=motif.id)))
+                                       data.frame(postid = post.id, 
+                                                  motif = motif.id,
+                                                  conversation = digest(V(eg)$name)))) # hash to identify conversation
       } # end egos
       #cat('done', file=filelog, sep="\n", append=TRUE)
       # keep track of threads that gave no problems
@@ -224,7 +169,7 @@ count_motifs_by_post <- function(threads,
                 motifs = NA))
   }
   
-  names(posts.motifs) <- c('postid', 'motif')
+  names(posts.motifs) <- c('postid', 'motif', 'conversation')
   
   # Sort by frequency (and relabel: 1 for the most frequent and so forth)
   idx <- order(table(posts.motifs$motif), decreasing = TRUE)
