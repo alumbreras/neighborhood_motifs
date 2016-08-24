@@ -88,10 +88,6 @@ registerDoParallel(cl)
 pck <- c('RSQLite', 'data.table', 'changepoint', 'digest')
 res.parallel <- foreach(i=1:length(chunks), .packages = pck)%dopar%{
   source('R/extract_from_db.r')
-  #withTimeout(  count_motifs_by_post(chunks[[i]], 
-  #                                   database='reddit',
-  #                                   neighbourhood='time'),
-  #                                  120, onTimeout='warning')
   count_motifs_by_post(chunks[[i]], 
                        database='reddit',
                        neighbourhood='time', chunk.id=i)

@@ -7,7 +7,8 @@ source('R/extract_from_db.r')
 source('R/tree_changepoints.r')
 source('R/pruning.r')
 
-
+#' Compute a hashtag to identify the conversation
+#' so that we consider only once the N participations of a user in a conversation
 count_motifs_by_post <- function(threads, 
                                  database='reddit', 
                                  neighbourhood=c('struct', 'order', 'time'),
@@ -90,6 +91,9 @@ count_motifs_by_post <- function(threads,
           eg <- make_ego_graph(gp, rad, nodes=j)[[1]]
         }
 
+        # Assign colors:
+        # white: root
+        # red: ego posts
         u <- V(eg)[V(eg)$user==user.name] # posts writen by ego author
         
         #mypalette <- c("black", "yellow", "orange", "red", "white")

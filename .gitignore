@@ -2,4 +2,5 @@ tried*.csv
 processed*.csv
 exception*.csv
 log*.csv
+*.rda
 ~

@@ -1,3 +1,4 @@
+#  Deprecated. This is now in rlumbreras
 library(RSQLite)
 library(data.table)
 source('R/extract_from_db.r')
